@@ -1,0 +1,55 @@
+package com.zs.cws.ws.android.attendence.model;
+
+import java.util.List;
+
+public class AttendanceDate {
+	
+	private String status="";
+	private int schoolID;
+	private int divisionID;
+	private String date;
+	private List<Students>studentsList;
+	public AttendanceDate() {
+		
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getDivisionID() {
+		return divisionID;
+	}
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
+	public List<Students> getStudentsList() {
+		return studentsList;
+	}
+	public void setStudentsList(List<Students> studentsList) {
+		this.studentsList = studentsList;
+	}
+	@Override
+	public String toString() {
+		return "AttendanceDate [status=" + status + ", schoolID=" + schoolID + ", divisionID=" + divisionID + ", date="
+				+ date + ", studentsList=" + studentsList + "]";
+	}
+	
+	
+
+	
+}

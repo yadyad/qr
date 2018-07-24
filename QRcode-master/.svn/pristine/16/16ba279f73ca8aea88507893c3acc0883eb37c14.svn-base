@@ -1,0 +1,29 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.List;
+
+public class FinalMessageReplyRsponseModel {
+	String responseStatus;
+	List<MessageReplyResponseModel> messageLists;
+	public FinalMessageReplyRsponseModel() {
+	}
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+	public List<MessageReplyResponseModel> getMessageLists() {
+		return messageLists;
+	}
+	public void setMessageLists(List<MessageReplyResponseModel> messageLists) {
+		this.messageLists = messageLists;
+	}
+	@Override
+	public String toString() {
+		return "FinalMessageReplyRsponseModel [responseStatus=" + responseStatus + ", messageLists=" + messageLists
+				+ "]";
+	}
+	
+	
+}

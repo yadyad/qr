@@ -1,0 +1,11 @@
+package com.zs.cws.payment.dao;
+
+import java.util.List;
+
+import com.zs.cws.payment.model.PaymentModel;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+
+public interface PaymentDAO {
+	List<PaymentModel> getPaymentHistory(Integer schoolId);
+	SubscriptionPlanActivationModel getPlanDetails(Integer schoolId);
+}

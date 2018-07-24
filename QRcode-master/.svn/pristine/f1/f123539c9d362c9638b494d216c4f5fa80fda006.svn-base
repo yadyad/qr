@@ -1,0 +1,49 @@
+package com.zs.cws.ws.android.dairy.model;
+
+public class MessageReplyResponseModel {
+
+	String parentName;
+	String staffName;
+	String message;
+	String messageFlow;
+	String messageDate;
+	
+	public MessageReplyResponseModel() {
+	}
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+	public String getMessageDate() {
+		return messageDate;
+	}
+	public void setMessageDate(String messageDate) {
+		this.messageDate = messageDate;
+	}
+	public String getParentName() {
+		return parentName;
+	}
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	@Override
+	public String toString() {
+		return "MessageReplyResponseModel [parentName=" + parentName + ", staffName=" + staffName + ", message="
+				+ message + ", messageFlow=" + messageFlow + ", messageDate=" + messageDate + "]";
+	}
+	
+}

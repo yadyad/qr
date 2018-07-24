@@ -1,0 +1,49 @@
+package com.zs.cws.ws.android.parentsearch.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.parentsearch.model.ParentSearchRequestModel;
+import com.zs.cws.ws.android.parentsearch.model.ParentSearchResponseModel;
+
+@RestController
+@RequestMapping("android/parentsearch")
+public class ParentSearchServiceController {
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	// Method for parent search
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object parentSearch(HttpServletRequest request,
+			@RequestBody ParentSearchRequestModel parentSearchRequestModel) {
+		ParentSearchResponseModel parentSearchResponseModel = new ParentSearchResponseModel();
+		try {
+			if (studentDAO.isValidStudent(parentSearchRequestModel.getStudentID())) {
+				StudentModel studentModel = studentDAO.getStudentDetails(parentSearchRequestModel.getStudentID());
+				parentSearchResponseModel.setBloodGroup(studentModel.getBloodGroup());
+				parentSearchResponseModel.setDob(studentModel.getDob().toString());
+				parentSearchResponseModel.setEmailID(studentModel.getEmail());
+				parentSearchResponseModel.setFatherName(studentModel.getFatherName());
+				parentSearchResponseModel.setPhone(studentModel.getFatherNumber());
+				parentSearchResponseModel.setResponseStatus("Success");
+				return parentSearchResponseModel;
+			} else {
+				parentSearchResponseModel.setResponseStatus("Invalid Student");
+				return parentSearchResponseModel;
+			}
+		} catch (Exception e) {
+			parentSearchResponseModel.setResponseStatus("Failed");
+			return parentSearchResponseModel;
+		}
+
+	}
+}

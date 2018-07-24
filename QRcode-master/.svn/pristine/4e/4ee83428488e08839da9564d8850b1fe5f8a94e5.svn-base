@@ -1,0 +1,31 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+public class MeetingMembersModel {
+	int memberID;
+	String staffName;
+
+	public MeetingMembersModel() {
+	}
+
+	public int getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingMembersModel [memberID=" + memberID + ", staffName=" + staffName + "]";
+	}
+
+}

@@ -1,0 +1,71 @@
+package com.zs.cws.utils;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+
+/**
+ *
+ * @author 100019
+ */
+public class FCMGroupSender {
+
+    public static void fcmForGroup(Object object,String key) throws ProtocolException, IOException {
+
+        String a = object.toString();
+        final String apiKey = "AIzaSyBLizNi8G4yKi-3HT_ZNL3p8YoPepXmWhA";
+        URL url = new URL("https://fcm.googleapis.com/fcm/send");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "key=" + apiKey);
+        conn.setDoOutput(true);
+        Gson gson = new Gson();
+//        activityServicePOJO.setActivityDate("zazzzz");
+//        activityServicePOJO.setActivityDescription("aaaaaaaaaaaaaa");
+        String json = gson.toJson(object);
+        String input = "{\"data\" : {\"msg\" : " + json + ",\"key\" : \""+key+"\"}, \"to\":\"" + "/topics/Testing\"}";
+        System.out.println("stringggg" + input);
+        OutputStream os = conn.getOutputStream();
+        os.write(input.getBytes());
+        os.flush();
+        os.close();
+        int responseCode = conn.getResponseCode();
+        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("Post parameters : " + input);
+        System.out.println("Response Code : " + responseCode);
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        // print result
+        System.out.println(response.toString());
+    }
+
+    public static void main(String[] args) throws IOException {
+        String a = "1000000";
+        int b = Integer.valueOf(a);
+        System.out.println("aaaaaaaaaa" + b);
+        a = String.valueOf(b);
+        System.out.println("aaaaaaaaaa" + a);
+
+    }
+}

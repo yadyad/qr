@@ -1,0 +1,101 @@
+package com.zs.cws.ws.android.feespayment.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+
+@Entity
+@Table(name = "cwas_fees_payment_details")
+public class FeesPaymentModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int feesPaymentID;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@OneToOne
+	@JoinColumn(name = "student_id")
+	StudentModel studentModel;
+
+	@Column(name = "payed_date")
+	@DateTimeFormat
+	private Date payedDate;
+
+	@Column(name = "amount")
+	private double amount;
+
+	@Column(name = "remarks")
+	private String remarks;
+
+	public FeesPaymentModel() {
+	}
+
+	public int getFeesPaymentID() {
+		return feesPaymentID;
+	}
+
+	public void setFeesPaymentID(int feesPaymentID) {
+		this.feesPaymentID = feesPaymentID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	public Date getPayedDate() {
+		return payedDate;
+	}
+
+	public void setPayedDate(Date payedDate) {
+		this.payedDate = payedDate;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	@Override
+	public String toString() {
+		return "FeesPaymentModel [feesPaymentID=" + feesPaymentID + ", schoolModel=" + schoolModel + ", studentModel="
+				+ studentModel + ", payedDate=" + payedDate + ", amount=" + amount + ", remarks=" + remarks + "]";
+	}
+
+}

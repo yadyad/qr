@@ -1,0 +1,478 @@
+package com.zs.cws.ws.android.dairy.contoller;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.utils.FCMSender;
+import com.zs.cws.ws.android.dairy.dao.DairyDAO;
+import com.zs.cws.ws.android.dairy.model.DairyDeliveryModel;
+import com.zs.cws.ws.android.dairy.model.DairyFcmModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageDeliverModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageReplyModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageResponseModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageFinalResponseModel;
+import com.zs.cws.ws.android.dairy.model.DairyRequestServiceModel;
+import com.zs.cws.ws.android.dairy.model.DiaryMessageResponseModel;
+import com.zs.cws.ws.android.dairy.model.FinalMessageDeliveryResponseModel;
+import com.zs.cws.ws.android.dairy.model.FinalMessageRepliedResponseModel;
+import com.zs.cws.ws.android.dairy.model.FinalMessageReplyRsponseModel;
+import com.zs.cws.ws.android.dairy.model.MessageDeliverResponseModel;
+import com.zs.cws.ws.android.dairy.model.MessageReplyRequestModel;
+import com.zs.cws.ws.android.dairy.model.MessageReplyResponseModel;
+import com.zs.cws.ws.android.dairy.repository.DairyMessageDeliverRepository;
+import com.zs.cws.ws.android.dairy.repository.DairyMessageReplyRepository;
+import com.zs.cws.ws.android.dairy.repository.DairyMessageRepository;
+
+@RestController
+@RequestMapping("android/dairy")
+public class DairyServiceController {
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	StudentRepository studentRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	@Autowired
+	DairyMessageRepository dairyMessageRepository;
+
+	@Autowired
+	DairyMessageReplyRepository dairyMessageReplyRepository;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	DairyMessageDeliverRepository dairyMessageDeliverRepository;
+
+	@Autowired
+	DairyDAO dairyDAO;
+	@Autowired
+	StudentDAO studentDAO;
+
+	// Method for send message to multiple parents in a school..
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentDairyMeaages(HttpServletRequest request,
+			@RequestBody DairyRequestServiceModel dairyRequestServiceModel) {
+		// String messageDate = "";
+		Date messageDate = null;
+		DairyMessageFinalResponseModel dairyMessageResponseModel = new DairyMessageFinalResponseModel();
+		try {
+			if (schoolStaffDAO.isValidMemberStaffLike(dairyRequestServiceModel.getFromStaffID())) {
+				SchoolModel schoolModel = schoolRepository.findOne(dairyRequestServiceModel.getSchoolID());
+				SchoolStaffModel schoolStaffModel = schoolStaffRepository
+						.findOne(dairyRequestServiceModel.getFromStaffID());
+				DairyMessageModel dairyMessageModel = new DairyMessageModel();
+				dairyMessageModel.setMessageType(dairyRequestServiceModel.getMessageType());
+				dairyMessageModel.setMessageContent(dairyRequestServiceModel.getMessageContent());
+				dairyMessageModel.setTitle(dairyRequestServiceModel.getTitle());
+				dairyMessageModel.setSchoolModel(schoolModel);
+				dairyMessageModel.setGroupStatus(dairyRequestServiceModel.getGroupStatus());
+				dairyMessageModel.setMessageDate(new Date());
+				dairyMessageModel.setMessageFlow(dairyRequestServiceModel.getMessageFlow());
+				dairyMessageRepository.save(dairyMessageModel);
+				// FCM Dairy message sending
+				DairyFcmModel dairyFcmModel = new DairyFcmModel();
+				dairyFcmModel.setMessageID(dairyMessageModel.getMessageID());
+
+				if (dairyRequestServiceModel.getParentIDs().size() > 0) {
+					for (int parentID : dairyRequestServiceModel.getParentIDs()) {
+						StudentModel studentModel = studentRepository.findOne(parentID);
+						DairyMessageDeliverModel dairyMessageDeliverModel = new DairyMessageDeliverModel();
+						dairyMessageDeliverModel.setDairyMessageModel(dairyMessageModel);
+						dairyMessageDeliverModel.setSchoolModel(schoolModel);
+						dairyMessageDeliverModel.setStudentModel(studentModel);
+						dairyMessageDeliverModel.setMessageDate(new Date());
+						dairyMessageDeliverModel.setSchoolStaffModel(schoolStaffModel);
+						dairyMessageDeliverModel.setMessageFlow(dairyRequestServiceModel.getMessageFlow());
+						dairyMessageDeliverRepository.save(dairyMessageDeliverModel);
+						dairyFcmModel.setDeliverID(dairyMessageDeliverModel.getDeliverID());
+
+						messageDate = dairyMessageDeliverModel.getMessageDate();
+						if (dairyRequestServiceModel.getMessageFlow().equalsIgnoreCase("PT")) {
+							dairyFcmModel.setMemberID(dairyRequestServiceModel.getFromStaffID());
+							dairyFcmModel.setDivisionID(studentModel.getSchoolDivModel().getSchoolDivId());
+							dairyFcmModel.setSchoolID(dairyRequestServiceModel.getSchoolID());
+							dairyFcmModel.setType("T");
+							FCMSender.fcmTest1(dairyFcmModel, schoolStaffModel.getFcmTocken(), "dairy");
+						} else {
+							dairyFcmModel.setType("P");
+							dairyFcmModel.setMemberID(parentID);
+							dairyFcmModel.setDivisionID(studentModel.getSchoolDivModel().getSchoolDivId());
+							dairyFcmModel.setSchoolID(dairyRequestServiceModel.getSchoolID());
+							FCMSender.fcmTest1(dairyFcmModel, studentModel.getFcmTocken(), "dairy");
+						}
+					}
+					SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String s = sdf1.format(messageDate);
+					dairyMessageResponseModel.setMessageID(dairyMessageModel.getMessageID());
+					dairyMessageResponseModel.setMessageDate(s);
+					dairyMessageResponseModel.setResponseStatus("Success");
+					return dairyMessageResponseModel;
+				}
+
+			} else {
+				dairyMessageResponseModel.setMessageID(0);
+				dairyMessageResponseModel.setResponseStatus("Invalid User");
+				return dairyMessageResponseModel;
+			}
+		} catch (Exception e) {
+			dairyMessageResponseModel.setMessageID(0);
+			dairyMessageResponseModel.setResponseStatus("Failed");
+			return dairyMessageResponseModel;
+		}
+		return null;
+	}
+
+	// Method for send message to multiple parents in a school..
+	@RequestMapping(value = "/view", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sendMessageView(HttpServletRequest request,
+			@RequestBody DairyRequestServiceModel dairyRequestServiceModel) {
+		FinalMessageDeliveryResponseModel finalMessageDeliveryResponseModel = new FinalMessageDeliveryResponseModel();
+		if ((schoolStaffDAO.isValidMemberStaffLike(dairyRequestServiceModel.getMemberID()))
+				|| (studentDAO.isValidStudent(dairyRequestServiceModel.getMemberID()))) {
+			try {
+				List<DairyMessageResponseModel> messageList = dairyDAO.getDeliveredMessages(
+						dairyRequestServiceModel.getLastModifiedDate(), dairyRequestServiceModel.getMemberType(),
+						dairyRequestServiceModel.getMemberID(), dairyRequestServiceModel.getStatus());
+
+				finalMessageDeliveryResponseModel.setResponseStatus("Success");
+				finalMessageDeliveryResponseModel.setStatus(dairyRequestServiceModel.getStatus());
+
+				// Get reply details for each delivered messages..
+				List<DairyMessageResponseModel> finalMessageList = new ArrayList<>();
+				for (DairyMessageResponseModel dairyMessageResponseModel : messageList) {
+					if (dairyMessageResponseModel.getMessageFlow().equals("PT")) {
+						dairyMessageResponseModel
+								.setMessageReplyList((dairyDAO.getReplies(dairyMessageResponseModel.getParentID(), "P",
+										dairyMessageResponseModel.getDeliverID())));
+					} else {
+						dairyMessageResponseModel.setMessageReplyList(dairyDAO.getReplies(
+								dairyMessageResponseModel.getStaffID(), "T", dairyMessageResponseModel.getDeliverID()));
+					}
+					finalMessageList.add(dairyMessageResponseModel);
+				}
+
+				finalMessageDeliveryResponseModel.setMessageLists(finalMessageList);
+
+				return finalMessageDeliveryResponseModel;
+			} catch (Exception e) {
+				e.printStackTrace();
+				finalMessageDeliveryResponseModel.setResponseStatus("Failed");
+				finalMessageDeliveryResponseModel.setStatus("");
+				finalMessageDeliveryResponseModel.setMessageLists(new ArrayList<>());
+				return finalMessageDeliveryResponseModel;
+			}
+		} else {
+			finalMessageDeliveryResponseModel.setResponseStatus("Invalid User");
+			finalMessageDeliveryResponseModel.setStatus("");
+			finalMessageDeliveryResponseModel.setMessageLists(new ArrayList<>());
+			return finalMessageDeliveryResponseModel;
+		}
+	}
+
+	// Method for view the deliverid's if it has at least one reply
+	@RequestMapping(value = "/deliverview", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object dairydeliverview(HttpServletRequest request,
+			@RequestBody DairyRequestServiceModel dairyRequestServiceModel) {
+
+		HashMap<Integer, List<DairyDeliveryModel>> dairyDeliveryMap = new HashMap<>();
+
+		FinalMessageRepliedResponseModel finalMessageRepliedResponseModel = new FinalMessageRepliedResponseModel();
+		if ((schoolStaffDAO.isValidMemberStaffLike(dairyRequestServiceModel.getMemberID()))
+				|| (studentDAO.isValidStudent(dairyRequestServiceModel.getMemberID()))) {
+			try {
+				List<DairyMessageResponseModel> messageList = dairyDAO.getRepliedDeliverMessages(
+						dairyRequestServiceModel.getMessageID(), dairyRequestServiceModel.getMemberType(),
+						dairyRequestServiceModel.getMemberID(), dairyRequestServiceModel.getStatus(),
+						dairyRequestServiceModel.getFcmCall());
+				
+				for (DairyMessageResponseModel DairyMessageResponseModel : messageList) {
+					dairyDeliveryMap.put(DairyMessageResponseModel.getMessageID(), new ArrayList<>());
+				}
+				for (DairyMessageResponseModel DairyMessageResponseModel : messageList) {
+					if (dairyDeliveryMap.get(DairyMessageResponseModel.getMessageID()) != null) {
+						List<DairyDeliveryModel> deliveryList = dairyDeliveryMap
+								.get(DairyMessageResponseModel.getMessageID());
+						DairyDeliveryModel dairyDeliveryModel = new DairyDeliveryModel();
+						dairyDeliveryModel.setDeliveryID(DairyMessageResponseModel.getDeliverID());
+						dairyDeliveryModel.setParentName(DairyMessageResponseModel.getParentName());
+						dairyDeliveryModel.setStaffName(DairyMessageResponseModel.getStaffName());
+						dairyDeliveryModel.setMessageDate(DairyMessageResponseModel.getMessageDate());
+						deliveryList.add(dairyDeliveryModel);
+						dairyDeliveryMap.put(DairyMessageResponseModel.getMessageID(), deliveryList);
+					}
+				}
+				List<DiaryMessageResponseModel> finalMessageReplyList = new ArrayList<>();
+				for (Object key : dairyDeliveryMap.keySet()) {
+					DiaryMessageResponseModel diaryMessageResponseModel = new DiaryMessageResponseModel();
+					DairyMessageModel dairyMessageModel = dairyMessageRepository
+							.findOne(Integer.parseInt((key.toString())));
+					diaryMessageResponseModel.setMessage(dairyMessageModel.getMessageContent());
+					diaryMessageResponseModel.setTitle(dairyMessageModel.getTitle());
+					diaryMessageResponseModel.setMessageID(dairyMessageModel.getMessageID());
+					diaryMessageResponseModel.setGroupStatus(dairyMessageModel.getGroupStatus());
+					diaryMessageResponseModel.setMessageDeliverList(dairyDeliveryMap.get(key));
+					String parentNames = "";
+					String staffName = "";
+					for (DairyDeliveryModel dairyDeliveryModel : dairyDeliveryMap.get(key)) {
+						parentNames = parentNames + dairyDeliveryModel.getParentName() + ",";
+						staffName = dairyDeliveryModel.getStaffName();
+					}
+					diaryMessageResponseModel.setParentName(parentNames);
+					diaryMessageResponseModel.setStaffName(staffName);
+					diaryMessageResponseModel.setMessageDate(dairyMessageModel.getMessageDate().toString());
+					diaryMessageResponseModel.setMessageFlow(dairyMessageModel.getMessageFlow());
+					finalMessageReplyList.add(diaryMessageResponseModel);
+				}
+
+				finalMessageRepliedResponseModel.setResponseStatus("Success");
+				finalMessageRepliedResponseModel.setStatus(dairyRequestServiceModel.getStatus());
+				finalMessageRepliedResponseModel.setMessageLists(finalMessageReplyList);
+				return finalMessageRepliedResponseModel;
+			} catch (Exception e) {
+				e.printStackTrace();
+				finalMessageRepliedResponseModel.setResponseStatus("Failed");
+				finalMessageRepliedResponseModel.setStatus("");
+				finalMessageRepliedResponseModel.setMessageLists(new ArrayList<>());
+				return finalMessageRepliedResponseModel;
+			}
+		} else {
+			finalMessageRepliedResponseModel.setResponseStatus("Invalid User");
+			finalMessageRepliedResponseModel.setStatus("");
+			finalMessageRepliedResponseModel.setMessageLists(new ArrayList<>());
+			return finalMessageRepliedResponseModel;
+		}
+	}
+
+	
+	//DELVER VIEW FOR FCM CALL
+	
+	
+	@RequestMapping(value = "/fcmdeliverview", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object dairydeliverviewA(HttpServletRequest request,
+			@RequestBody DairyRequestServiceModel dairyRequestServiceModel) {
+
+		HashMap<Integer, List<DairyDeliveryModel>> dairyDeliveryMap = new HashMap<>();
+
+		FinalMessageRepliedResponseModel finalMessageRepliedResponseModel = new FinalMessageRepliedResponseModel();
+		if ((schoolStaffDAO.isValidMemberStaffLike(dairyRequestServiceModel.getMemberID()))
+				|| (studentDAO.isValidStudent(dairyRequestServiceModel.getMemberID()))) {
+			try {
+				List<DairyMessageResponseModel> messageList = dairyDAO.getRepliedDeliverMessagesForFCM(
+						dairyRequestServiceModel.getMessageID(), dairyRequestServiceModel.getMemberType(),
+						dairyRequestServiceModel.getMemberID(), dairyRequestServiceModel.getStatus(),
+						dairyRequestServiceModel.getFcmCall());
+				
+				for (DairyMessageResponseModel DairyMessageResponseModel : messageList) {
+					dairyDeliveryMap.put(DairyMessageResponseModel.getMessageID(), new ArrayList<>());
+				}
+				for (DairyMessageResponseModel DairyMessageResponseModel : messageList) {
+					if (dairyDeliveryMap.get(DairyMessageResponseModel.getMessageID()) != null) {
+						List<DairyDeliveryModel> deliveryList = dairyDeliveryMap
+								.get(DairyMessageResponseModel.getMessageID());
+						DairyDeliveryModel dairyDeliveryModel = new DairyDeliveryModel();
+						dairyDeliveryModel.setDeliveryID(DairyMessageResponseModel.getDeliverID());
+						dairyDeliveryModel.setParentName(DairyMessageResponseModel.getParentName());
+						dairyDeliveryModel.setStaffName(DairyMessageResponseModel.getStaffName());
+						dairyDeliveryModel.setMessageDate(DairyMessageResponseModel.getMessageDate());
+						deliveryList.add(dairyDeliveryModel);
+						dairyDeliveryMap.put(DairyMessageResponseModel.getMessageID(), deliveryList);
+					}
+				}
+				List<DiaryMessageResponseModel> finalMessageReplyList = new ArrayList<>();
+				for (Object key : dairyDeliveryMap.keySet()) {
+					DiaryMessageResponseModel diaryMessageResponseModel = new DiaryMessageResponseModel();
+					DairyMessageModel dairyMessageModel = dairyMessageRepository
+							.findOne(Integer.parseInt((key.toString())));
+					diaryMessageResponseModel.setMessage(dairyMessageModel.getMessageContent());
+					diaryMessageResponseModel.setTitle(dairyMessageModel.getTitle());
+					diaryMessageResponseModel.setMessageID(dairyMessageModel.getMessageID());
+					diaryMessageResponseModel.setGroupStatus(dairyMessageModel.getGroupStatus());
+					diaryMessageResponseModel.setMessageDeliverList(dairyDeliveryMap.get(key));
+					String parentNames = "";
+					String staffName = "";
+					for (DairyDeliveryModel dairyDeliveryModel : dairyDeliveryMap.get(key)) {
+						parentNames = parentNames + dairyDeliveryModel.getParentName() + ",";
+						staffName = dairyDeliveryModel.getStaffName();
+					}
+					diaryMessageResponseModel.setParentName(parentNames);
+					diaryMessageResponseModel.setStaffName(staffName);
+					diaryMessageResponseModel.setMessageDate(dairyMessageModel.getMessageDate().toString());
+					diaryMessageResponseModel.setMessageFlow(dairyMessageModel.getMessageFlow());
+					finalMessageReplyList.add(diaryMessageResponseModel);
+				}
+
+				finalMessageRepliedResponseModel.setResponseStatus("Success");
+				finalMessageRepliedResponseModel.setStatus(dairyRequestServiceModel.getStatus());
+				finalMessageRepliedResponseModel.setMessageLists(finalMessageReplyList);
+				return finalMessageRepliedResponseModel;
+			} catch (Exception e) {
+				e.printStackTrace();
+				finalMessageRepliedResponseModel.setResponseStatus("Failed");
+				finalMessageRepliedResponseModel.setStatus("");
+				finalMessageRepliedResponseModel.setMessageLists(new ArrayList<>());
+				return finalMessageRepliedResponseModel;
+			}
+		} else {
+			finalMessageRepliedResponseModel.setResponseStatus("Invalid User");
+			finalMessageRepliedResponseModel.setStatus("");
+			finalMessageRepliedResponseModel.setMessageLists(new ArrayList<>());
+			return finalMessageRepliedResponseModel;
+		}
+	}
+
+	
+	
+	@RequestMapping(value = "/reply", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentReplys(HttpServletRequest request,
+			@RequestBody MessageReplyRequestModel messageReplyRequestModel) {
+		DairyMessageDeliverModel DairyMessageDeliverModel = dairyMessageDeliverRepository
+				.findOne(messageReplyRequestModel.getDeliverID());
+		SchoolStaffModel schoolStaffModel = DairyMessageDeliverModel.getSchoolStaffModel();
+		StudentModel studentModel = DairyMessageDeliverModel.getStudentModel();
+		DairyMessageFinalResponseModel dairyMessageResponseModel = new DairyMessageFinalResponseModel();
+		DairyMessageReplyModel dairyMessageReplyModel = new DairyMessageReplyModel();
+		DairyMessageDeliverModel diDairyMessageDeliverModel = dairyMessageDeliverRepository
+				.findOne(messageReplyRequestModel.getDeliverID());
+		dairyMessageReplyModel.setDairyMessageDeliverModel(
+				dairyMessageDeliverRepository.findOne(messageReplyRequestModel.getDeliverID()));
+		dairyMessageReplyModel.setSchoolModel(schoolRepository.findOne(messageReplyRequestModel.getSchoolID()));
+		dairyMessageReplyModel.setMessageFlow(messageReplyRequestModel.getMessageFlow());
+		dairyMessageReplyModel.setReplyMessage(messageReplyRequestModel.getMessage());
+		dairyMessageReplyModel.setMessageDate(new Date());
+		dairyMessageReplyModel.setDairyMessageModel(diDairyMessageDeliverModel.getDairyMessageModel());
+		dairyMessageReplyRepository.save(dairyMessageReplyModel);
+
+		if (dairyMessageReplyModel.getMessageReplyID() != 0) {
+			DairyMessageDeliverModel dairyMessageDeliverModel2 = dairyMessageDeliverRepository
+					.findOne(messageReplyRequestModel.getDeliverID());
+			dairyMessageDeliverModel2.setMessageDate(new Date());
+			dairyMessageDeliverRepository.save(dairyMessageDeliverModel2);
+
+		}
+
+		dairyMessageResponseModel.setMessageID(
+				dairyMessageReplyModel.getDairyMessageDeliverModel().getDairyMessageModel().getMessageID());
+		DairyFcmModel dairyFcmModel = new DairyFcmModel();
+		if (dairyMessageReplyModel.getMessageReplyID() != 0) {
+			dairyMessageResponseModel.setResponseStatus("Success");
+
+			dairyFcmModel.setDeliverID(dairyMessageReplyModel.getDairyMessageDeliverModel().getDeliverID());
+			dairyFcmModel.setSchoolID(DairyMessageDeliverModel.getSchoolModel().getSchoolId());
+			dairyFcmModel.setMessageID(
+					dairyMessageReplyModel.getDairyMessageDeliverModel().getDairyMessageModel().getMessageID());
+			if (messageReplyRequestModel.getMessageFlow().equals("PT")) {
+				dairyFcmModel.setMemberID(schoolStaffModel.getSchoolStaffId());
+				dairyFcmModel.setType("T");
+				dairyFcmModel.setSender(studentModel.getFatherName());
+				dairyFcmModel.setDivisionID(studentModel.getSchoolDivModel().getSchoolDivId());
+				dairyFcmModel.setReciever(schoolStaffModel.getFirstName() + " " + schoolStaffModel.getLastName());
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String s = sdf1.format(dairyMessageReplyModel.getMessageDate());
+				dairyFcmModel.setModifiedDate(s);
+				System.err.println(dairyFcmModel.toString());
+				try {
+					FCMSender.fcmTest1(dairyFcmModel, schoolStaffModel.getFcmTocken(), "diaryReply");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				dairyFcmModel.setType("P");
+				dairyFcmModel.setMemberID(studentModel.getStudentId());
+				dairyFcmModel.setReciever(studentModel.getFatherName());
+				dairyFcmModel.setSender(schoolStaffModel.getFirstName() + " " + schoolStaffModel.getLastName());
+
+				try {
+					FCMSender.fcmTest1(dairyFcmModel, studentModel.getFcmTocken(), "diaryReply");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		} else {
+			dairyMessageResponseModel.setResponseStatus("Failed");
+		}
+		dairyMessageResponseModel.setPosition(messageReplyRequestModel.getPosition());
+		return dairyMessageResponseModel;
+	}
+
+	@RequestMapping(value = "/reply/view", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object replyView(HttpServletRequest request,
+			@RequestBody DairyRequestServiceModel dairyRequestServiceModel) {
+		FinalMessageReplyRsponseModel finalMessageReplyRsponseModel = new FinalMessageReplyRsponseModel();
+		try {
+			List<MessageReplyResponseModel> messgeReplyList = dairyDAO.getReplies(
+					dairyRequestServiceModel.getMemberID(), dairyRequestServiceModel.getMemberType(),
+					dairyRequestServiceModel.getDeliverID());
+			finalMessageReplyRsponseModel.setResponseStatus("Success");
+			finalMessageReplyRsponseModel.setMessageLists(messgeReplyList);
+			return finalMessageReplyRsponseModel;
+		} catch (Exception e) {
+			finalMessageReplyRsponseModel.setResponseStatus("Failed");
+			finalMessageReplyRsponseModel.setMessageLists(new ArrayList<>());
+			return finalMessageReplyRsponseModel;
+		}
+	}
+
+	// FOR TESTING..............................................DON'T CARE
+	@RequestMapping(value = "/deliver/messageview", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object replymessageView(HttpServletRequest request,
+			@RequestBody DairyMessageFinalResponseModel dairyMessageFinalResponseModel) {
+		MessageDeliverResponseModel messageDeliverResponseModel = new MessageDeliverResponseModel();
+		String parentNames = "";
+		String staffName = "";
+		DiaryMessageResponseModel diaryMessageResponseModel = new DiaryMessageResponseModel();
+		DairyMessageModel dairyMessageModel = dairyMessageRepository
+				.findOne(dairyMessageFinalResponseModel.getMessageID());
+		diaryMessageResponseModel.setGroupStatus(dairyMessageModel.getGroupStatus());
+		diaryMessageResponseModel.setMessage(dairyMessageModel.getMessageContent());
+		diaryMessageResponseModel.setMessageDate(dairyMessageModel.getMessageDate().toString());
+		diaryMessageResponseModel.setMessageFlow(dairyMessageModel.getMessageFlow());
+		diaryMessageResponseModel.setMessageID(dairyMessageModel.getMessageID());
+		diaryMessageResponseModel.setTitle(dairyMessageModel.getTitle());
+		List<DairyDeliveryModel> deliveryList = new ArrayList<>();
+		List<DairyMessageDeliverModel> deliverList = dairyDAO.getDeliveredMessages(
+				dairyMessageFinalResponseModel.getMessageID(), dairyMessageModel.getGroupStatus(),
+				dairyMessageFinalResponseModel.getMessageDate());
+		for (DairyMessageDeliverModel DairyMessageDeliverModel : deliverList) {
+			DairyDeliveryModel dairyDeliveryModel = new DairyDeliveryModel();
+			dairyDeliveryModel.setDeliveryID(DairyMessageDeliverModel.getDeliverID());
+			dairyDeliveryModel.setMessageDate(DairyMessageDeliverModel.getMessageDate().toString());
+			dairyDeliveryModel.setParentName(DairyMessageDeliverModel.getStudentModel().getFatherName());
+			dairyDeliveryModel.setStaffName(DairyMessageDeliverModel.getSchoolStaffModel().getFirstName() + " "
+					+ DairyMessageDeliverModel.getSchoolStaffModel().getLastName());
+			parentNames = dairyDeliveryModel.getParentName() + "," + parentNames;
+			staffName = dairyDeliveryModel.getStaffName();
+			deliveryList.add(dairyDeliveryModel);
+		}
+		diaryMessageResponseModel.setStaffName(staffName);
+		diaryMessageResponseModel.setParentName(parentNames);
+		diaryMessageResponseModel.setMessageDeliverList(deliveryList);
+		messageDeliverResponseModel.setResponseStatus("Success");
+		messageDeliverResponseModel.setDiaryMessageResponseModel(diaryMessageResponseModel);
+		return messageDeliverResponseModel;
+	}
+
+}

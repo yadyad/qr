@@ -1,0 +1,346 @@
+package com.zs.cws.superadmin.school.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.utils.FileAction;
+import com.zs.cws.utils.UploadFiles;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Date;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/school")
+public class SchoolController {
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	ManagementRepository managementRepository;
+	int schoolId = 0;
+	int managementID = 0;
+	private static final String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	private static final int RANDOM_STRING_LENGTH = 5;
+	private static final String INTERNAL_FILE = "SchoolDownloadModelSheet.xlsx";
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementPage() {
+		ModelAndView model = new ModelAndView("super_admin_school");
+		return model;
+	}
+
+	@RequestMapping("/listAll")
+	public @ResponseBody Object superAdminListschool(HttpServletRequest request) {
+		List<SchoolModel> listSchool = schoolRepository.findAll();
+		List<SchoolModel> finalSchoolList = new ArrayList<>();
+		for (SchoolModel schoolModel : listSchool) {
+			if (schoolModel.getSchoolLogo() != null) {
+				System.out.println("LOGO URL::>" + schoolModel.getSchoolLogo());
+				System.out.println("URL BASE::>" + FileAction.getURLBase(request));
+				String[] fileName = schoolModel.getSchoolLogo().split(FileAction.getURLBase(request));
+				double fileSize = FileAction.getFileSize(request, fileName[1]);
+				if (fileSize == 0) {
+					System.out.println("YESPPPPPPP");
+					schoolModel.setSchoolLogo(FileAction.getURLBase(request) + "/resources/img/no-management.jpg");
+				} else {
+					System.out.println("NOOPPPPP");
+					schoolModel.setSchoolLogo(schoolModel.getSchoolLogo());
+				}
+			} else {
+
+				schoolModel.setSchoolLogo(FileAction.getURLBase(request) + "/resources/img/no-management.jpg");
+
+			}
+			finalSchoolList.add(schoolModel);
+		}
+		return finalSchoolList;
+	}
+
+	@RequestMapping("/bymanagement")
+	public ModelAndView superAdminManagementMemberPage(
+			@RequestParam(value = "id", required = false) Integer managementID) {
+		ModelAndView model = new ModelAndView("school_by_management");
+		if (managementID != null) {
+			this.managementID = managementID;
+		}
+
+		return model;
+	}
+
+	@RequestMapping(value = "/bymanagement/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllMembers(HttpServletRequest request) {
+		List<SchoolModel> schoolList = schoolDAO.getSchoolsByManagement(this.managementID);
+		List<SchoolModel> finalSchoolList = new ArrayList<>();
+		for (SchoolModel schoolModel : schoolList) {
+			if (schoolModel.getSchoolLogo() != null) {
+				System.out.println("LOGO URL::>" + schoolModel.getSchoolLogo());
+				System.out.println("URL BASE::>" + FileAction.getURLBase(request));
+				String[] fileName = schoolModel.getSchoolLogo().split(FileAction.getURLBase(request));
+				System.out.println("FILE(00)::>"+fileName[0]);
+				if (fileName.length > 1) {
+					double fileSize = FileAction.getFileSize(request, fileName[1]);
+					if (fileSize == 0) {
+						System.out.println("YESPPPPPPP");
+						schoolModel.setSchoolLogo(FileAction.getURLBase(request) + "resources/img/no-management.jpg");
+						System.out.println("IMG URL::>>" + schoolModel.getSchoolLogo());
+					} else {
+						System.out.println("NOOPPPPP"+schoolModel.getSchoolLogo());
+						schoolModel.setSchoolLogo(schoolModel.getSchoolLogo());
+					}
+				} else {
+					schoolModel.setSchoolLogo(FileAction.getURLBase(request) + "resources/img/No-School.jpg");
+				}
+			} else {
+				schoolModel.setSchoolLogo(FileAction.getURLBase(request) + "resources/img/No-School.jpg");
+				System.out.println("IMG URL::>>" + schoolModel.getSchoolLogo());
+
+			}
+			finalSchoolList.add(schoolModel);
+		}
+		return schoolList;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody SchoolModel schoolModel,
+			HttpSession session) {
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!schoolDAO.isAvailable(schoolModel)) {
+			schoolModel.setCreatedUser(loggedUser);
+			schoolModel.setUpdatedUser(loggedUser);
+			schoolModel.setCreatedDate(new Date());
+			schoolModel.setUpdatedDate(new Date());
+			schoolId = schoolModel.getSchoolId();
+			ManagementModel managementModel = managementRepository.findOne(this.managementID);
+			schoolModel.setManagementModel(managementModel);
+
+			if (schoolModel.getSchoolLogo() != null) {
+				String[] fileName = schoolModel.getSchoolLogo().split(FileAction.getURLBase(request));
+				if (fileName[1].equals("resources/img/No-School.jpg")) {
+					managementModel.setImageURL(null);
+				}
+			}
+			schoolRepository.save(schoolModel);
+			System.out.println("SCHOOOLLLLL" + schoolModel.toString());
+			return schoolModel;
+		} else {
+			System.out.println("DUplicate");
+			return new SchoolModel();
+		}
+
+	}
+
+	@RequestMapping(value = { "/getDropDownValue/{id}" }, method = RequestMethod.GET, produces = { "application/json" })
+	public @ResponseBody Object sdfsdg(HttpServletRequest request, @PathVariable int id, HttpSession session) {
+		SchoolModel schoolModel = schoolRepository.findOne(id);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>" + id);
+		return schoolModel;
+
+	}
+
+	@RequestMapping(value = "/downloadExcel", method = RequestMethod.GET)
+	public void downloadExcel(HttpServletResponse response) throws IOException {
+
+		File file = null;
+
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		file = new File(classloader.getResource(INTERNAL_FILE).getFile());
+
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			System.out.println("mimetype is not detectable, will take default");
+			mimeType = "application/octet-stream";
+		}
+		System.out.println("mimetype : " + mimeType);
+
+		response.setContentType(mimeType);
+
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+		response.setContentLength((int) file.length());
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+
+	}
+
+	@RequestMapping(value = { "/uploadSchool" }, method = RequestMethod.POST)
+	public ModelAndView corporateCreate(@RequestParam("uploadfile") MultipartFile[] uploadfile,
+			HttpServletRequest request, final RedirectAttributes redirectAttributes, HttpSession session) {
+		// String a = UploadFiles.uploadExcelFile(uploadfile, request);
+		String ExcelURL = UploadFiles.uploadExcelFile(uploadfile, request);
+
+		System.out.println("inside the controller" + ExcelURL);
+		List<SchoolModel> list = new ArrayList<>();
+		list = readExcelFileToPOJO(ExcelURL);
+		ManagementModel managementModel = new ManagementModel();
+
+		System.out.println("size in controllerrrrr file" + list.size());
+		for (SchoolModel schoolModel : list) {
+			managementModel.setManagementID(1);
+			System.out.println("inside list count");
+			schoolModel.setManagementModel(managementModel);
+			schoolRepository.save(schoolModel);
+		}
+		ModelAndView model = new ModelAndView("redirect:/superadmin/school");
+		List<SchoolModel> listSchool = schoolRepository.findAll();
+		return model;
+
+	}
+
+	/* METHODE FOR READ EXCEL FILE */
+	public static List<SchoolModel> readExcelFileToPOJO(String fileName) {
+		List<SchoolModel> schoolModels = new ArrayList<SchoolModel>();
+		try {
+			// Create the input stream from file
+			FileInputStream fis = new FileInputStream(fileName);
+
+			// Create Workbook instance for input stream
+			Workbook workbook = null;
+			if (fileName.toLowerCase().endsWith("xlsx")) {
+				workbook = new XSSFWorkbook(fis);
+			} else if (fileName.toLowerCase().endsWith("xls")) {
+				workbook = new HSSFWorkbook(fis);
+			}
+
+			// Get the nth sheet from the workbook
+			Sheet sheet = workbook.getSheetAt(0);
+
+			// iterate through the rows
+			SchoolModel schoolModel = new SchoolModel();
+
+			for (Row row : sheet) {
+				// JOptionPane.showMessageDialog(null,row.getRowNum());
+				// avoid first row as it is header
+				System.out.println("LAST CELLL NO:::>>>>" + row.getLastCellNum());
+				schoolModel = new SchoolModel();
+				if (row.getRowNum() == 0) {
+					continue;
+				}
+
+				for (int count = 0; count < row.getLastCellNum(); count++) {
+					Cell cell = row.getCell(count, Row.RETURN_BLANK_AS_NULL);
+
+					// whenever we get blank cell value, we avoid it and
+					// continues the loop
+					if (cell == null) {
+						continue;
+					}
+					cell.setCellType(Cell.CELL_TYPE_STRING);
+					// check the cell type
+					switch (cell.getCellType()) {
+					case Cell.CELL_TYPE_STRING:
+						if (count == 0) {
+
+							System.out.println("CELLL VALUE:::::::>>>>" + cell.getStringCellValue().trim());
+							schoolModel.setCountry(cell.getStringCellValue().trim());
+						} else if (count == 1) {
+							// schoolModel.setState(Float.parseFloat(cell.getStringCellValue()));
+							schoolModel.setState(cell.getStringCellValue().trim());
+
+						} else if (count == 2) {
+							// schoolModel.setLeavedebited(Float.parseFloat(cell.getStringCellValue()));
+							schoolModel.setDistrict(cell.getStringCellValue().trim());
+
+						} else if (count == 3) {
+							schoolModel.setLocation(cell.getStringCellValue().trim());
+							// schoolModel.setLop(Float.parseFloat(cell.getStringCellValue()));
+
+						}
+						System.out.println("out puts :: >>>>" + schoolModel.toString());
+						break;
+
+					}
+
+				}
+
+				schoolModels.add(schoolModel);
+				// System.out.println("out puts :: " + schoolModel.toString());
+			}
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("size in upload file" + schoolModels.size());
+		return schoolModels;
+	}
+
+	@RequestMapping(value = "/divsearch", method = RequestMethod.GET)
+	public ModelAndView addNewActivity() {
+		ModelAndView modelAndView = new ModelAndView("divsearch");
+		/* modelAndView.setView(view); */
+		return modelAndView;
+
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int schoolID, HttpServletRequest request) {
+		if (schoolID != 0) {
+			SchoolModel schoolModel = new SchoolModel();
+			schoolModel = schoolRepository.findOne(schoolID);
+			// String[] fileName =
+			// schoolModel.getSchoolLogo().split(FileAction.getURLBase(request));
+			// FileAction.deleteFile(request, fileName[1]);
+			schoolRepository.delete(schoolID);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/insertImage", method = RequestMethod.POST)
+	public @ResponseBody Object uploadTimeTable(@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpSession session, HttpServletRequest request) throws IOException {
+
+		SchoolModel schoolModel = new SchoolModel();
+		if (file != null) {
+			schoolModel = schoolRepository.findOne(schoolId);
+			if (schoolModel.getSchoolLogo() != null) {
+				String[] fileName = schoolModel.getSchoolLogo().split(FileAction.getURLBase(request));
+				FileAction.deleteFile(request, fileName[1]);
+			}
+			String directory = "/resources/img/" + schoolModel.getManagementModel().getManagementName() + "/"
+					+ schoolModel.getSchoolName();
+			schoolModel.setSchoolLogo(UploadFiles.uploadDocument(file, request, directory, ".jpg"));
+			schoolRepository.save(schoolModel);
+		}
+		return schoolModel;
+	}
+
+}

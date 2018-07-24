@@ -1,0 +1,24 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+public class MeetingServiceResponseModel {
+
+	String responseStatus;
+
+	public MeetingServiceResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingServiceResponseModel [responseStatus=" + responseStatus + "]";
+	}
+	
+	
+}

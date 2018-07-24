@@ -1,0 +1,147 @@
+package com.zs.cws.schooladmin.myclass.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name="cwas_myclass_details")
+public class MyClassModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int myClassId;
+	
+	
+	@OneToOne
+	@JoinColumn(name="division_id")
+	private SchoolDivModel schoolDivModel;
+	
+	
+	@OneToOne
+	@JoinColumn(name="staff_id")
+	private SchoolStaffModel schoolStaffModel;
+	
+	@Column(name="school_id")
+	private int schoolId;
+	
+	@OneToOne
+	@JoinColumn(name="subject_id")
+	private SubjectModel subjectModel;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+
+	public MyClassModel() {
+		
+	}
+
+	public int getMyClassId() {
+		return myClassId;
+	}
+
+	public void setMyClassId(int myClassId) {
+		this.myClassId = myClassId;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	
+
+	public int getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public SubjectModel getSubjectModel() {
+		return subjectModel;
+	}
+
+	public void setSubjectModel(SubjectModel subjectModel) {
+		this.subjectModel = subjectModel;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "MyClassModel [myClassId=" + myClassId + ", schoolDivModel=" + schoolDivModel + ", schoolStaffModel="
+				+ schoolStaffModel + ", schoolId=" + schoolId + ", subjectModel=" + subjectModel + ", createdBy="
+				+ createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate="
+				+ updatedDate + "]";
+	}
+
+	
+	
+	
+	
+	
+	
+}

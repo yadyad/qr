@@ -1,0 +1,71 @@
+div.box {
+    height: 100% !important;
+    padding: 0px !important;
+    overflow: auto;
+    border: 1px solid transparent;
+    background-color: transparent;
+}.center {
+    margin: 0 auto;
+    width: 2000px;
+    max-width: 95%;
+}
+
+.jplist .list .list-item
+{
+margin-top: 8px;
+    float: left;
+    background-color: #fff !important;
+    /* padding: 1px; */
+    margin: 6px;
+    padding: 11px !important;
+    border: 1px solid #e2e9e9;
+ /*    box-shadow: 7px 6px 8px #cfd6d6; */
+    min-height: 320px;
+
+   
+}
+.jplist-panel button {
+    float: left;
+    height: 30px;
+    /* box-shadow: 0 0 1px #fff; */
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    text-shadow:none;   
+    color: #ffffff;
+    background: #fff;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#fff),color-stop(100%,#efefef));
+    background: -webkit-linear-gradient(top,#fff 0,#efefef 100%);
+    background: linear-gradient(to bottom,#3b9995 0,#168681 100%);
+    margin: 10px 10px 0 0;
+}
+
+.jplist .list {
+	
+    background: rgba(51, 143, 140, 0.08) !important;
+    margin: 30px 0;
+    padding:1% !important;
+        box-shadow: 1px 2px 3px rgba(51, 143, 140, 0.25);
+}
+.jplist .title {
+    font-size: 16px !important;
+    color: #133130 !important;
+}
+
+.jplist-thumbs-view .list-item .img img {
+    min-width: 90%;
+    vertical-align: bottom;
+}
+.jplist-drop-down
+{
+	 background:#fff !important;
+}
+
+.jplist .list .list-item:hover
+{
+    box-shadow: 1px 5px 15px 0 rgba(0,0,0,.22);	
+        transition: all .3s ease-in-out;
+        cursor:pointer;
+}

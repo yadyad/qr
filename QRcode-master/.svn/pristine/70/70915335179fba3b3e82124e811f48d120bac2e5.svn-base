@@ -1,0 +1,91 @@
+package com.zs.cws.schooladmin.settings.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_fees_structure")
+public class FeesStructureModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int feesStructureID;
+
+	@Column(name = "fee_structure")
+	String feesStructure;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@Column(name = "created_date")
+	@DateTimeFormat
+	Date createdDate;
+
+	@Column(name = "created_user")
+	String createdUser;
+
+	public FeesStructureModel() {
+
+	}
+
+	public int getFeesStructureID() {
+		return feesStructureID;
+	}
+
+	public void setFeesStructureID(int feesStructureID) {
+		this.feesStructureID = feesStructureID;
+	}
+
+	public String getFeesStructure() {
+		return feesStructure;
+	}
+
+	public void setFeesStructure(String feesStructure) {
+		this.feesStructure = feesStructure;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	@Override
+	public String toString() {
+		return "FeesStructureModel [feesStructureID=" + feesStructureID + ", feesStructure=" + feesStructure
+				+ ", schoolModel=" + schoolModel + ", createdDate=" + createdDate + ", createdUser=" + createdUser
+				+ "]";
+	}
+
+}

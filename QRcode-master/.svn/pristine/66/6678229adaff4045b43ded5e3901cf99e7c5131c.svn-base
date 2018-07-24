@@ -1,0 +1,17 @@
+package com.zs.cws.schooladmin.settings.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.settings.model.AcademicModel;
+import com.zs.cws.schooladmin.settings.model.FeesStructureModel;
+
+public interface AcademicYearDAO {
+
+	 public AcademicModel getAcademicYear(int schoolID);
+
+	public boolean isAvaliableFees(int schoolID);
+
+	public List<FeesStructureModel> getFees(int schoolID);
+
+	public List<AcademicModel> findAcademicDetails(int schoolID);
+}

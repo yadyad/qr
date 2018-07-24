@@ -1,0 +1,46 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+
+public class ManagementMeetingFCM {
+
+	
+	
+	String meetingPurpose;
+	String venue;
+	String meetingTime;
+	int schoolID;
+	public ManagementMeetingFCM() {
+		
+	}
+	public String getMeetingPurpose() {
+		return meetingPurpose;
+	}
+	public void setMeetingPurpose(String meetingPurpose) {
+		this.meetingPurpose = meetingPurpose;
+	}
+	public String getVenue() {
+		return venue;
+	}
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	@Override
+	public String toString() {
+		return "ManagementMeetingFCM [meetingPurpose=" + meetingPurpose + ", venue=" + venue + ", meetingTime="
+				+ meetingTime + ", schoolID=" + schoolID + "]";
+	}
+	
+	
+	
+}

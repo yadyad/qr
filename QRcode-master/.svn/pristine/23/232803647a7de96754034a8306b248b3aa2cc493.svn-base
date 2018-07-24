@@ -1,0 +1,156 @@
+package com.zs.cws.superadmin.master.feature.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+@Table(name = "cwas_feature_master")
+public class FeatureModel {
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int rowId;
+	
+	
+	@Column(name = "feature_name")
+	String featureName;
+	
+	@Column(name = "description")
+	String description; 
+	
+	@Column(name = "url")
+	String url;
+	
+	@Column(name = "css")
+	String css;
+	
+	
+	@Column(name="feature_type")
+	String featureType;
+	
+	@Column(name = "created_by")
+	String createdUser;
+	
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	
+	@Column(name = "updated_by")
+	String updatedUser;
+	
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public FeatureModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
+	
+	
+	public String getFeatureType() {
+		return featureType;
+	}
+
+	public void setFeatureType(String featureType) {
+		this.featureType = featureType;
+	}
+
+	public int getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
+	}
+
+	public String getFeatureName() {
+		return featureName;
+	}
+
+	public void setFeatureName(String featureName) {
+		this.featureName = featureName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getCss() {
+		return css;
+	}
+
+	public void setCss(String css) {
+		this.css = css;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "FeatureModel [rowId=" + rowId + ", featureName=" + featureName + ", description=" + description
+				+ ", url=" + url + ", css=" + css + ", featureType=" + featureType + ", createdUser=" + createdUser
+				+ ", createdDate=" + createdDate + ", updatedUser=" + updatedUser + ", updatedDate=" + updatedDate
+				+ "]";
+	}
+
+	
+
+}

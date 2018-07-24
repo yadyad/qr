@@ -1,0 +1,9 @@
+package com.zs.cws.ws.hybrid.kudos.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.hybrid.kudos.model.KudosLikesModel;
+
+public interface KudosServiceRepository extends JpaRepository<KudosLikesModel, Integer> {
+
+}

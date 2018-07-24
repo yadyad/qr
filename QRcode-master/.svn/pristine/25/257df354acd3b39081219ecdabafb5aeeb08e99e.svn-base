@@ -1,0 +1,361 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<script src="${myUrl}resources/js/datatable/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="${myUrl}resources/controller/schoolAdmin/payment/AddNewStudent.js"></script>
+<body>
+	<h3 class="title title-pricing">Payment Details</h3>
+	<div ng-app="paymentRequest" id="cntrlID"
+		ng-controller="paymentRequestController">
+		<form action="${myUrl}pages/saveOrder" name="frmTransaction"
+			id="frmTransaction" class="form-horizontal form-label-left"
+			method="post">
+			<div class="fullwidth payment-form">
+				<div class="container bottomPddng commonBorder">
+					<div class="row rowsTitlebgForm2"></div>
+
+
+					<div class="form-group">
+						<div class="">
+							<strong>Transaction Details</strong>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span class="required"
+										style="color: red">*</span> Reference No
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<input type="text" class="form-control col-md-7 col-xs-12"
+									id="referenceNo" name="referenceNo" readonly="true"
+									value="${refID}">
+							</div>
+						</div>
+					</div>
+
+					<!--  outletId should be '0' -->
+					<div class="form-group" style="display: none">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span>*</span> Outlet ID
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<!-- <form:input id="apiVersion" htmlEscape="true" maxlength="45" />-->
+								<input type="text" class="form-control" id="outletId"
+									name="outletId" value="0" readonly="true">
+							</div>
+						</div>
+					</div>
+
+					<!-- apiVersion should be '2.0.0'-->
+					<div class="row rowsTitlebgForm2" style="display: none">
+						<div class="col-xs-12 col-sm-4 col-md-3">
+							<span>*</span> API Version
+						</div>
+						<div class="col-xs-12 col-sm-8 col-md-5">
+							<input type="text" class="form-control" id="apiVersion"
+								name="apiVersion" value="2.0.1" readonly>
+						</div>
+					</div>
+
+					<!-- currencyCode should be 'INR'-->
+					<div class="row rowsTitlebgForm2" style="display: none">
+						<div class="col-xs-12 col-sm-4 col-md-3">
+							<span>*</span> Currency Code
+						</div>
+						<div class="col-xs-12 col-sm-8 col-md-5">
+							<input type="text" class="form-control" id="currencyCode"
+								name="currencyCode" value="INR" readonly>
+						</div>
+					</div>
+
+					<!-- locale should be 'EN'-->
+					<div class="row rowsTitlebgForm2" style="display: none">
+						<div class="col-xs-12 col-sm-4 col-md-3">
+							<span>*</span> Locale
+						</div>
+						<div class="col-xs-12 col-sm-8 col-md-5">
+							<input type="text" class="form-control" id="locale" name="locale"
+								value="EN-US" readonly>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span class="required"
+										style="color: red">*</span> Payment Mode
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<input type="text" ng-model="planType"
+									value="{{planType}}" readonly="readonly" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span class="required"
+										style="color: red">*</span> Description
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<!--<form:input id="description" htmlEscape="true" maxlength="45" />-->
+								<input type="text" class="form-control" id="description"
+									required="required" name="description" value="">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span class="required"
+										style="color: red">*</span>Member Count
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<input type="number" ng-model="subscriptionDetails.memberCount"
+									ng-keyup="search()" id="amount" name="amount" htmlEscape="true"
+									maxlength="45" required="true">
+
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row rowsTitlebgForm2">
+							<div class="col-xs-12 col-sm-4 col-md-3">
+								<span class="required"
+										style="color: red">*</span> Amount (Includes {{taxModel.taxPercentage}}% {{taxModel.taxName}})
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-5">
+								<input type="number" id="amount" name="amount" htmlEscape="true"
+									maxlength="45" ng-model="totalAmount" value="${amount}"
+									readonly="true" required="true"> INR
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="row rowsTitlebgForm2" style="display: none">
+						<div class="col-xs-12 col-sm-4 col-md-3">
+							<span>*</span> Response URL
+						</div>
+						<div class="col-xs-12 col-sm-8 col-md-5">
+							<input id="responseURL" name="responseURL" class="form-control"
+								htmlEscape="true" maxlength="100"
+								value="http://localhost:8080/clubwizard-school/responseData">
+
+						</div>
+					</div>
+
+					<div class="row rowsTitlebgForm2" style="display: none">
+						<div class="col-xs-12 col-sm-4 col-md-3">
+							<span>*</span> Channel
+						</div>
+						<div class="col-xs-12 col-sm-8 col-md-5">
+							<input type="number" id="channel" name="channel"
+								htmlEscape="true" maxlength="2" readonly="true" value="3"
+								required="true">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-6 bdrRght"
+							style="display: none">
+							<div class="row rowsTitlebgForm activeRowBg bdrRght2">
+								<lable name="address_type" value="BILLING"> <strong>Billing
+									Address</strong></lable>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> Name
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingContactName" name="billingContactName"
+										htmlEscape="true" maxlength="45" required="true"
+										value="Rajesh D">
+								</div>
+							</div>
+
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> Address
+								</div>
+								<div class="col-xs-12 col-sm-8  col-md-9">
+									<input type="text" id="billingAddress" name="billingAddress"
+										htmlEscape="true" maxlength="45" required="true"
+										value="6-3-347/C/1,Abhinav Enclave,Panjagutta">
+								</div>
+							</div>
+
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> City
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingCity" name="billingCity" htmlEscape="true"
+										maxlength="45" required="true" value="Hyderabad">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> State
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingState" name="billingState" required="true"
+										value="Telangana">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> Postal Code
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingPostalCode" name="billingPostalCode"
+										required="true" value="500082">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> Country
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingCountry" name="billingCountry"
+										pattern="[A-za-z]{1,}" title="Text only" value="IND">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span>*</span> Email
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingEmail" name="billingEmail" required="true"
+										value="rajesh.devavarapu@gmail.com">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Telephone
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input id="billingPhone" name="billingPhone" required="true"
+										value="9989115467">
+								</div>
+							</div>
+						</div>
+						<!-- billing info end -->
+
+						<div class="col-xs-12 col-sm-12 col-md-6" style="display: none">
+							<!--  <div class="row rowsTitlebgForm activeRowBg"><lable name="address_type" value="BILLING"><strong>Shipping Address</strong></lable></div> -->
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Name
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingContactName"
+										name="shippingContactName" htmlEscape="true" maxlength="45">
+								</div>
+							</div>
+
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Address
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingAddress"
+										name="shippingAddress" htmlEscape="true" maxlength="45">
+								</div>
+							</div>
+
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> City
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingCity" name="shippingCity"
+										htmlEscape="true" maxlength="45">
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> State
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingState" name="shippingState" />
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Postal Code
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingPostalCode"
+										name="shippingPostalCode" />
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Country
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingCountry"
+										name="shippingCountry" pattern="[A-za-z]{1,}"
+										title="Text only" value="IND" />
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Email
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingEmail" name="shippingEmail" />
+								</div>
+							</div>
+							<div class="row rowsTitlebgForm">
+								<div class="col-xs-12 col-sm-4 col-md-3">
+									<span></span> Telephone
+								</div>
+								<div class="col-xs-12 col-sm-8 col-md-9">
+									<input type="hidden" id="shippingPhone" name="shippingPhone" />
+								</div>
+							</div>
+						</div>
+						<!-- billing info end -->
+					</div>
+					<!-- row end -->
+
+					<div class="row">
+						<div
+							class="col-xs-12 col-sm-12 col-md-5 col-md-offset-3  rowsTitlebgForm  topMargn2">
+							<button type="submit" ng-click="ss()"
+								class="btn btn-primary pull-right">Submit</button>
+							<!--     <input name="submitted" value="Submit" type="button" onclick="submitForm()" /> -->
+							&nbsp;
+							<!--  <input value="Reset" type="reset" /></div>-->
+							<button type="reset" class="btn btn-primary pull-right">Reset</button>
+							<span id="form_validator" style="color: red"></span>
+							<div class="col-xs-12 col-sm-12 col-md-12 topMargn2">
+								<span class="pull-right">denotes required field</span><span
+									class="pull-right">*</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+	<%-- <a href="${myUrl}">Homepage</a> --%>
+</body>
+<!-- </html> -->

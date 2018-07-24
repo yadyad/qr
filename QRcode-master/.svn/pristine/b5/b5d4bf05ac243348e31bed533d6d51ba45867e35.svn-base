@@ -1,0 +1,42 @@
+package com.zs.cws.ws.android.leave.model;
+
+public class LeaveViewRequestModel {
+	int schoolID;
+	int divisionID;
+	int lastAppliedID;
+	String status;
+	public LeaveViewRequestModel() {
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getLastAppliedID() {
+		return lastAppliedID;
+	}
+	public void setLastAppliedID(int lastAppliedDate) {
+		this.lastAppliedID = lastAppliedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "LeaveViewRequestModel [schoolID=" + schoolID + ", divisionID=" + divisionID + ", lastAppliedID="
+				+ lastAppliedID + ", status=" + status + "]";
+	}
+	
+}

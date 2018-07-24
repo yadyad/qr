@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.quota.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.quota.model.QuotaModel;
+
+public interface QuotaRepository extends JpaRepository<QuotaModel, Integer>{
+
+}

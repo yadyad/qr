@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- Main Defenition -->
+	<definition name="superadmin.master.definition"
+		template="/WEB-INF/views/superAdmin/masterForms/master_form_home.jsp">
+		<!-- <put-attribute name="title" value="ZoftSolution" /> -->
+		<put-attribute name="superadmin.script"
+			value="/WEB-INF/views/superAdmin/common/scripts.jsp" />
+		<put-attribute name="superadmin.header"
+			value="/WEB-INF/views/superAdmin/common/header.jsp" />
+		<put-attribute name="superadmin.master.leftmenu"
+			value="/WEB-INF/views/superAdmin/masterForms/leftMenu/leftMenu.jsp" />
+		<put-attribute name="superadmin.master.body" value="" />
+	</definition>
+	<!-- Super admin home page definition -->
+	<definition name="super_admin_master_department" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/department/department.jsp" />
+	</definition>
+	
+	<definition name="super_admin_department" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/department/department.jsp" />
+	</definition>
+	
+	<definition name="super_admin_managementPostion" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/managementPositions/managementPosition.jsp" />
+	</definition>
+
+	<definition name="super_admin_category" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/category/category.jsp" />
+	</definition>
+
+		<definition name="super_admin_feature" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/feature/feature.jsp" />
+	</definition>
+	
+	
+	<definition name="super_admin_subject" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/subject/subject.jsp" />
+	</definition>
+	
+	
+	<definition name="super_admin_designation" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/designation/designation.jsp" />
+	</definition>
+
+<definition name="super_admin_subscription" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/subsciption/subscription.jsp" />
+	</definition>
+	
+	
+	<definition name="super_admin_new_plan" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/planCreation/planCreation.jsp" />
+	</definition>
+	
+	<definition name="super_admin_paymentmode" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/paymentmode/paymentmode.jsp" />
+	</definition>
+	
+	<definition name="super_admin_tax" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/tax/tax.jsp" />
+	</definition>
+	
+	<definition name="super_admin_quota" extends="superadmin.master.definition">
+		<put-attribute name="superadmin.master.body"
+			value="/WEB-INF/views/superAdmin/masterForms/quota/quota.jsp" />
+	</definition>
+</tiles-definitions>

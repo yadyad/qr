@@ -1,0 +1,156 @@
+package com.zs.cws.ws.hybrid.kudos.model;
+
+import java.util.Date;
+
+public class KudosResponseModel {
+	
+	
+	private int kudosResponseId;
+	private String kudos="";
+	private String kudosDesc="";
+	private String imageUrl="";
+	private String kudosDate="";
+	private int memberId;
+	private long kudosLikeCount=0l;
+	private int schoolID;
+	private String kudosLikeStatus="";
+		
+	
+	public KudosResponseModel() {
+		
+	}
+
+	
+	
+	
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+
+
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+
+
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+
+
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+
+
+
+	public long getKudosLikeCount() {
+		return kudosLikeCount;
+	}
+
+
+
+	public void setKudosLikeCount(long kudosLikeCount) {
+		this.kudosLikeCount = kudosLikeCount;
+	}
+
+
+
+	public String getKudosLikeStatus() {
+		return kudosLikeStatus;
+	}
+
+
+
+	public void setKudosLikeStatus(String kudosLikeStatus) {
+		this.kudosLikeStatus = kudosLikeStatus;
+	}
+
+	public String getKudosDate() {
+		return kudosDate;
+	}
+
+
+
+	public void setKudosDate(String kudosDate) {
+		this.kudosDate = kudosDate;
+	}
+
+
+
+	public int getKudosResponseId() {
+		return kudosResponseId;
+	}
+
+
+	public void setKudosResponseId(int kudosResponseId) {
+		this.kudosResponseId = kudosResponseId;
+	}
+
+
+	public String getKudos() {
+		return kudos;
+	}
+
+
+	public void setKudos(String kudos) {
+		this.kudos = kudos;
+	}
+
+
+	public String getKudosDesc() {
+		return kudosDesc;
+	}
+
+
+	public void setKudosDesc(String kudosDesc) {
+		this.kudosDesc = kudosDesc;
+	}
+
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "KudosResponseModel [kudosResponseId=" + kudosResponseId + ", kudos=" + kudos + ", kudosDesc="
+				+ kudosDesc + ", imageUrl=" + imageUrl + ", kudosDate=" + kudosDate + ", memberId=" + memberId
+				+ ", kudosLikeCount=" + kudosLikeCount + ", schoolID=" + schoolID + ", kudosLikeStatus="
+				+ kudosLikeStatus + "]";
+	}
+
+
+
+
+	
+
+	
+
+
+
+	
+
+
+
+	
+
+	
+	
+
+}

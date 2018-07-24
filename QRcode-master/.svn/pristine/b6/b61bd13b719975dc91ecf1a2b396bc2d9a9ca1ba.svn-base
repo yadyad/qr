@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.driverdetails.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.driverdetails.model.DriverDetailsModel;
+
+public interface DriverDetailsRepository extends JpaRepository<DriverDetailsModel, Integer>{
+
+}

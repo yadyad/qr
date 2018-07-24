@@ -1,0 +1,19 @@
+package com.zs.cws.superadmin.schooldivision.dao;
+
+import java.util.List;
+
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+
+public interface SchoolDivDAO {
+	boolean isAvailable(SchoolDivModel schoolDivModel);
+
+	List<SchoolDivModel> getDivisionLists(int schoolID);
+	
+	SchoolDivModel getDivision(SchoolDivModel schoolDivModel,int schoolId);
+
+	int getDivisionCount(int schoolID);
+
+	boolean validDivision(int divisionID, int schoolID);
+
+	
+}

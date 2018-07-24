@@ -1,0 +1,26 @@
+package com.zs.cws.ws.android.aboutschool.model;
+
+public class AboutSchoolRequest {
+	
+	int schoolID;
+
+	public AboutSchoolRequest() {
+		
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	@Override
+	public String toString() {
+		return "AboutSchoolRequest [schoolID=" + schoolID + "]";
+	}
+	
+	
+
+}

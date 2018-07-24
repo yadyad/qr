@@ -1,0 +1,547 @@
+package com.zs.cws.superadmin.schoolstaff.controller;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.master.category.dao.CategoryDAO;
+import com.zs.cws.superadmin.master.category.model.CategoryModel;
+import com.zs.cws.superadmin.master.category.repository.CategoryRepository;
+import com.zs.cws.superadmin.master.department.dao.DepartmentDAO;
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+import com.zs.cws.superadmin.master.department.repository.DepartmentRepository;
+import com.zs.cws.superadmin.master.designation.dao.DesignationDAO;
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+import com.zs.cws.superadmin.master.designation.repository.DesignationRepository;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.LoginRepository;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.utils.MailSender;
+import com.zs.cws.utils.MailSentPOJO;
+import com.zs.cws.utils.UploadFiles;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/schoolStaff")
+public class SchoolStaffController {
+	@Autowired
+	DesignationRepository designationRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	DepartmentRepository departmentRepository;
+	@Autowired
+	ManagementRepository managementRepository;
+	int schoolId;
+	@Autowired
+	LoginRepository loginRepository;
+	@Autowired
+	CategoryRepository categoryRepository;
+	@Autowired
+	CategoryDAO categoryDAO;
+	@Autowired
+	DepartmentDAO departmentDAO;
+	@Autowired
+	DesignationDAO designationDAO;
+	public static int faild = 0;
+	public static int succesCount = 0;
+	public static int excelCount = 0;
+	public static List<SchoolStaffModel> failedList = new ArrayList<>();
+	private static final String INTERNAL_FILE = "StaffDownloadModelSheet.xlsx";
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementPage(@RequestParam(value = "id", required = false) Integer schoolId) {
+		ModelAndView model = new ModelAndView("super_admin_school_staff");
+		if (schoolId != null)
+			this.schoolId = schoolId;
+		return model;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllSchoolStaff() {
+		List<LoginModel> staffList = schoolStaffDAO.getStaffBySchool(this.schoolId);
+		return staffList;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody LoginModel loginModel,
+			HttpSession session) {
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		loginModel.getSchoolStaffModel().setCreatedUser(loggedUser);
+		loginModel.getSchoolStaffModel().setCreatedDate(new Date());
+		loginModel.getSchoolStaffModel().setUpdatedUser(loggedUser);
+		loginModel.getSchoolStaffModel().setUpdatedDate(new Date());
+		loginModel.getSchoolStaffModel().setModifiedDate(new Date());
+		SchoolModel schoolModel = schoolRepository.findOne(schoolId);
+		DepartmentModel departmentModel = departmentRepository
+				.findOne(loginModel.getSchoolStaffModel().getDepartmentModel().getRowId());
+		loginModel.getSchoolStaffModel().setDepartmentModel(departmentModel);
+		DesignationModel designationModel = designationRepository
+				.findOne(loginModel.getSchoolStaffModel().getDesignationModel().getRowId());
+		loginModel.getSchoolStaffModel().setDesignationModel(designationModel);
+		CategoryModel categoryModel = categoryRepository
+				.findOne(loginModel.getSchoolStaffModel().getCategoryModel().getRowId());
+		loginModel.getSchoolStaffModel().setCategoryModel(categoryModel);
+		loginModel.getSchoolStaffModel().setSchoolModel(schoolModel);
+		loginModel.setUserName(loginModel.getSchoolStaffModel().getPhone());
+
+		if (!schoolStaffDAO.isAvailable(loginModel,schoolId)) {
+
+			if (loginModel.getLoginId() != 0) {
+			} else {
+				loginModel.setPassword("123");
+				loginModel.setEnabled(1);
+				loginModel.setRole("ROLE_STAFF");
+			}
+			schoolStaffRepository.save(loginModel.getSchoolStaffModel());
+			loginModel = loginRepository.save(loginModel);
+			return loginModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+		// return loginModel;
+
+	}
+
+	/*
+	 * @RequestMapping(value = { "/getDropDownValue1/{id}" }, method =
+	 * RequestMethod.GET, produces = { "application/json" })
+	 * public @ResponseBody Object getDesignation(HttpServletRequest
+	 * request, @PathVariable int id, HttpSession session) { DesignationModel
+	 * designationModel = designationRepository.findOne(id); return
+	 * designationModel;
+	 * 
+	 * }
+	 * 
+	 * @RequestMapping(value = { "/getDropDownValue/{id}" }, method =
+	 * RequestMethod.GET, produces = { "application/json" })
+	 * public @ResponseBody Object getDept(HttpServletRequest
+	 * request, @PathVariable int id, HttpSession session) { DepartmentModel
+	 * departmentModel = departmentRepository.findOne(id); return
+	 * departmentModel;
+	 * 
+	 * }
+	 */
+
+	@RequestMapping(value = "/deleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] schoolStaffIds) {
+		for (int staffId : schoolStaffIds) {
+			if (staffId != 0) {
+				List<LoginModel> staffList = schoolStaffDAO.getStaffBySchool(this.schoolId);
+				for (LoginModel loginModel : staffList) {
+					loginModel.getSchoolStaffModel().setModifiedDate(new Date());
+					loginModel.getSchoolStaffModel().setCreatedDate(new Date());
+					loginModel.getSchoolStaffModel().setUpdatedDate(new Date());
+					schoolStaffRepository.save(loginModel.getSchoolStaffModel());
+				}
+
+				schoolStaffRepository.delete(staffId);
+
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int staffId) {
+		if (staffId != 0) {
+			schoolStaffRepository.delete(staffId);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/isPhoneRegistered/{phone}", method = RequestMethod.GET)
+	public @ResponseBody Object isRegisteredPhone(@PathVariable("phone") String phone) {
+		return schoolStaffDAO.isRegisteredPhone(phone);
+	}
+
+	@RequestMapping(value = "/makeAdmin/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object makeAdmins(@PathVariable("id") int staffID) {
+
+		System.out.println("MAKE ADMIN");
+		LoginModel loginModel = new LoginModel();
+		loginModel = schoolStaffDAO.getLoginModel(staffID);
+		if (staffID != 0) {
+			if (loginModel.getRole().equals("ROLE_SCHOOL_ADMIN")) {
+				loginModel.setRole("ROLE_STAFF");
+			} else {
+				loginModel.setRole("ROLE_SCHOOL_ADMIN");
+			}
+
+			loginRepository.save(loginModel);
+			MailSentPOJO mailSentPOJO = new MailSentPOJO();
+			mailSentPOJO.setFrom("clubwizardschool@gmail.com");
+			mailSentPOJO.setTo(loginModel.getSchoolStaffModel().getEmailId());
+			mailSentPOJO.setSubject("Role Change");
+			String content = "Your current role is changed as SCHOOL ADMIN and your password is : "
+					+ loginModel.getPassword() + " ";
+			mailSentPOJO.setContent(content);
+
+			Thread t = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						MailSender.sendMail(mailSentPOJO);
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			t.start();
+		}
+		return loginModel;
+	}
+
+	// METHODE FOR UPLOAD EXCEL FILES
+	@RequestMapping(value = { "/uploadschoolStaff" }, method = RequestMethod.POST)
+	public ModelAndView corporateCreate(@RequestParam("uploadfile") MultipartFile[] uploadfile,
+			HttpServletRequest request, final RedirectAttributes redirectAttributes, HttpSession session) {
+		// String a = UploadFiles.uploadExcelFile(uploadfile, request);
+		failedList.clear();
+		ModelAndView model = new ModelAndView("redirect:/superadmin/schoolStaff");
+		try {
+			String ExcelURL = UploadFiles.uploadExcelFile(uploadfile, request);
+			String loggedUser = (String) session.getAttribute("loggedUser");
+			System.out.println("inside the controller" + ExcelURL);
+			List<SchoolStaffModel> excelList = new ArrayList<>();
+			excelList = readExcelFileToPOJO(ExcelURL);
+			if (excelList.size()==0) {
+				model.addObject("msg","Please use the downloaded excel");
+				model.setViewName("redirect:/superadmin/schoolStaff/excelFailure");
+				return model;
+			}
+			System.out.println("size in controllerrrrr file" + excelList.toString());
+			System.out.println("size in controllerrrrr file" + excelList.size());
+			// SAVE EXCEL DETAILS
+
+			for (SchoolStaffModel schoolStaffModel : excelList) {
+				LoginModel loginModel = new LoginModel();
+				schoolStaffModel.setCreatedUser(loggedUser);
+				schoolStaffModel.setCreatedDate(new Date());
+				SchoolModel schoolModel = schoolRepository.findOne(schoolId);
+				CategoryModel categoryModel = categoryDAO
+						.selectCategoryByname(schoolStaffModel.getCategoryModel().getCategory());
+				DepartmentModel departmentModel = departmentDAO
+						.getDepartmentByname(schoolStaffModel.getDepartmentModel().getDepartment());
+				DesignationModel designationModel = designationDAO.getDesignationByname(
+						schoolStaffModel.getDesignationModel().getDesignation(), departmentModel.getRowId());
+				schoolStaffModel.setCategoryModel(categoryModel);
+				schoolStaffModel.setDepartmentModel(departmentModel);
+				schoolStaffModel.setDesignationModel(designationModel);
+				/*
+				 * if (!studentDAO.isAvailable(studentModel)) {
+				 * studentRepository.save(studentModel); } else { //
+				 * failedList.add(studentModel); }
+				 */
+				loginModel.setSchoolStaffModel(schoolStaffModel);
+				loginModel.setUserName(schoolStaffModel.getPhone());
+
+				if (!schoolStaffDAO.isAvailable(loginModel,schoolId)) {
+
+					if (loginModel.getLoginId() != 0) {
+					} else {
+						loginModel.setPassword("123");
+						loginModel.setEnabled(1);
+						loginModel.setRole("ROLE_STAFF");
+					}
+					schoolStaffModel.setSchoolModel(schoolModel);
+					SchoolStaffModel staffModel = schoolStaffRepository.save(loginModel.getSchoolStaffModel());
+					System.out.println("Staff Model:::>>>" + staffModel.getSchoolStaffId());
+					loginModel = loginRepository.save(loginModel);
+					// return loginModel;
+				} else {
+					System.out.println("DUplicate");
+					failedList.add(schoolStaffModel);
+					// return null;
+				}
+
+			}
+
+			faild = 0;
+			succesCount = 0;
+			
+			excelCount = 0;
+			// JOptionPane.showConfirmDialog(null, "ex" + faild + "failed" +
+			// excelCount);
+			faild = failedList.size();
+			succesCount = excelList.size() - failedList.size();
+			
+			excelCount = excelList.size();
+			// JOptionPane.showConfirmDialog(null, "ex" + excelList.size() +
+			// "failed" + failedList.size());
+			if (faild >= 0) {
+				model.setViewName("redirect:/superadmin/schoolStaff/excelFailure");
+				model.addObject("msg","Duplicate phone number or email");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.setViewName("redirect:/superadmin/schoolStaff/excelFailure");
+			model.addObject("msg","Please use the downloaded excel");
+
+		}
+		// SUBSCRIPTION CALCULATION END
+
+		// model.addObject("a", attributeValue)
+		// List<StudentModel> listStudent =
+		// studentDAO.getStudentBySchool(schoolId);
+		return model;
+	}
+
+	@RequestMapping(value = { "/excelFailure" }, method = RequestMethod.GET)
+	public ModelAndView excelFailure(HttpServletRequest request, HttpSession session,@RequestParam(value="msg",required=false) String msg) {
+		ModelAndView model = new ModelAndView("staff_excel_failure");
+		model.addObject("excelCount", excelCount);
+		model.addObject("successCount", succesCount);
+		model.addObject("failureCount", faild);
+		model.addObject("failedList", failedList);
+		model.addObject("msg", msg);
+		return model;
+	}
+
+	// EXCEL IMPORT
+	/* METHODE FOR READ EXCEL FILE */
+	public static List<SchoolStaffModel> readExcelFileToPOJO(String fileName) {
+		List<SchoolStaffModel> schoolStaffModels = new ArrayList<SchoolStaffModel>();
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+
+			// Create Workbook instance for input stream
+			Workbook workbook = null;
+			if (fileName.toLowerCase().endsWith("xlsx")) {
+				workbook = new XSSFWorkbook(fis);
+			} else if (fileName.toLowerCase().endsWith("xls")) {
+				workbook = new HSSFWorkbook(fis);
+			}
+
+			// Get the nth sheet from the workbook
+			Sheet sheet = workbook.getSheetAt(0);
+
+			// iterate through the rows
+			SchoolStaffModel schoolStaffModel = new SchoolStaffModel();
+			DepartmentModel departmentModel = new DepartmentModel();
+			DesignationModel designationModel = new DesignationModel();
+			CategoryModel categoryModel = new CategoryModel();
+			for (Row row : sheet) {
+				// JOptionPane.showMessageDialog(null,row.getRowNum());
+				// avoid first row as it is header
+				System.out.println("LAST CELLL NO:::>>>>" + row.getLastCellNum());
+				schoolStaffModel = new SchoolStaffModel();
+				
+				
+				
+				
+				
+				if (row.getRowNum() == 0) {
+					
+					
+					
+					
+					boolean firstName = false;
+					boolean lastName = false;
+					boolean quali = false;
+					boolean dept = false;
+					boolean desgn = false;
+					boolean phone = false;
+					boolean email = false;
+					boolean category=false;
+					boolean gender=false;
+
+					for (int count = 0; count < row.getLastCellNum(); count++) {
+
+						Cell cell = row.getCell(count, Row.RETURN_BLANK_AS_NULL);
+						if (cell == null) {
+							continue;
+						}
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						// check the cell type
+						switch (cell.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+
+							// =====================================================================================================
+
+							if (count == 0) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("First name")) {
+									firstName = true;
+								}
+
+							} else if (count == 1) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Last name")) {
+									lastName = true;
+								}
+
+							} else if (count == 2) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Qualification")) {
+									quali = true;
+								}
+							} else if (count == 3) {
+
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Department")) {
+									dept = true;
+								}
+							} else if (count == 4) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Designation")) {
+									desgn = true;
+								}
+							} else if (count == 5) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Category")) {
+									category = true;
+								}
+							} else if (count == 6) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Email")) {
+									email = true;
+								}
+							} else if (count == 7) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Phone")) {
+									phone = true;
+								}
+							} else if (count == 8) {
+								if (cell.getStringCellValue().trim().equalsIgnoreCase("Gender")) {
+									gender = true;
+								}
+							} 
+
+							// =====================================================================================================
+
+						}
+					}
+					if (firstName == true && lastName == true && dept == true && desgn == true && category == true
+							&& email == true && phone == true && gender == true) {
+						continue;
+					} else {
+						//UserCreation creation = new UserCreation();
+						//creation.setUserName("EXCEL FAIL");
+						//userCreations.add(creation);
+						break;
+					}
+					
+					
+					
+					
+					
+				}
+
+				for (int count = 0; count < row.getLastCellNum(); count++) {
+					Cell cell = row.getCell(count, Row.RETURN_BLANK_AS_NULL);
+
+					// whenever we get blank cell value, we avoid it and
+					// continues the loop
+					if (cell == null) {
+						continue;
+					}
+					cell.setCellType(Cell.CELL_TYPE_STRING);
+					// check the cell type
+					switch (cell.getCellType()) {
+					case Cell.CELL_TYPE_STRING:
+						if (count == 0) {
+							schoolStaffModel.setFirstName(cell.getStringCellValue().trim());
+
+						} else if (count == 1) {
+							schoolStaffModel.setLastName(cell.getStringCellValue().trim());
+
+						} else if (count == 2) {
+							schoolStaffModel.setQualification(cell.getStringCellValue().trim());
+						} else if (count == 3) {
+							departmentModel.setDepartment(cell.getStringCellValue().trim());
+						} else if (count == 4) {
+							designationModel.setDesignation(cell.getStringCellValue().trim());
+						} else if (count == 5) {
+							categoryModel.setCategory(cell.getStringCellValue().trim());
+						} else if (count == 6) {
+							schoolStaffModel.setEmailId(cell.getStringCellValue().trim());
+						} else if (count == 7) {
+							schoolStaffModel.setPhone(cell.getStringCellValue().trim());
+						} else if (count == 8) {
+							schoolStaffModel.setGender(cell.getStringCellValue().trim());
+						}
+						schoolStaffModel.setCategoryModel(categoryModel);
+						schoolStaffModel.setDepartmentModel(departmentModel);
+						schoolStaffModel.setDesignationModel(designationModel);
+						//break;
+					}
+				}
+				schoolStaffModels.add(schoolStaffModel);
+			}
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("size in upload file" + schoolStaffModels.size());
+		return schoolStaffModels;
+	}
+
+	// DOWNLOAD EXCEL
+	@RequestMapping(value = "/downloadExcel", method = RequestMethod.GET)
+	public void downloadExcel(HttpServletResponse response) throws IOException {
+
+		File file = null;
+
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		file = new File(classloader.getResource(INTERNAL_FILE).getFile());
+
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			System.out.println("mimetype is not detectable, will take default");
+			mimeType = "application/octet-stream";
+		}
+		System.out.println("mimetype : " + mimeType);
+
+		response.setContentType(mimeType);
+
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+		response.setContentLength((int) file.length());
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+
+	}
+}

@@ -1,0 +1,98 @@
+package com.zs.cws.ws.android.attendence.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.ws.android.attendence.model.AttendanceModel;
+import com.zs.cws.ws.android.attendence.model.StudentAttendanceResponseModel;
+import com.zs.cws.ws.hybrid.attendance.model.Division;
+import com.zs.cws.ws.hybrid.attendance.model.HybridAttendanceRequestModel;
+
+@Repository
+@Transactional
+public class AttendanceIMPL implements AttendanceDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<AttendanceModel> getAttendanceForDate(int schoolID, int divisionID, String attendanceDate) {
+		String query = "From AttendanceModel where schoolModel.schoolId = '" + schoolID
+				+ "' and schoolDivModel.schoolDivId = '" + divisionID + "' and date = '" + attendanceDate + "' ";
+		@SuppressWarnings("unchecked")
+		List<AttendanceModel> attendanceModels = entityManager.createQuery(query).getResultList();
+		return attendanceModels;
+	}
+
+	@Override
+	public void deleteGivenDateAttendance(String attendanceDate, int schoolID, int divisionID) {
+
+		int deletedCount = entityManager
+				.createQuery("Delete from AttendanceModel where schoolModel.schoolId = '" + schoolID
+						+ "' and schoolDivModel.schoolDivId = '" + divisionID + "' and date = '" + attendanceDate + "'")
+				.executeUpdate();
+		System.out.println("DELETE COUNT>>>>>" + deletedCount);
+	}
+
+	@Override
+	public Division getPresentCount(HybridAttendanceRequestModel hybridAttendanceRequestModel, Division division) {
+		String query = "SELECT COUNT(*) FROM AttendanceModel WHERE schoolModel.schoolId="
+				+ hybridAttendanceRequestModel.getSchoolID() + " AND schoolDivModel.schoolDivId='"
+				+ division.getDivisionID() + "' AND date = '" + hybridAttendanceRequestModel.getAttendanceRequestDate()
+				+ "' AND isAbsent='true'";
+		long divisionCount = (Long) entityManager.createQuery(query).getSingleResult();
+		division.setAbsent(String.valueOf(divisionCount));
+		String query1 = "SELECT COUNT(*) FROM StudentModel WHERE schoolModel.schoolId="
+				+ hybridAttendanceRequestModel.getSchoolID() + " AND schoolDivModel.schoolDivId='"
+				+ division.getDivisionID() + "'";
+		long divisionCount1 = (Long) entityManager.createQuery(query1).getSingleResult();
+
+		division.setPresent(String.valueOf(divisionCount1 - divisionCount));
+		division.setTotal(String.valueOf(divisionCount1));
+		return division;
+	}
+
+	@Override
+	public boolean isAttendanceAvailable(String attendanceDate, int schoolID) {
+		String query = "SELECT COUNT(*) FROM AttendanceModel WHERE schoolModel.schoolId=" + schoolID + " AND date='"
+				+ attendanceDate + "'";
+		long available = (long) entityManager.createQuery(query).getSingleResult();
+		return available > 0;
+	}
+
+	@Override
+	public List<StudentAttendanceResponseModel> getStudentsAttendanceList(int startYear, int startmonth, int endYear,
+			int endMonth, int studentID) {
+		System.err.println(">>>>"+startYear+"sss"+startmonth);
+		String query = "FROM AttendanceModel WHERE studentModel.studentId=" + studentID + " AND (YEAR(date)>="
+				+ startYear + " AND YEAR(date)<=" + endYear + ")";
+		@SuppressWarnings("unchecked") 
+		List<AttendanceModel> attendanceModels = entityManager.createQuery(query).getResultList();
+
+		List<StudentAttendanceResponseModel> studentsAttendanceList = new ArrayList<>();
+		for (AttendanceModel attendanceModel : attendanceModels) {
+			StudentAttendanceResponseModel studentAttendanceResponseModel = new StudentAttendanceResponseModel();
+			studentAttendanceResponseModel.setDate(attendanceModel.getDate());
+			if (attendanceModel.getIsAbsent().equalsIgnoreCase("true")) {
+				studentAttendanceResponseModel.setStatus("Absent");
+				studentAttendanceResponseModel.setMinutes("0");
+			} else {
+				studentAttendanceResponseModel.setStatus("Late");
+				studentAttendanceResponseModel.setMinutes(attendanceModel.getLateTime());
+			}
+			studentsAttendanceList.add(studentAttendanceResponseModel);
+		}
+		List<StudentAttendanceResponseModel> finalAttendanceList = new ArrayList<>();
+		for (StudentAttendanceResponseModel studentAttendanceResponseModel : studentsAttendanceList) {
+			String[] temDate = studentAttendanceResponseModel.getDate().split("-");
+			if (((startYear == Integer.parseInt(temDate[0]) && (startmonth <= Integer.parseInt(temDate[1]))))||((endYear==Integer.parseInt(temDate[0]))&&(endMonth>=Integer.parseInt(temDate[1])))) {
+				finalAttendanceList.add(studentAttendanceResponseModel);
+			}
+		}
+		return finalAttendanceList;
+	}
+
+}

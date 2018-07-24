@@ -1,0 +1,31 @@
+package com.zs.cws.ws.android.staffdetails.model;
+
+import java.util.List;
+
+public class StaffDetailsResponseModel {
+	
+	String status;
+	List<StaffDetails> staffs;
+	public StaffDetailsResponseModel() {
+		
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public List<StaffDetails> getStaffs() {
+		return staffs;
+	}
+	public void setStaffs(List<StaffDetails> staffs) {
+		this.staffs = staffs;
+	}
+	@Override
+	public String toString() {
+		return "StaffDetailsResponseModel [status=" + status + ", staffs=" + staffs + "]";
+	}
+	
+	
+
+}

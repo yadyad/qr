@@ -1,0 +1,83 @@
+package com.zs.cws.superadmin.master.paymentmode.controller;
+
+import java.util.Date;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.zs.cws.superadmin.master.paymentmode.dao.PaymentModeDAO;
+import com.zs.cws.superadmin.master.paymentmode.model.PaymentModeModel;
+import com.zs.cws.superadmin.master.paymentmode.repository.PaymentModeRepository;
+
+@Controller
+@RequestMapping("superadmin/paymentmode")
+public class PaymentModeController {
+	
+	
+	@Autowired
+	PaymentModeRepository paymentModeRepository;
+	
+	@Autowired
+	PaymentModeDAO paymentModeDAO;
+
+	@RequestMapping()
+	public ModelAndView viewPlanCreation() {
+		
+		ModelAndView modelAndView = new ModelAndView("super_admin_paymentmode");
+	modelAndView.addObject("paymentmode", "active");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllPlans() {
+		List<PaymentModeModel> paymentModeModels= paymentModeRepository.findAll();
+		return paymentModeModels;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody PaymentModeModel paymentModeModel,
+			HttpSession session) {
+		
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!paymentModeDAO.isAvailable(paymentModeModel)) {
+			paymentModeModel.setCreatedBy(loggedUser);
+			paymentModeModel.setUpdatedBy(loggedUser);
+			paymentModeModel.setCreatedDate(new Date());
+			paymentModeModel.setUpdatedDate(new Date());
+		
+			paymentModeRepository.save(paymentModeModel);
+			
+			return paymentModeModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	
+	@RequestMapping(value = "/paydeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] payIDs) {
+		for (int paymentId : payIDs) {
+			if (paymentId != 0) {
+				paymentModeRepository.delete(paymentId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/paydeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int payId) {
+		if (payId != 0) {
+			paymentModeRepository.delete(payId);
+			return true;
+		}
+		return false;
+	}
+}

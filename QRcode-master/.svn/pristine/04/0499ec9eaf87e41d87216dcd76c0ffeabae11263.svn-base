@@ -1,0 +1,27 @@
+package com.zs.cws.superadmin.home;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin")
+public class SuperAdminHomeController {
+	@RequestMapping()
+	public ModelAndView superAdminHome() {
+		ModelAndView model = new ModelAndView("managementHome");
+//		ModelAndView model = new ModelAndView("superadmin_home");
+		return model;
+	}
+
+	@RequestMapping(value = "/config", method = RequestMethod.GET)
+	public ModelAndView addNewActivity() {
+//		ModelAndView modelAndView = new ModelAndView("managementHome");
+		ModelAndView model = new ModelAndView("superadmin_home");
+		return model;
+	}
+
+}

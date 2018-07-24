@@ -1,0 +1,301 @@
+package com.zs.cws.superadmin.schoolstaff.dao;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.license.model.SchoolLicenceModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalUpcomingMeetingRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalModel;
+
+@Repository
+@Transactional
+public class SchoolStaffIMPL implements SchoolStaffDAO {
+	@Autowired
+	EntityManager entityManager;
+	// @Autowired
+	// SchoolSta schoolRepository;
+
+	public boolean isAvailable(SchoolStaffModel schoolStaffModel) {
+
+		String query = "";
+		if (schoolStaffModel.getSchoolStaffId() != 0) {
+			query = "select count(*) from SchoolStaffModel where firstName=? and lastName =? and schoolId <> "
+					+ schoolStaffModel.getSchoolStaffId() + "";
+		} else {
+			query = "select count(*) from SchoolStaffModel where firstName=? and lastName =? ";
+		}
+		Query query1 = entityManager.createQuery(query);
+		query1.setParameter(1, schoolStaffModel.getFirstName().trim());
+		query1.setParameter(2, schoolStaffModel.getLastName().trim());
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+
+	}
+
+	@Override
+
+	public List<LoginModel> getStaffBySchool(int schoolId) {
+		String query = "from LoginModel where schoolStaffModel.schoolModel.schoolId=" + schoolId
+				+ " order by loginId DESC";
+		@SuppressWarnings("unchecked")
+		List<LoginModel> staffList = entityManager.createQuery(query).getResultList();
+		return staffList;
+	}
+
+	@Override
+	public SchoolStaffModel getLastInsertedStaff() {
+		// TODO Auto-generated method stub
+		String query = "select t from SchoolStaffModel t order by t.schoolStaffId desc";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModelList = entityManager.createQuery(query).setMaxResults(1).getResultList();
+		return schoolStaffModelList.get(0);
+	}
+
+	@Override
+	public boolean isRegisteredPhone(String phone) {
+		String query = "SELECT COUNT(phone) FROM SchoolStaffModel WHERE phone='" + phone + "'";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public int getStaffCount(int schoolID) {
+		String query = "SELECT COUNT(*) FROM SchoolStaffModel WHERE schoolModel.schoolId=" + schoolID + "";
+		long staffCount = (Long) entityManager.createQuery(query).getSingleResult();
+		System.out.println("STAFFF COUNT>>>>>>>" + staffCount);
+		return (int) staffCount;
+	}
+
+	@Override
+	public LoginModel getLoginDetails(String phone) {
+		String query = "from LoginModel where userName='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<LoginModel> loginList = entityManager.createQuery(query).getResultList();
+		return loginList.get(0);
+	}
+
+	@Override
+	public LoginModel getLoginModel(int staffId) {
+		String query = "From LoginModel where schoolStaffModel.schoolStaffId='" + staffId + "'";
+		LoginModel loginModel = (LoginModel) entityManager.createQuery(query).getSingleResult();
+		return loginModel;
+	}
+
+	@Override
+	public boolean isValidMemberStaff(int memberId) {
+
+		System.out.println("MEMBERIDDDD" + memberId);
+		// System.out.println("PRRRR" +Principal);
+		String query = "From SchoolStaffModel where  schoolStaffId=" + memberId + " ";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> staffModels = entityManager.createQuery(query).getResultList();
+
+		System.out.println("LISTTTTT" + staffModels.size());
+		if (staffModels.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public List<SchoolStaffModel> getStaffBySchoolForMyClass(int schoolId) {
+		String query = "From SchoolStaffModel where schoolModel.schoolId = " + schoolId
+				+ " order by schoolStaffId desc";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModels = entityManager.createQuery(query).getResultList();
+		return schoolStaffModels;
+	}
+
+	public static void main(String args[]) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateInString = "07/06/2013";
+
+		try {
+
+			Date date = formatter.parse(dateInString);
+			System.out.println(date);
+			System.out.println(formatter.format(date));
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean isValidMemberParent(int memberId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValidMemberStaffLike(int memberId) {
+		String query = "From SchoolStaffModel where schoolStaffId = '" + memberId + "'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModels = entityManager.createQuery(query).getResultList();
+		if (schoolStaffModels.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public List<SchoolLicenceModel> getSchoolsByPhone(String phone) {
+		int staffID = 0;
+		String staffName = "";
+		String query = "From SchoolStaffModel where phone ='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> resultList = entityManager.createQuery(query).getResultList();
+		List<SchoolModel> schoolModels = new ArrayList<>();
+
+		for (int i = 0; i < resultList.size(); i++) {
+			boolean status = false;
+			for (int j = 0; j < schoolModels.size(); j++) {
+				if (resultList.get(i).getSchoolModel().getSchoolId() == schoolModels.get(j).getSchoolId()) {
+					status = true;
+				}
+			}
+			if (!status) {
+				schoolModels.add(resultList.get(i).getSchoolModel());
+				staffID = resultList.get(i).getSchoolStaffId();
+				staffName = resultList.get(i).getFirstName() + " " + resultList.get(i).getLastName();
+			}
+		}
+
+		List<SchoolLicenceModel> finalSchoolList = new ArrayList<>();
+		for (SchoolModel schoolModel : schoolModels) {
+			SchoolLicenceModel schoolLicenceModel = new SchoolLicenceModel();
+			schoolLicenceModel.setSchoolID(schoolModel.getSchoolId());
+			schoolLicenceModel.setSchoolName(schoolModel.getSchoolName());
+			schoolLicenceModel.setSchoolLogo(schoolModel.getSchoolLogo());
+			schoolLicenceModel.setStaffID(staffID);
+			schoolLicenceModel.setStaffName(staffName);
+			finalSchoolList.add(schoolLicenceModel);
+		}
+		return finalSchoolList;
+	}
+
+	@Override
+	public boolean isTeacher(String phone, int schoolID) {
+		String query = "From SchoolStaffModel where phone =? AND schoolModel.schoolId=" + schoolID;
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).setParameter(1, phone).getResultList();
+		if (resultList.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isAvailable(LoginModel loginModel,int schoolID) {
+		String query = "";
+		if (loginModel.getSchoolStaffModel().getSchoolStaffId() != 0) {
+			query = "select count(*) from SchoolStaffModel where (emailId=? or phone=?) and schoolStaffId <> "
+					+ loginModel.getSchoolStaffModel().getSchoolStaffId() + " and schoolModel.schoolId='"
+					+ schoolID + "' ";
+		} else {
+			query = "select count(*) from SchoolStaffModel where (emailId=? or phone=?)  and schoolModel.schoolId='"+schoolID+"' ";
+		}
+
+		Query query1 = entityManager.createQuery(query);
+		query1.setParameter(1, loginModel.getSchoolStaffModel().getEmailId().trim());
+		query1.setParameter(2, loginModel.getSchoolStaffModel().getPhone().trim());
+
+		boolean exists = (Long) (query1).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public int getStaffID(String phone) {
+		String query = "From SchoolStaffModel where phone =?";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> resultList = entityManager.createQuery(query).setParameter(1, phone).getResultList();
+		if (resultList.isEmpty()) {
+			return 0;
+		}
+		return resultList.get(0).getSchoolStaffId();
+	}
+
+	@Override
+	public List<SchoolStaffModel> getStaffsForMeeting(int schoolID) {
+		String query = "From SchoolStaffModel where schoolModel.schoolId = " + schoolID
+				+ " AND categoryModel.category='Teaching'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModels = entityManager.createQuery(query).getResultList();
+		return schoolStaffModels;
+	}
+
+	/*
+	 * @Override public boolean isValidMemberStaff(int memberId,String
+	 * memberType) { String query=
+	 * "From SchoolStaffModel where schoolStaffId = '"+memberId+
+	 * "' and designationModel.designation = '"+Principal+"'" return false; }
+	 */
+
+	@Override
+	public boolean isAnyUpdation(int schoolID, String modifiedDate) {
+
+		String query = "select count(*) from SchoolStaffModel where schoolModel.schoolId=" + schoolID
+				+ " AND modifiedDate>'" + modifiedDate + "'";
+
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public List<SchoolStaffModel> getStaffsByPhone(String phoneNumber) {
+		String query = "From SchoolStaffModel where phone = '" + phoneNumber + "'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModels = entityManager.createQuery(query).getResultList();
+		return schoolStaffModels;
+	}
+
+	@Override
+	public List<LoginModel> getStaffServiceBySchool(int schoolID, String lastModifiedDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ManagementPrincipalModel> getPrincipalsFromManagement(int managementID) {
+		String query = "From SchoolStaffModel where schoolModel.managementModel.managementID = " + managementID
+				+ " AND designationModel.designation='Principal'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> schoolStaffModels = entityManager.createQuery(query).getResultList();
+		List<ManagementPrincipalModel> principalList = new ArrayList<>();
+		for (SchoolStaffModel schoolStaffModel : schoolStaffModels) {
+			ManagementPrincipalModel managementPrincipalModel = new ManagementPrincipalModel();
+			managementPrincipalModel.setPrincipalID(schoolStaffModel.getSchoolStaffId());
+			managementPrincipalModel
+					.setPrincipalName(schoolStaffModel.getFirstName() + " " + schoolStaffModel.getLastName());
+			principalList.add(managementPrincipalModel);
+		}
+		return principalList;
+	}
+
+	@Override
+	public List<ManagementPrincipalMeetingStatusModel> getPrincipalMeetings(
+			PrincipalUpcomingMeetingRequestModel principalUpcomingMeetingRequestModel) {
+		String query = "From ManagementPrincipalMeetingStatusModel where managementModel.managementID = '"
+				+ principalUpcomingMeetingRequestModel.getManagementID() + "' and schoolStaffModel.schoolStaffId = '"
+				+ principalUpcomingMeetingRequestModel.getMemberID() + "'";
+		List<ManagementPrincipalMeetingStatusModel> managementPrincipalMeetingStatusModels = entityManager
+				.createQuery(query).getResultList();
+		return managementPrincipalMeetingStatusModels;
+	}
+}

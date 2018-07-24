@@ -1,0 +1,43 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<div class="container">
+	<div class="row">
+
+		<h3 class="title title-pricing">ClubWizard Subscription Plan</h3>
+		<c:forEach var="subscriptionModel" items="${subSubsciptionPlanModels}">
+		<div class="col-md-4 col-sm-6">
+			<div class="pricingTable">
+				<div class="pricingTable-header">
+					<span class="heading">
+						<h3>${subscriptionModel.planName}</h3>
+					</span> <span class="subscription-plan-pricing">Initial Setup(rs):<span class="currency"></span>${subscriptionModel.initialSetupPrie}<span
+						class="mo"> One time</span></span>
+				</div>
+
+				<div class="pricingContent">
+					<ul>
+						<li>Quarterly Price(rs) - ${subscriptionModel.quarterlyPrice}</li>
+						<li>Yearly Price(rs) - ${subscriptionModel.yearlyPrice}</li>
+						<li>Bandwidth - ${subscriptionModel.storageSpace} MB</li>
+					</ul>
+				</div>
+				<!-- /  CONTENT BOX-->
+
+				<div class="pricingTable-sign-up">
+					<a href="${myUrl}paymentRequest?id=${subscriptionModel.newPlanId}" class="btn btn-block btn-default">Subscribe</a>
+				</div>
+				<!-- BUTTON BOX-->
+			</div>
+		</div>
+		</c:forEach>
+	</div>
+</div>
+

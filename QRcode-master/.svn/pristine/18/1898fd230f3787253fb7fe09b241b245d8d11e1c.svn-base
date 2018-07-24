@@ -1,0 +1,367 @@
+<div class="container">
+	<div class="row" style="margin-top: 20px;">
+		<h2 class="admin-home-head"></h2>
+	</div>
+	<div class="row">
+		<div class="col-lg-8">
+			<!---- first -row-->
+
+
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+					<a href="${myUrl}/clubwizard-school/superadmin/management">
+						<div class="offer offer-danger">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon glyphicon glyphicon-eye-open"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Management <label class="label label-danger white-label">323</label>
+								</h3>
+								<p>
+									<br>
+								<div class="progress">
+									<div class="progress-bar progress-bar-danger"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+					<a href="${myUrl}/clubwizard-school/superadmin/school">
+						<div class="offer offer-success">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon glyphicon glyphicon-th"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									School <label class="label label-success white-label">
+										323</label>
+								</h3>
+								<p>
+								 <br>
+								<div class="progress">
+									<div class="progress-bar progress-bar-success"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+						<a href="${myUrl}/clubwizard-school/superadmin/schoolStaff">
+						<div class="offer offer-radius offer-primary">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon  glyphicon-user"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Staff <label class="label label-primary white-label">
+										323</label>
+								</h3>
+								<p>
+									Ortalama Oranı: <br>
+								<div class="progress">
+									<div class="progress-bar progress-bar-primary"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+					<a href="${myUrl}/clubwizard-school/superadmin/managementmember">
+						<div class="offer offer-danger">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon glyphicon glyphicon-eye-open"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Management Members<label class="label label-danger white-label">323</label>
+								</h3>
+								<p>
+									<br>
+									<div class="progress">
+									<div class="progress-bar progress-bar-danger"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+							
+
+			</div>
+
+			<!--first row end-->
+									<!--second--row-->
+			
+								<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+				<a href="${myUrl}/clubwizard-school/superadmin/schoolfeature">
+						<div class="offer offer-danger">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon glyphicon glyphicon-eye-open"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Division<label class="label label-danger white-label">323</label>
+								</h3>
+								<p>
+									Oranı: <br>
+								
+								<div class="progress">
+									<div class="progress-bar progress-bar-danger"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+					<a href="#">
+						<div class="offer offer-success">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon glyphicon glyphicon-th"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Students<label class="label label-success white-label">
+										323</label>
+								</h3>
+								<p>
+									Ortalama Oranı : <br>
+								
+								<div class="progress">
+									<div class="progress-bar progress-bar-success"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+					<a href="#">
+						<div class="offer offer-radius offer-primary">
+							<div class="shape">
+								<div class="shape-text">
+									<span class="glyphicon  glyphicon-user"></span>
+								</div>
+							</div>
+							<div class="offer-content">
+								<h3 class="lead">
+									Drivers<label class="label label-primary white-label">
+										323</label>
+								</h3>
+								<p>
+									Ortalama Oranı: <br>
+								
+								<div class="progress">
+									<div class="progress-bar progress-bar-primary"
+										role="progressbar" aria-valuenow="60" aria-valuemin="0"
+										aria-valuemax="100" style="width: 100%">60%</div>
+								</div>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="form-field"></div>
+
+		</div>
+		<!--second--row end-->
+		<div class="col-lg-4">
+
+			<div class="x_panel fixed_height_320">
+				<div class="x_title">
+					<h2>
+						Daily users <small>Sessions</small>
+					</h2>
+				
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<table class="" style="width: 100%">
+						<tr>
+							<th style="width: 37%;">
+								<p>Top 5</p>
+							</th>
+							<th>
+								<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+									<p class="">Device</p>
+								</div>
+								<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+									<p class="">Progress</p>
+								</div>
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<canvas id="canvas1" height="140" width="140"
+									style="margin: 15px 10px 10px 0"></canvas>
+							</td>
+							<td>
+								<table class="tile_info">
+									<tr>
+										<td>
+											<p>
+												<i class="fa fa-square blue"></i>IOS
+											</p>
+										</td>
+										<td>30%</td>
+									</tr>
+									<tr>
+										<td>
+											<p>
+												<i class="fa fa-square green"></i>Android
+											</p>
+										</td>
+										<td>10%</td>
+									</tr>
+									<tr>
+										<td>
+											<p>
+												<i class="fa fa-square purple"></i>Blackberry
+											</p>
+										</td>
+										<td>20%</td>
+									</tr>
+									<tr>
+										<td>
+											<p>
+												<i class="fa fa-square aero"></i>Symbian
+											</p>
+										</td>
+										<td>15%</td>
+									</tr>
+									<tr>
+										<td>
+											<p>
+												<i class="fa fa-square red"></i>Others
+											</p>
+										</td>
+										<td>30%</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+
+</div>
+
+<script type="text/javascript"
+	src="${myUrl}resources/lib/Table/js/table.js"></script>
+<script src="${myUrl}resources/lib/chart/Chart.min.js"></script>
+<script>
+	$(document)
+			.ready(
+					function() {
+						// Setup - add a text input to each footer cell
+						$('#example tfoot th')
+								.each(
+										function() {
+											var title = $(this).text();
+											$(this)
+													.html(
+															'<input type="text" placeholder="Search '+title+'" />');
+										});
+
+						// DataTable
+						var table = $('#example').DataTable();
+
+						// Apply the search
+						table
+								.columns()
+								.every(
+										function() {
+											var that = this;
+
+											$('input', this.footer())
+													.on(
+															'keyup change',
+															function() {
+																if (that
+																		.search() !== this.value) {
+																	that
+																			.search(
+																					this.value)
+																			.draw();
+																}
+															});
+										});
+					});
+</script>
+
+
+<script>
+<!-- Doughnut Chart -->
+	$(document).ready(
+			function() {
+				var options = {
+					legend : false,
+					responsive : false
+				};
+
+				new Chart(document.getElementById("canvas1"), {
+					type : 'doughnut',
+					tooltipFillColor : "rgba(51, 51, 51, 0.55)",
+					data : {
+						labels : [ "Symbian", "Blackberry", "Other", "Android",
+								"IOS" ],
+						datasets : [ {
+							data : [ 15, 20, 30, 10, 30 ],
+							backgroundColor : [ "#BDC3C7", "#9B59B6",
+									"#E74C3C", "#26B99A", "#3498DB" ],
+							hoverBackgroundColor : [ "#CFD4D8", "#B370CF",
+									"#E95E4F", "#36CAAB", "#49A9EA" ]
+						} ]
+					},
+					options : options
+				});
+			});
+</script>
+

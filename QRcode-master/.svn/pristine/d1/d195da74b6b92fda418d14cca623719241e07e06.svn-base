@@ -1,0 +1,57 @@
+package com.zs.cws.superadmin.schoolstaff.dao;
+
+import java.util.List;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.ws.android.license.model.SchoolLicenceModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalUpcomingMeetingRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalModel;
+
+public interface SchoolStaffDAO {
+	public boolean isAvailable(SchoolStaffModel schoolStaffModel);
+
+	public List<LoginModel> getStaffBySchool(int schoolId);
+
+	public SchoolStaffModel getLastInsertedStaff();
+
+	public boolean isRegisteredPhone(String phone);
+
+	public int getStaffCount(int schoolID);
+
+	public LoginModel getLoginDetails(String phone);
+
+	public LoginModel getLoginModel(int staffId);
+
+	//public boolean isValidMemberStaff(int memberId);
+
+	public List<SchoolStaffModel> getStaffBySchoolForMyClass(int sCHOOL_ID);
+
+	public boolean isValidMemberParent(int memberId);
+
+	public boolean isValidMemberStaffLike(int memberId);
+
+	public List<SchoolLicenceModel> getSchoolsByPhone(String phone);
+
+	public boolean isTeacher(String phone, int schoolID);
+
+	public boolean isAvailable(LoginModel loginModel, int schoolId);
+
+	public int getStaffID(String phone);
+
+	public List<SchoolStaffModel> getStaffsForMeeting(int schoolID);
+
+	boolean isValidMemberStaff(int memberId);
+
+	boolean isAnyUpdation(int schoolID, String modifiedDate);
+
+	public List<SchoolStaffModel> getStaffsByPhone(String phoneNumber);
+
+	public List<LoginModel> getStaffServiceBySchool(int schoolID, String lastModifiedDate);
+
+	public List<ManagementPrincipalModel> getPrincipalsFromManagement(int managementID);
+
+	public List<ManagementPrincipalMeetingStatusModel> getPrincipalMeetings(
+			PrincipalUpcomingMeetingRequestModel principalUpcomingMeetingRequestModel);
+}

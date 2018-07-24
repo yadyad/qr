@@ -1,0 +1,62 @@
+package com.zs.cws.utils;
+
+public class FilePropertyModel {
+
+	String name;
+	String fileURL;
+	String fileType;
+	double fileSize;
+
+	String parentURL;
+
+	public FilePropertyModel() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+
+	}
+
+	public String getFileURL() {
+		return fileURL;
+	}
+
+	public void setFileURL(String fileURL) {
+		this.fileURL = fileURL;
+	}
+
+	public String getParentURL() {
+		return parentURL;
+	}
+
+	public void setParentURL(String parentURL) {
+		this.parentURL = parentURL;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public double getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(double fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	@Override
+	public String toString() {
+		return "FilePropertyModel [name=" + name + ", fileURL=" + fileURL + ", fileType=" + fileType + ", fileSize="
+				+ fileSize + ", parentURL=" + parentURL + "]";
+	}
+
+}

@@ -1,0 +1,47 @@
+package com.zs.cws.ws.android.attendence.model;
+
+public class Students {
+	
+	int studentID;
+	String isAbsent="";
+	String isLate="";
+	String lateTime="";
+	public Students() {
+		
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	public String getIsAbsent() {
+		return isAbsent;
+	}
+	public void setIsAbsent(String isAbsent) {
+		this.isAbsent = isAbsent;
+	}
+	public String getIsLate() {
+		return isLate;
+	}
+	public void setIsLate(String isLate) {
+		this.isLate = isLate;
+	}
+	public String getLateTime() {
+		return lateTime;
+	}
+	public void setLateTime(String lateTime) {
+		this.lateTime = lateTime;
+	}
+	@Override
+	public String toString() {
+		return "Students [studentID=" + studentID + ", isAbsent=" + isAbsent + ", isLate=" + isLate + ", lateTime="
+				+ lateTime + "]";
+	}
+	
+	
+	
+	
+	
+
+}

@@ -1,0 +1,37 @@
+package com.zs.cws.ws.android.exams.model;
+
+public class ExamList {
+	int examID;
+	String examName;
+
+	public ExamList() {
+		
+	}
+
+	public int getExamID() {
+		return examID;
+	}
+
+	public void setExamID(int examID) {
+		this.examID = examID;
+	}
+
+	public String getExamName() {
+		return examName;
+	}
+
+	public void setExamName(String examName) {
+		this.examName = examName;
+	}
+
+	@Override
+	public String toString() {
+		return "ExamList [examID=" + examID + ", examName=" + examName + "]";
+	}
+
+	
+	
+	
+	
+
+}

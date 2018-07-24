@@ -1,0 +1,9 @@
+package com.zs.cws.ws.android.attendence.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.android.attendence.model.AttendanceModel;
+
+public interface AttendanceRepository extends JpaRepository<AttendanceModel, Integer> {
+
+}

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2017-04-17T11:56:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StudentsPaymentReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="206555ad-1c8e-4c47-b8ed-236632aec233">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT
+	cfd.amount,
+	cfd.payed_date AS payedDate,
+	cfd.remarks,
+	concat(csd.first_name," ",csd.last_name) as studentName,
+	csd.student_id AS enrollmentNumber,
+	CONCAT(cdd.standard, cdd.division)as standard
+FROM
+	cwas_fees_payment_details cfd,
+	cwas_student_details csd,
+	cwas_division_details cdd
+WHERE
+	cfd.student_id = csd.row_id
+AND csd.division_id = cdd.row_id]]>
+	</queryString>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="payedDate" class="java.sql.Timestamp"/>
+	<field name="studentName" class="java.lang.String"/>
+	<field name="enrollmentNumber" class="java.lang.String"/>
+	<field name="standard" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="230" y="20" width="100" height="30" uuid="a73052a5-ffb2-4703-b1cd-2b5922e0e4a3"/>
+				<text><![CDATA[PAYMENT DETAILS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="72" splitType="Stretch">
+			<rectangle>
+				<reportElement x="3" y="7" width="507" height="55" uuid="6551b406-5ec4-4f3c-87f3-be607eb6148a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="3" y="9" width="100" height="53" uuid="c2d87f0c-5f94-4a68-b073-a7cc416e8169"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="2" y="19" width="100" height="30" uuid="57d1c857-7325-43ca-9163-c9fa03fdfb68"/>
+				<text><![CDATA[Enrollment number]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="104" y="9" width="100" height="53" uuid="124b78cb-4ffd-49cc-a82f-e40c8e428e39"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="206" y="9" width="100" height="53" uuid="a00e7a02-5f07-480d-804c-5a87c8f65b14"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="308" y="9" width="100" height="53" uuid="3487a36e-d8c3-4da9-84a0-608cdf2cac62"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="410" y="9" width="100" height="53" uuid="e939c25c-7d2f-41e3-8ae3-fffac29fb202"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="106" y="19" width="100" height="30" uuid="6bcf7734-4310-44e7-9e8b-91f7d7d184af"/>
+				<text><![CDATA[Student name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="21" width="100" height="30" uuid="c1c2fe60-cbbe-4ee3-8993-03db66f95f35"/>
+				<text><![CDATA[Class]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="20" width="100" height="30" uuid="bd5c3281-3933-4aac-ad35-11ea16556fc1"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="20" width="100" height="30" uuid="819b2cd6-f03b-40dc-9ba7-4cefc58c6e59"/>
+				<text><![CDATA[Payed date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<rectangle>
+				<reportElement x="2" y="-1" width="508" height="120" uuid="18708a71-a1f1-465a-bb8a-758e0458a8a1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="2" y="0" width="100" height="119" uuid="1d2aefb3-bfca-4019-89b3-c167ba7aef69"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="104" y="1" width="100" height="119" uuid="92312b65-11b3-4234-8a5a-02b640642792"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="207" y="0" width="100" height="119" uuid="2be19fe8-2b51-4ab5-b56c-ce98b5ffa046"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="311" y="0" width="100" height="119" uuid="63dd5110-5bfd-452e-94a2-2442954f8edc"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="412" y="0" width="100" height="119" uuid="b8137ddf-b134-498a-9103-8c5944e967bd"/>
+			</rectangle>
+			<textField>
+				<reportElement x="106" y="20" width="100" height="30" uuid="3a28a013-9569-475d-b9cd-4958774cdc35"/>
+				<textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="15" width="100" height="30" uuid="a37e1d1c-9ad6-41ae-8065-667898b0f439"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="10" width="100" height="30" uuid="a37e1d1c-9ad6-41ae-8065-667898b0f439"/>
+				<textFieldExpression><![CDATA[$F{payedDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="211" y="15" width="100" height="30" uuid="a37e1d1c-9ad6-41ae-8065-667898b0f439"/>
+				<textFieldExpression><![CDATA[$F{standard}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="15" width="100" height="30" uuid="34f88abc-e852-4a84-8501-85e942b3f00c"/>
+				<textFieldExpression><![CDATA[$F{enrollmentNumber}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

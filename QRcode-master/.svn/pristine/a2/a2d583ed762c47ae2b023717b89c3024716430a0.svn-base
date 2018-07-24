@@ -1,0 +1,10 @@
+package com.zs.cws.superadmin.managementmembers.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+
+
+public interface ManagementMemberRepository extends JpaRepository<ManagementMemberModel, Integer>{
+
+}

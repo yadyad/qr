@@ -1,0 +1,35 @@
+package com.zs.cws.ws.android.myclass.model;
+
+public class MyClassServiceRequestModel {
+	int divisionID;
+	int schoolID;
+	int studentID;
+	
+	public MyClassServiceRequestModel() {
+	}
+	public int getDivisionID() {
+		return divisionID;
+	}
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	@Override
+	public String toString() {
+		return "MyClassServiceRequestModel [divisionID=" + divisionID + ", schoolID=" + schoolID + ", studentID="
+				+ studentID + "]";
+	}
+	
+	
+}

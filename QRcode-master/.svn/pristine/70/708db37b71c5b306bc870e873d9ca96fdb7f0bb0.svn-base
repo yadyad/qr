@@ -1,0 +1,35 @@
+package com.zs.cws.ws.hybrid.attendance.model;
+
+public class HybridAttendanceRequestModel {
+
+	int schoolID;
+	String attendanceRequestDate;
+	
+	public HybridAttendanceRequestModel() {
+		
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getAttendanceRequestDate() {
+		return attendanceRequestDate;
+	}
+
+	public void setAttendanceRequestDate(String attendanceRequestDate) {
+		this.attendanceRequestDate = attendanceRequestDate;
+	}
+
+	@Override
+	public String toString() {
+		return "HybridAttendanceRequestModel [schoolID=" + schoolID + ", attendanceRequestDate=" + attendanceRequestDate
+				+ "]";
+	}
+	
+	
+}

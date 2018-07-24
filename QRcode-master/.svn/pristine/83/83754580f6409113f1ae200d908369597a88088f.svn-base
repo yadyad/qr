@@ -1,0 +1,14 @@
+package com.zs.cws.superadmin.specialdays.dao;
+
+import java.util.List;
+
+import com.zs.cws.superadmin.specialdays.model.SpecialDaysModel;
+
+public interface SpecialDaysDAO {
+
+	List<SpecialDaysModel> findSpclDaysBySchool(int schoolId);
+
+	List<SpecialDaysModel> findSpclDaysBySchoolService(int schoolID, String modDate);
+
+
+}

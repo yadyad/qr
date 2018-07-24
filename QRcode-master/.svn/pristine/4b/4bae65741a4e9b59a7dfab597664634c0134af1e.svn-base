@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.kudos.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.kudos.model.KudosModel;
+
+public interface KudosRepository extends JpaRepository<KudosModel, Integer> {
+
+}

@@ -1,0 +1,44 @@
+package com.zs.cws.ws.android.driverdetails.model;
+
+import java.util.List;
+
+public class FinalDriverDetails {
+	
+	String status="";
+	List<DriverDetailsResponse>driverDetails;
+	
+	
+	public FinalDriverDetails() {
+		
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	public List<DriverDetailsResponse> getDriverDetails() {
+		return driverDetails;
+	}
+
+
+	public void setDriverDetails(List<DriverDetailsResponse> driverDetails) {
+		this.driverDetails = driverDetails;
+	}
+
+
+	@Override
+	public String toString() {
+		return "FinalDriverDetails [status=" + status + ", driverDetails=" + driverDetails + "]";
+	}
+	
+	
+	
+
+}

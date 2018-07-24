@@ -1,0 +1,128 @@
+package com.zs.cws.superadmin.master.suscription.model;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "cwas_subscription_plan_master")
+public class SubsciptionPlanModel {
+
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int newPlanId;
+
+	@Column(name = "plan_name")
+	private String planName;
+
+	@Column(name = "quarterly_price")
+	private double quarterlyPrice;
+
+	@Column(name = "yearly_price")
+	private double yearlyPrice;
+
+	@Column(name = "member_count")
+	private int memberCount;
+	
+	@Column(name = "min_member_count")
+	private int minMemberCount;
+
+	@Column(name = "initial_setup_price")
+	private double initialSetupPrie;
+
+	@Column(name = "storage_space")
+	private double storageSpace;
+
+	@Column(name = "grace_period")
+	private int gracePeriod;
+
+
+	public SubsciptionPlanModel() {
+	}
+
+	public int getNewPlanId() {
+		return newPlanId;
+	}
+
+	public void setNewPlanId(int newPlanId) {
+		this.newPlanId = newPlanId;
+	}
+
+	public String getPlanName() {
+		return planName;
+	}
+
+	public void setPlanName(String planName) {
+		this.planName = planName;
+	}
+
+	public double getQuarterlyPrice() {
+		return quarterlyPrice;
+	}
+
+	public void setQuarterlyPrice(double quarterlyPrice) {
+		this.quarterlyPrice = quarterlyPrice;
+	}
+
+	public double getYearlyPrice() {
+		return yearlyPrice;
+	}
+
+	public void setYearlyPrice(double yearlyPrice) {
+		this.yearlyPrice = yearlyPrice;
+	}
+
+	public int getMemberCount() {
+		return memberCount;
+	}
+
+	public void setMemberCount(int memberCount) {
+		this.memberCount = memberCount;
+	}
+
+	public double getInitialSetupPrie() {
+		return initialSetupPrie;
+	}
+
+	public void setInitialSetupPrie(double initialSetupPrie) {
+		this.initialSetupPrie = initialSetupPrie;
+	}
+
+	public double getStorageSpace() {
+		return storageSpace;
+	}
+
+	public void setStorageSpace(double storageSpace) {
+		this.storageSpace = storageSpace;
+	}
+
+	public int getGracePeriod() {
+		return gracePeriod;
+	}
+
+	public void setGracePeriod(int gracePeriod) {
+		this.gracePeriod = gracePeriod;
+	}
+
+	public int getMinMemberCount() {
+		return minMemberCount;
+	}
+
+	public void setMinMemberCount(int minMemberCount) {
+		this.minMemberCount = minMemberCount;
+	}
+
+	@Override
+	public String toString() {
+		return "SubsciptionPlanModel [newPlanId=" + newPlanId + ", planName=" + planName + ", quarterlyPrice="
+				+ quarterlyPrice + ", yearlyPrice=" + yearlyPrice + ", memberCount=" + memberCount + ", minMemberCount="
+				+ minMemberCount + ", initialSetupPrie=" + initialSetupPrie + ", storageSpace=" + storageSpace
+				+ ", gracePeriod=" + gracePeriod + "]";
+	}
+
+}

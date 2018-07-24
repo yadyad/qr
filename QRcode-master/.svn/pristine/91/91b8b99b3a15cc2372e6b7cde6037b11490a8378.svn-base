@@ -1,0 +1,236 @@
+package com.zs.cws.superadmin.student.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+
+@Entity
+@Table(name = "cwas_student_details")
+public class StudentModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int studentId;
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+	@OneToOne
+	@JoinColumn(name = "division_id")
+	SchoolDivModel schoolDivModel;
+	@Column(name = "first_name")
+	String firstName;
+	@Column(name = "last_name")
+	String lastName;
+	@Column(name = "gender")
+	String gender;
+	@Column(name = "address")
+	String address;
+	@Column(name = "student_id")
+	String enrollmentNumber;
+	@Column(name = "image_url")
+	String imageURL;
+	
+	@Column(name = "dob")
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	Date dob;
+	@Column(name = "blood_group")
+	String bloodGroup;
+	@Column(name = "father_name")
+	String fatherName;
+	@Column(name = "father_number")
+	String fatherNumber;
+	@Column(name = "email")
+	String email;
+	@Column(name = "created_by")
+	String createdUser;
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	@Column(name = "updated_by")
+	String updatedUser;
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+	@Column(name = "fcm_tocken")
+	String fcmTocken;
+	public StudentModel() {
+		
+	}
+
+
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEnrollmentNumber() {
+		return enrollmentNumber;
+	}
+
+	public void setEnrollmentNumber(String enrollmentNumber) {
+		this.enrollmentNumber = enrollmentNumber;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
+
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
+
+	public String getFatherName() {
+		return fatherName;
+	}
+
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+
+	
+
+	public String getFatherNumber() {
+		return fatherNumber;
+	}
+
+	public void setFatherNumber(String fatherNumber) {
+		this.fatherNumber = fatherNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	public String getFcmTocken() {
+		return fcmTocken;
+	}
+
+	public void setFcmTocken(String fcmTocken) {
+		this.fcmTocken = fcmTocken;
+	}
+
+
+	@Override
+	public String toString() {
+		return "StudentModel [studentId=" + studentId + ", schoolModel=" + schoolModel + ", schoolDivModel="
+				+ schoolDivModel + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender
+				+ ", address=" + address + ", enrollmentNumber=" + enrollmentNumber + ", imageURL=" + imageURL
+				+ ", dob=" + dob + ", bloodGroup=" + bloodGroup + ", fatherName=" + fatherName + ", fatherNumber="
+				+ fatherNumber + ", email=" + email + ", createdUser=" + createdUser + ", createdDate=" + createdDate
+				+ ", updatedUser=" + updatedUser + ", updatedDate=" + updatedDate + ", fcmTocken=" + fcmTocken + "]";
+	}
+
+}

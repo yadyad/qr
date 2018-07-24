@@ -1,0 +1,26 @@
+package com.zs.cws.ws.android.leave.model;
+
+public class LeaveStatusRequest {
+	
+	int leaveID;
+
+	public LeaveStatusRequest() {
+		
+	}
+
+	public int getLeaveID() {
+		return leaveID;
+	}
+
+	public void setLeaveID(int leaveID) {
+		this.leaveID = leaveID;
+	}
+
+	@Override
+	public String toString() {
+		return "LeaveStatusRequest [leaveID=" + leaveID + "]";
+	}
+	
+	
+
+}

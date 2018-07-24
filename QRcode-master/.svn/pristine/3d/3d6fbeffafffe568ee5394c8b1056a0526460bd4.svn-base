@@ -1,0 +1,90 @@
+package com.zs.cws.superadmin.schoolfeature.controller;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolfeature.dao.SchoolFeatureDAO;
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+import com.zs.cws.superadmin.schoolfeature.repository.SchoolFeatureRepository;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/schoolfeature")
+public class SchoolFeatureController {
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	SchoolFeatureRepository schoolFeatureRepository;
+	@Autowired
+	SchoolFeatureDAO schoolFeatureDAO;
+	int schoolID = 189;
+
+	@RequestMapping()
+	public ModelAndView schoolFeaturePage(@RequestParam(value = "id", required = false) Integer schoolID,
+			@ModelAttribute("schoolFeatureModel") FeatureModel schoolFeatureModel) {
+		ModelAndView model = new ModelAndView("div_search");
+		if (schoolID != null) {
+			this.schoolID = schoolID;
+		}
+		List<SchoolFeatureModel> schoolFeatureListMain = schoolFeatureDAO.getSchoolFeatureListMain(this.schoolID);
+		List<SchoolFeatureModel> schoolFeatureList = schoolFeatureDAO.getSchoolFeatureList(this.schoolID);
+		List<FeatureModel> schoolfeature = schoolFeatureDAO.getRemainingSchoolFeatureList(this.schoolID);
+
+		model.addObject("schoolFeatureList", schoolFeatureList);
+		model.addObject("schoolFeatureListMain", schoolFeatureListMain);
+		model.addObject("schoolfeature", schoolfeature);
+		return model;
+	}
+
+	@RequestMapping("/save")
+	public ModelAndView GroupSave(@ModelAttribute("schoolFeatureModel") FeatureModel schoolFeatureModel,
+			BindingResult result) {
+		String[] featureIDs = schoolFeatureModel.getFeatureName().split(",");
+		SchoolFeatureModel schoolFeatureModel2 = new SchoolFeatureModel();
+		FeatureModel featureModel = new FeatureModel();
+		SchoolModel schoolModel = new SchoolModel();
+		schoolModel.setSchoolId(this.schoolID);
+		schoolFeatureModel2.setSchoolModel(schoolModel);
+		schoolFeatureDAO.deleteAllFeatures(schoolID);
+		System.out.println("Feature Deleted");
+		for (String featureID : featureIDs) {
+			System.out.println("Feature Inserting...");
+			if (!featureID.equals("")) {
+				featureModel = new FeatureModel();
+				featureModel.setRowId(Integer.parseInt(featureID));
+				schoolFeatureModel2 = new SchoolFeatureModel();
+				schoolFeatureModel2.setFeatureModel(featureModel);
+				schoolFeatureModel2.setSchoolModel(schoolModel);
+				schoolFeatureRepository.save(schoolFeatureModel2);
+			}
+		}
+		return new ModelAndView("redirect:/superadmin/school/bymanagement");
+	}
+
+	@RequestMapping("/listSchoolFeatures")
+	public @ResponseBody Object schoolFeatureList() {
+		List<SchoolFeatureModel> schoolFeatureList = schoolFeatureDAO.getSchoolFeatureListForWeb(schoolID);
+		System.out.println("School Features count::>"+schoolFeatureList.size());
+		return schoolFeatureList;
+	}
+
+	@RequestMapping("/listRemSchoolFeatures")
+	public @ResponseBody Object remSchoolFeatureList() {
+		List<FeatureModel> remSchoolfeatureList = schoolFeatureDAO.getRemainingSchoolFeatureList(schoolID);
+		System.out.println("School  Rem Features count::>"+remSchoolfeatureList.size());
+		return remSchoolfeatureList;
+	}
+
+}

@@ -1,0 +1,164 @@
+package com.zs.cws.superadmin.specialdays.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_special_days_url_details")
+public class SpecialDaysModel {
+	
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int specialDayId;
+	
+	
+	@Column(name="image_url")
+	private String imageUrl;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	
+	@Column(name="event_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date eventDate;
+	
+	@Column(name="event_name")
+	private String eventName;
+	
+	@Column(name="event_description")
+	private String eventDesc;
+	
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+
+	public SpecialDaysModel() {
+		
+	}
+
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	public int getSpecialDayId() {
+		return specialDayId;
+	}
+
+	public void setSpecialDayId(int specialDayId) {
+		this.specialDayId = specialDayId;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public Date getEventDate() {
+		return eventDate;
+	}
+
+	public void setEventDate(Date eventDate) {
+		this.eventDate = eventDate;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
+
+	public String getEventDesc() {
+		return eventDesc;
+	}
+
+	public void setEventDesc(String eventDesc) {
+		this.eventDesc = eventDesc;
+	}
+
+
+	@Override
+	public String toString() {
+		return "SpecialDaysModel [specialDayId=" + specialDayId + ", imageUrl=" + imageUrl + ", schoolModel="
+				+ schoolModel + ", eventDate=" + eventDate + ", eventName=" + eventName + ", eventDesc=" + eventDesc
+				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+
+	
+	
+}

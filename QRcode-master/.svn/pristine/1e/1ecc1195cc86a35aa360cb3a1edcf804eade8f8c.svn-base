@@ -1,0 +1,13 @@
+package com.zs.cws.schooladmin.examdetails.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+
+public interface ExamDetailsDAO {
+
+	List<ExamDetailsModel> findEaxmBySchool(int sCHOOL_ID);
+
+	String getExamName(int schoolID);
+
+}

@@ -1,0 +1,36 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.List;
+
+public class FinalMessageDeliveryResponseModel {
+String status;
+String responseStatus;
+	List<DairyMessageResponseModel> messageLists;
+	public FinalMessageDeliveryResponseModel() {
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+	public List<DairyMessageResponseModel> getMessageLists() {
+		return messageLists;
+	}
+	public void setMessageLists(List<DairyMessageResponseModel> messageLists) {
+		this.messageLists = messageLists;
+	}
+	@Override
+	public String toString() {
+		return "FinalMessageDeliveryResponseModel [status=" + status + ", responseStatus=" + responseStatus
+				+ ", messageLists=" + messageLists + "]";
+	}
+	
+	
+}

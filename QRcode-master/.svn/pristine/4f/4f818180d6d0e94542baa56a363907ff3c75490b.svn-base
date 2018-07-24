@@ -1,0 +1,64 @@
+package com.zs.cws.ws.hybrid.meetingtask.model;
+
+import java.util.List;
+
+public class MeetingTaskServiceRequestModel {
+
+	int meetingID;
+	String keyPoints;
+	String nextMeetingDate;
+	String memberType;
+
+	List<MemberTaskListModel> memberTaskList;
+
+	public MeetingTaskServiceRequestModel() {
+	}
+
+	public int getMeetingID() {
+		return meetingID;
+	}
+
+	public void setMeetingID(int meetingID) {
+		this.meetingID = meetingID;
+	}
+
+	public String getKeyPoints() {
+		return keyPoints;
+	}
+
+	public void setKeyPoints(String keyPoints) {
+		this.keyPoints = keyPoints;
+	}
+
+	public String getNextMeetingDate() {
+		return nextMeetingDate;
+	}
+
+	public void setNextMeetingDate(String nextMeetingDate) {
+		this.nextMeetingDate = nextMeetingDate;
+	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	public List<MemberTaskListModel> getMemberTaskList() {
+		return memberTaskList;
+	}
+
+	public void setMemberTaskList(List<MemberTaskListModel> memberTaskList) {
+		this.memberTaskList = memberTaskList;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingTaskServiceRequestModel [meetingID=" + meetingID + ", keyPoints=" + keyPoints
+				+ ", nextMeetingDate=" + nextMeetingDate + ", memberType=" + memberType + ", memberTaskList="
+				+ memberTaskList + "]";
+	}
+
+}

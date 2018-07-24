@@ -1,0 +1,83 @@
+package com.zs.cws.ws.hybrid.license.model;
+
+import java.util.List;
+
+public class ManagementLicenseResponsePOJO {
+	int managementId;
+	String managementName="";
+	String managementHead="";
+	String phone="";
+	String email="";
+	int memberID;
+	// String responseStatus;
+	List<SchoolResponsePOJO> schools;
+
+	
+	public int getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+	public int getManagementId() {
+		return managementId;
+	}
+
+	public void setManagementId(int managementId) {
+		this.managementId = managementId;
+	}
+
+	public String getManagementName() {
+		return managementName;
+	}
+
+	public void setManagementName(String managementName) {
+		this.managementName = managementName;
+	}
+
+	public String getManagementHead() {
+		return managementHead;
+	}
+
+	public void setManagementHead(String managementHead) {
+		this.managementHead = managementHead;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public List<SchoolResponsePOJO> getSchools() {
+		return schools;
+	}
+
+	public void setSchools(List<SchoolResponsePOJO> schools) {
+		this.schools = schools;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementLicenseResponsePOJO [managementId=" + managementId + ", managementName=" + managementName
+				+ ", managementHead=" + managementHead + ", phone=" + phone + ", email=" + email + ", memberID="
+				+ memberID + ", schools=" + schools + "]";
+	}
+
+
+
+	
+
+}

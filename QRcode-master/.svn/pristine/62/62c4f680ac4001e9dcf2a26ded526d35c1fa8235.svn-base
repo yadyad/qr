@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.managementposition.dao;
+
+import com.zs.cws.superadmin.master.managementposition.model.ManagementPositionModel;
+
+public interface ManagementPositionDAO {
+
+	boolean isAvailable(ManagementPositionModel managementPositionModel);
+
+}

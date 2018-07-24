@@ -1,0 +1,29 @@
+package com.zs.cws.ws.android.student.model;
+
+import java.util.List;
+
+public class StudentServiceResponseModel {
+
+	String status;
+	List<StudentServiceModel> studentList;
+	public StudentServiceResponseModel() {
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public List<StudentServiceModel> getStudentList() {
+		return studentList;
+	}
+	public void setStudentList(List<StudentServiceModel> studentList) {
+		this.studentList = studentList;
+	}
+	@Override
+	public String toString() {
+		return "StudentServiceResponseModel [status=" + status + ", studentList=" + studentList + "]";
+	}
+	
+	
+}

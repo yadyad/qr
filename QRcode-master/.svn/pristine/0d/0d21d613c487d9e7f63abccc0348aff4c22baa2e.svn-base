@@ -1,0 +1,35 @@
+package com.zs.cws.superadmin.master.feature.dao;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+@Repository
+@Transactional
+public class FeatureIMPL implements FeatureDAO{
+	@Autowired
+	EntityManager entityManager;
+
+
+	@Override
+	@Transactional
+	public boolean isAvailable(FeatureModel featureModel) {
+		String query = "";
+		if (featureModel.getRowId() != 0) {
+			query = "select count(*) from FeatureModel where featureName= ? and featureType=?  and rowId <> " + featureModel.getRowId() + "";
+		} else {
+			query = "select count(*) from FeatureModel where featureName=? and featureType=?";
+		}
+		Query query1= entityManager.createQuery(query);
+		query1.setParameter(1, featureModel.getFeatureName().trim());
+		query1.setParameter(2, featureModel.getFeatureType().trim());
+		boolean exists =  (Long) query1.getSingleResult() > 0;
+		return exists;
+	}
+
+}

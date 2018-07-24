@@ -1,0 +1,29 @@
+package com.zs.cws.superadmin.master.tax.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.tax.model.TaxModel;
+
+@Repository
+@Transactional
+public class TaxIMPL implements TaxDAO {
+	@Autowired
+	EntityManager entityManager;
+	
+	@Override
+	public TaxModel getCurrentTax() {
+			String query = "From TaxModel";
+			@SuppressWarnings("unchecked")
+			List<TaxModel> taxList = entityManager.createQuery(query).getResultList();
+			return taxList.get(0);
+		}
+
+	}
+
+

@@ -1,0 +1,342 @@
+<!-- <body class="lgn-page-bg-home">
+ -->
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<script type="text/javascript"
+	src="${myUrl}resources/controller/schoolAdmin/schoolstaff/SchoolStaffController.js"></script>
+<div class="container-fluid">
+	<div class="title-form">
+		<h2>
+			Staff Details<small></small>
+		</h2>
+	</div>
+	<div ng-app="schoolStaff" id="cntrlID" ng-controller="schoolStaffCtrl">
+		<button id="btnDelete" ng-click="hide()"
+			class="btn btn-primary pull-right">{{Show}}</button>
+		<div class="alert-box success" id="success">Saved or updated
+			successfully!</div>
+		<div class="alert-box failure" id="deleted">Deleted
+			Successfully!</div>
+		<div class="alert-box failure" id="duplicate">Duplicate Entry!</div>
+
+		<div class="alert-box failure" id="phone">Already registered
+			phone number!!</div>
+		<div style="">
+			<div class="row mrg-lg-btm-top" style="width: 100%;">
+				<button type="button" class="btn btn-primary pull-right"
+					data-toggle="modal" data-target="#model">EXCEL</button>
+			</div>
+			<div class="row mrg-lg-btm-top" style="width: 100%;"></div>
+			<div class="modal fade bs-example-modal-lg" tabindex="-1" id="model"
+				role="dialog" aria-labelledby="myLargeModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content modal-height">
+						<div class="container">
+							<form:form
+								action="${myUrl}schooladmin/schoolStaff/uploadschoolStaff"
+								id="corporateFormId" name="corporateFormId" autocomplete="off"
+								class="idealforms1" enctype="multipart/form-data" method="post">
+								<div class="row">
+									<div class="buttons-modal">
+										<div class="col-lg-4 col-sm-6 col-12 col-lg-offset-1">
+
+											<div class="" data-provides="fileinput">
+												<span class="btn btn-primary btn-file"><input
+													type="file" multiple name="uploadfile"
+													accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /></span>
+												<span class="help-block">upload documents in excel
+													format only</span>
+											</div>
+
+										</div>
+										<div class="col-lg-4">
+											<a href="${myUrl}superadmin/schoolStaff/downloadExcel"
+												class="btn btn-primary" title="Download Upload File Format">
+												Download sample excel format </a>
+											<button type="submit" class="btn btn-primary"
+												onclick="submitFormCorporate();" title="Registration">Register</button>
+										</div>
+									</div>
+								</div>
+							</form:form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="staff-form" class="contain-space1">
+
+				<div class="form-field">
+					<div class="row">
+						<form id="demo-form2" name="form" ng-submit="submit()"
+							class="form-horizontal form-label-left">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="firstName">First Name <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" name="firstName"
+											ng-model="schoolstaff.schoolStaffModel.firstName"
+											pattern="^[^\s]+(\s.*)?$" maxlength="255" id="firstName"
+											required class="form-control col-md-7 col-xs-12 checkSpace">
+										<span id="ssf" style="color: green"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="lastName">Last Name <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" name="lastName" pattern="^[^\s]+(\s.*)?$"
+											ng-model="schoolstaff.schoolStaffModel.lastName" required
+											maxlength="255" id="lastName"
+											class="form-control col-md-7 col-xs-12 checkSpace"> <span
+											id="ssl" style="color: green"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-3 col-xs-12">Qualification
+										<span class="required" style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-9 col-xs-12">
+										<input type="text" name="qualification"
+											ng-model="schoolstaff.schoolStaffModel.qualification"
+											maxlength="255" required id="lastName" required
+											class="form-control col-md-7 col-xs-12 checkSpace"> <span
+											id="ssq" style="color: green"></span>
+									</div>
+								</div>
+
+							</div>
+
+
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-3 col-xs-12">Department
+										<span class="required" style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-9 col-xs-12">
+										<select class="form-control" name="dept"
+											ng-init="schoolstaff.schoolStaffModell.departmentModel.rowId= designationModelList[0].value"
+											data-ng-model="schoolstaff.schoolStaffModel.departmentModel.rowId"
+											data-ng-options="key as value for (key, value) in deptList"
+											id="rowId" value="key" required>
+											<option value="">Please choose a Department</option>
+
+										</select>
+									</div>
+								</div>
+
+
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-3 col-xs-12">Designation
+										<span class="required" style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-9 col-xs-12">
+										<select class="form-control" name="desg"
+											ng-init="schoolstaff.schoolStaffModell.designationModel.rowId= designationModelList[0].value"
+											data-ng-model=schoolstaff.schoolStaffModel.designationModel.rowId
+											data-ng-options="key as value for (key, value) in desgList"
+											id="rowId" value="key" required>
+											<option value="">Please choose a Designation</option>
+
+										</select>
+									</div>
+								</div>
+
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="phone">Category <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<select class="form-control" name="category"
+											data-ng-model=schoolstaff.schoolStaffModel.categoryModel.rowId
+											data-ng-options="key as value for (key, value) in categoryList"
+											id="rowId" value="key" required>
+											<option value="">Please choose a Category</option>
+
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="email">Email <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input ng-model="schoolstaff.schoolStaffModel.emailId"
+											type="email" name="emailId" maxlength="254" required
+											id="emailId"
+											pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+											title="Enter valid email"
+											class="form-control col-md-7 col-xs-12"> <span
+											id="ssemail" style="color: green"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="phone">Phone <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" ng-blur="checkPhone()"
+											ng-model="schoolstaff.schoolStaffModel.phone" name="phone"
+											required class="form-control col-md-7 col-xs-12 schoolSpace"
+											pattern="^\d{10}$" title="Phone number must be 10 digits"
+											required><br />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="phone">Gender <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-9 col-xs-12">
+										<select class="form-control" name="gender"
+											ng-model="schoolstaff.schoolStaffModel.gender" required>
+											<option value="">Select</option>
+											<option value="male">Male</option>
+											<option value="female">Female</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-12">
+
+
+
+										<button class="btn btn-primary pull-right mrg-right-none"
+											type="submit" ng-click="submitted=true">Save</button>
+										<button class="btn btn-primary pull-right" ng-click="reset()"
+											type="reset">Clear</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<p class="pull-left mandatory">
+						<span class="required" style="color: red">*</span>represents
+						mandatory
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="contain-space1">
+			<div class="j-table-responsive">
+
+
+				<div class="table-field">
+					<table id="datatable-buttons" datatable="ng" border="0"
+						class="display table table-striped table-bordered table-bordered-color dataTable no-footer"
+						cellspacing="0" width="100%" class="">
+						<thead>
+							<tr>
+								<th style="text-align: center;">First name</th>
+								<th style="text-align: center;">Last name</th>
+								<th style="text-align: center;">Qualification</th>
+								<th style="text-align: center;">Department</th>
+								<th style="text-align: center;">Designation</th>
+								<th style="text-align: center;">Email</th>
+								<th style="text-align: center;">Phone</th>
+								<th style="text-align: center;">Gender</th>
+								<th style="text-align: center;">Category</th>
+								<th style="text-align: center;">Admin</th>
+								<th style="text-align: center;">Edit</th>
+
+								<th style="text-align: center;"><i ng-click="remove()"
+									class="fa fa-trash ico-action-red icon-deleteall"></i><input
+									type="checkbox" ng-model="selectedAll" ng-click="checkAll()"
+									style="position: relative;" /></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Qualification</th>
+								<th>Department</th>
+								<th>Designation</th>
+								<th>Email</th>
+								<th>Phone</th>
+								<th>Gender</th>
+								<th>Category</th>
+								<th>Admin</th>
+							</tr>
+						</tfoot>
+						<tbody>
+
+							<tr ng-repeat="loginModel in schoolStaffList">
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.firstName}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.lastName}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.qualification}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.departmentModel.department}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.designationModel.designation}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.emailId}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.phone}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.gender}}</td>
+								<td style="text-align: center;">{{loginModel.schoolStaffModel.categoryModel.category}}</td>
+								<td ng-if="loginModel.role=='ROLE_SCHOOL_ADMIN'"
+									style="text-align: center;"><input class="chk1"
+									ng-click="makeAdmin(loginModel.schoolStaffModel.schoolStaffId,$index)"
+									checked="checked" type="checkbox"></td>
+								<td ng-if="loginModel.role=='ROLE_STAFF'"
+									style="text-align: center;"><input class="chk1"
+									ng-click="makeAdmin(loginModel.schoolStaffModel.schoolStaffId,$index)"
+									type="checkbox"></td>
+								<td style="text-align: center;"><a
+									ng-click="edit(loginModel,$index)"><i
+										class="btn fa fa-edit ico-action"></i></a> <!-- <a
+									ng-click="deleteSchoolStaffs(loginModel.schoolStaffModel.schoolStaffId,$index)"><i
+										class="btn fa fa-trash ico-action-red"></i></a> --></td>
+								<td style="text-align: center;"><input type="checkbox"
+									class="chk" ng-model="loginModel.selected"
+									style="margin-left: 18px;" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function() {
+
+		$('body').on('keydown', '.checkSpace', function(e) {
+
+			console.log(this.value);
+
+			if (e.which === 32 && this.value === '') {
+				alert("No spaces allowed at the beginning");
+				return false;
+			}
+
+		});
+
+	});
+</script>
+
+

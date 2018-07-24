@@ -1,0 +1,32 @@
+package com.zs.cws.superadmin.master.plancreation.dao;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.plancreation.model.PlanCreationModel;
+
+@Repository
+public class PlanCreationIMPL implements PlanCreationDAO {
+
+	
+	@Autowired
+	EntityManager entityManager;
+	
+	
+	
+	
+	@Override
+	public boolean isAvailable(PlanCreationModel planCreationModel) {
+		String query = "";
+		if (planCreationModel.getNewPlanId() != 0) {
+			query = "select count(*) from PlanCreationModel where planName= ? and newPlanId <> " + planCreationModel.getNewPlanId() + "";
+		} else {
+			query = "select count(*) from PlanCreationModel where planName=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, planCreationModel.getPlanName().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+}

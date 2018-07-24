@@ -1,0 +1,27 @@
+package com.zs.cws.ws.android.complaintbox.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxModel;
+
+@Repository
+@Transactional
+public class ComplaintIMPL implements ComplaintDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<ComplaintBoxModel> getSchoolComplaints(int schoolID) {
+		String query="FROM ComplaintBoxModel WHERE schoolModel.schoolId="+schoolID+" order by createdDate DESC";
+		@SuppressWarnings("unchecked")
+		List<ComplaintBoxModel> complaintList = entityManager.createQuery(query).getResultList();
+		return complaintList;
+	}
+
+}

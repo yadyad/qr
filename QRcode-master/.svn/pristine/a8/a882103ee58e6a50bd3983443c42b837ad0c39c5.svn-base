@@ -1,0 +1,96 @@
+package com.zs.cws.superadmin.schoolfeature.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+import com.zs.cws.superadmin.schoolfeature.repository.SchoolFeatureRepository;
+
+@Repository
+@Transactional
+public class SchoolFeatureIMPL implements SchoolFeatureDAO {
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	SchoolFeatureRepository schoolFeatureRepository;
+
+	@Override
+	public List<SchoolFeatureModel> getSchoolFeatureList(int schoolID) {
+		String query = "FROM SchoolFeatureModel where schoolModel.schoolId=" + schoolID+" AND featureModel.featureType='Web'";
+		@SuppressWarnings("unchecked")
+		List<SchoolFeatureModel> schoolFeatureList = entityManager.createQuery(query).getResultList();
+		for(SchoolFeatureModel SchoolFeatureModel:schoolFeatureList){
+			System.out.println("CURR FID::>"+SchoolFeatureModel.getFeatureModel().getRowId());
+		}
+		return schoolFeatureList;
+	}
+	@Override
+	public List<SchoolFeatureModel> getSchoolFeatureListForWeb(int schoolID) {
+		String query = "FROM SchoolFeatureModel where schoolModel.schoolId=" + schoolID+"";
+		@SuppressWarnings("unchecked")
+		List<SchoolFeatureModel> schoolFeatureList = entityManager.createQuery(query).getResultList();
+		for(SchoolFeatureModel SchoolFeatureModel:schoolFeatureList){
+			System.out.println("CURR FID::>"+SchoolFeatureModel.getFeatureModel().getRowId());
+		}
+		return schoolFeatureList;
+	}
+	@Override
+	public List<FeatureModel> getRemainingSchoolFeatureList(int schoolID) {
+		String query = "SELECT f2 FROM FeatureModel f2 where f2.rowId NOT IN (SELECT f.featureModel.rowId FROM SchoolFeatureModel f WHERE f.schoolModel.schoolId="
+				+ schoolID + " )";
+		@SuppressWarnings("unchecked")
+		List<FeatureModel> remainingFeatureList = entityManager.createQuery(query).getResultList();
+		for(FeatureModel featureModel:remainingFeatureList){
+			System.out.println("REM FID::>"+featureModel.getRowId());
+		}
+		return remainingFeatureList;
+	}
+
+	@Override
+	public void deleteAllFeatures(int schoolID) {
+		String query = "DELETE FROM SchoolFeatureModel where schoolModel.schoolId=" + schoolID;
+		entityManager.createQuery(query).executeUpdate();
+	}
+
+	@Override
+	public List<String> listAllFeatures(int schoolID, String type) {
+		String query = "FROM SchoolFeatureModel where schoolModel.schoolId=" + schoolID+" AND featureModel.featureType='"+type+"'";
+		@SuppressWarnings("unchecked")
+		List<SchoolFeatureModel> schoolFeatureList = entityManager.createQuery(query).getResultList();
+	
+		List<String> featureList=new ArrayList<>();
+		for(SchoolFeatureModel schoolFeatureModel:schoolFeatureList){
+			featureList.add(schoolFeatureModel.getFeatureModel().getFeatureName());
+		}
+		
+		return featureList;
+	}
+
+	@Override
+	public List<SchoolFeatureModel> getSchoolFeatureListForPrincipal(int row_id, String Principal) {
+		String query = "FROM SchoolFeatureModel where schoolModel.schoolId=" + row_id+ " AND featureModel.featureType='"+Principal+"'";
+		@SuppressWarnings("unchecked")
+		List<SchoolFeatureModel> schoolFeatureList = entityManager.createQuery(query).getResultList();
+		System.out.println("CURRENT FEATURE LIST::>" + schoolFeatureList.toString());
+		return schoolFeatureList;
+	}
+	@Override
+	public List<SchoolFeatureModel> getSchoolFeatureListMain(int schoolID) {
+		String query = "FROM SchoolFeatureModel where schoolModel.schoolId=" + schoolID+" ";
+		@SuppressWarnings("unchecked")
+		List<SchoolFeatureModel> schoolFeatureList = entityManager.createQuery(query).getResultList();
+		for(SchoolFeatureModel SchoolFeatureModel:schoolFeatureList){
+			System.out.println("CURR FID::>"+SchoolFeatureModel.getFeatureModel().getRowId());
+		}
+		return schoolFeatureList;
+	}
+
+	
+
+}

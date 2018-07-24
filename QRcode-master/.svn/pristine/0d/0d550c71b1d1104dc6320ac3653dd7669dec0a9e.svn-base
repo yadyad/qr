@@ -1,0 +1,319 @@
+package com.zs.cws.payment.controller;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.zs.cws.payment.dao.PaymentDAO;
+import com.zs.cws.payment.model.PaymentModel;
+import com.zs.cws.payment.repository.PaymentHistoryRepository;
+import com.zs.cws.payment.service.IntegrationProcessServices;
+import com.zs.cws.schooladmin.subscriptionactivation.dao.SubscriptionActivationDAO;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+import com.zs.cws.schooladmin.subscriptionactivation.model.suscriptionDetailsModel;
+import com.zs.cws.schooladmin.subscriptionactivation.repository.SubscriptionActivationRepository;
+import com.zs.cws.superadmin.master.quota.model.QuotaModel;
+import com.zs.cws.superadmin.master.quota.repository.QuotaRepository;
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+import com.zs.cws.superadmin.master.suscription.repository.SubscriptionPlanRepository;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.utils.DateParsor;
+import com.zs.cws.utils.GlobalVariables;
+import com.zs.cws.utils.PasswordGenerator;
+
+@Controller
+// @RequestMapping("superadmin/payment")
+public class IntegrationProcessController {
+
+	@Autowired
+	SubscriptionPlanRepository subscriptionPlanRepository;
+
+	@Autowired
+	SubscriptionActivationRepository subscriptionActivationRepository;
+
+	@Autowired
+	PaymentDAO paymentDAO;
+
+	@Autowired
+	SubscriptionActivationDAO subscriptionActivationDAO;
+	@Autowired
+	PaymentHistoryRepository paymentHistoryRepository;
+
+	@Autowired
+	QuotaRepository quotaRepository;
+	public static suscriptionDetailsModel SUBSCRIPTIONMODEL;
+	boolean isRenewal = false;
+
+	static int QUATA_ID = 0;
+	static double QUATA_SIZE = 0;
+
+	@RequestMapping(value = { "/giveplandetails" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request,
+			@RequestBody suscriptionDetailsModel suscriptionDetailsModel, HttpSession session) {
+		SUBSCRIPTIONMODEL = suscriptionDetailsModel;
+		System.out.println("Additional Member Count::>" + SUBSCRIPTIONMODEL.toString());
+		return null;
+		/*
+		 * } else { System.out.println("DUplicate"); return null; }
+		 */
+	}
+
+	@RequestMapping(value = { "/getquataamount" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getQuataAmount(HttpServletRequest request) {
+		QuotaModel quotaModel = quotaRepository.findOne(QUATA_ID);
+		QUATA_SIZE = quotaModel.getQuotaSize();
+		return quotaModel.getQuotaPrice();
+	}
+
+	@RequestMapping(value = "/paymentRequest", method = RequestMethod.GET)
+	public ModelAndView paymentRequest(Locale locale,
+			@RequestParam(value = "id", required = false) int subscriptionID) {
+		ModelAndView model = new ModelAndView("paymentform");
+		/* return "test/payment_request"; */
+		double amount = 0;
+		SubsciptionPlanModel subsciptionPlanModel = subscriptionPlanRepository.findOne(subscriptionID);
+		if (subsciptionPlanModel != null) {
+			GlobalVariables.PLAN_ID = subscriptionID;
+			amount = subsciptionPlanModel.getInitialSetupPrie();
+		}
+		model.addObject("refID", PasswordGenerator.generateRandomString());
+		model.addObject("amount", amount);
+		return model;
+	}
+
+	@RequestMapping(value = "/quatarenewal", method = RequestMethod.GET)
+	public ModelAndView quataRenewal(Locale locale, @RequestParam(value = "id", required = false) int quataID) {
+		ModelAndView model = new ModelAndView("quatarenewalform");
+		QUATA_ID = quataID;
+		QuotaModel quotaModel = quotaRepository.findOne(quataID);
+		model.addObject("refID", PasswordGenerator.generateRandomString());
+		model.addObject("amount", quotaModel.getQuotaPrice());
+		return model;
+	}
+
+	@RequestMapping(value = "/addstudents", method = RequestMethod.GET)
+	public ModelAndView paymentRequestForNewStudents() {
+		ModelAndView model = new ModelAndView("paymentform_for_add_students");
+		/* return "test/payment_request"; */
+		SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(GlobalVariables.SCHOOL_ID);
+
+		System.out.println("CURRENT PLAN::>>>" + subscriptionPlanActivationModel.toString());
+
+		double amount = 0;
+		model.addObject("refID", PasswordGenerator.generateRandomString());
+		model.addObject("amount", amount);
+		isRenewal = true;
+		return model;
+	}
+
+	@RequestMapping(value = "/pages/saveOrder", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getRequestDetailsAndSave(HttpServletRequest request, HttpServletResponse response)
+			throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+		ModelAndView model = new ModelAndView();
+
+		// reading form data into map
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements()) {
+			String keyName = enumeration.nextElement();
+			String[] parameterValue = request.getParameterValues(keyName);
+			for (int i = 0; i < parameterValue.length; i++) {
+				String paramValue = parameterValue[i];
+				dataMap.put(keyName, paramValue);
+			}
+		}
+
+		IntegrationProcessServices integrationProcessServices = new IntegrationProcessServices();
+		// InitiatePayment method will initiate the payment request to paynear
+		// server
+		Map<String, Object> responseDataMap = integrationProcessServices.initiatePayment(dataMap);
+		String responseurl = (String) responseDataMap.get("redirectURL");
+		System.out.println("Response URL After Integration Process Service>>>>" + responseurl);
+		System.out.println("Response DataMap Response Message After Integration Process Service>>>>"
+				+ responseDataMap.get("responseMessage"));
+		System.out.println("Response DataMap ResponseCode After Integration Process Service>>>>"
+				+ responseDataMap.get("responseCode"));
+		if ("Success".equalsIgnoreCase((String) responseDataMap.get("responseMessage"))
+				&& "000".equalsIgnoreCase((String) responseDataMap.get("responseCode"))) {
+			model.addObject("redirectURL", responseurl);
+			model.setViewName("form");
+		} else {
+			model.addObject("dataMap", responseDataMap);
+			model.setViewName("error");
+		}
+		return model;
+	}
+
+	@RequestMapping(value = "/responseData", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getResponseDetailsFromPayee(HttpServletRequest request, HttpServletResponse response)
+			throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+
+		// reading form data into map
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements()) {
+			String keyName = enumeration.nextElement();
+			String[] parameterValue = request.getParameterValues(keyName);
+			for (int i = 0; i < parameterValue.length; i++) {
+				String paramValue = parameterValue[i];
+				dataMap.put(keyName, paramValue);
+			}
+		}
+
+		// Status Verification Process After payment Completed
+		System.out.println("ResponseData:" + dataMap.toString());
+
+		SubsciptionPlanModel subsciptionPlanModel = subscriptionPlanRepository.findOne(GlobalVariables.PLAN_ID);
+
+		SubscriptionPlanActivationModel lastInsertedSubscriptionModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(GlobalVariables.SCHOOL_ID);
+
+		IntegrationProcessServices integrationProcessServices = new IntegrationProcessServices();
+		Map<String, Object> responseDataMap = integrationProcessServices.getTransactionStatusProcess(dataMap);
+		System.out.println("RESPONSE MESSAGE:::>>>" + responseDataMap.get("responseMessage"));
+		// *=========STORING PAYMENT HISTORY DETAILS======================*//
+
+		PaymentModel paymentModel = new PaymentModel();
+		SchoolModel schoolModel = new SchoolModel();
+		schoolModel.setSchoolId(GlobalVariables.SCHOOL_ID);
+		paymentModel.setSchoolModel(schoolModel);
+		paymentModel.setPaymentID((String) responseDataMap.get("paymentId"));
+		paymentModel.setTransactionID((String) responseDataMap.get("transactionId"));
+		paymentModel.setOrderRefNo((String) responseDataMap.get("orderRefNo"));
+		paymentModel.setResponseStatus((String) responseDataMap.get("responseMessage"));
+		paymentModel.setResponseCode((String) responseDataMap.get("responseCode"));
+		paymentModel.setAmount((String) responseDataMap.get("amount"));
+		paymentModel.setMerchantID(String.valueOf(responseDataMap.get("merchantId")));
+		paymentModel.setPaymentMethod((String) responseDataMap.get("paymentMethod"));
+		paymentModel.setPaymentBrand((String) responseDataMap.get("paymentBrand"));
+		paymentModel.setTransaction_date(new Date());
+		paymentModel.setCurrencyCode((String) responseDataMap.get("currencyCode"));
+		paymentHistoryRepository.save(paymentModel);
+
+		// ACTIVATE THE PLAN IF THE PAYMENT SUCCESS..........
+		if ("success".equalsIgnoreCase((String) responseDataMap.get("responseMessage"))) {
+			if (QUATA_ID == 0) {
+				if (!isRenewal) {
+					SubscriptionPlanActivationModel subscriptionPlanActivationModel = new SubscriptionPlanActivationModel();
+					subscriptionPlanActivationModel.setSchoolModel(schoolModel);
+					subscriptionPlanActivationModel.setStartDate(new Date());
+					if (SUBSCRIPTIONMODEL.getPlanType().equals("Quarterly")) {
+						subscriptionPlanActivationModel.setEndDate(DateParsor.addDays(new Date(), 91));
+					} else {
+						subscriptionPlanActivationModel.setEndDate(DateParsor.addDays(new Date(), 365));
+					}
+					subscriptionPlanActivationModel.setSubscriptionType(SUBSCRIPTIONMODEL.getPlanType());
+					subscriptionPlanActivationModel.setGraceEndDate(DateParsor.addDays(
+							subscriptionPlanActivationModel.getEndDate(), subsciptionPlanModel.getGracePeriod()));
+					subscriptionPlanActivationModel.setSubsciptionPlanModel(subsciptionPlanModel);
+					subscriptionPlanActivationModel.setMemberCount(SUBSCRIPTIONMODEL.getMemberCount());
+					if (lastInsertedSubscriptionModel.getStorageSpace() != 0) {
+						subsciptionPlanModel.setStorageSpace(lastInsertedSubscriptionModel.getStorageSpace()
+								+ subsciptionPlanModel.getStorageSpace());
+					}
+					subscriptionPlanActivationModel.setStorageSpace(subsciptionPlanModel.getStorageSpace());
+					subscriptionActivationRepository.save(subscriptionPlanActivationModel);
+				} else {
+					SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+							.getLastSubscribedPlan(GlobalVariables.SCHOOL_ID);
+					subscriptionPlanActivationModel.setMemberCount(
+							subscriptionPlanActivationModel.getMemberCount() + SUBSCRIPTIONMODEL.getMemberCount());
+					subscriptionActivationRepository.save(subscriptionPlanActivationModel);
+					isRenewal = false;
+				}
+			} else {
+				SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+						.getLastSubscribedPlan(GlobalVariables.SCHOOL_ID);
+				subscriptionPlanActivationModel.setStorageSpace(
+						subscriptionPlanActivationModel.getStorageSpace() + QUATA_SIZE);
+				subscriptionActivationRepository.save(subscriptionPlanActivationModel);
+			}
+		}
+
+		ModelAndView model = new ModelAndView();
+		model.addObject("dataMap", responseDataMap);
+		model.setViewName("redirect:/login");
+		return model;
+	}
+
+	@RequestMapping(value = "/verificationRequestData", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getPaymentVerificationRequestProcess(HttpServletRequest request, HttpServletResponse response)
+			throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+
+		// reading form data into map
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements()) {
+			String keyName = enumeration.nextElement();
+			String[] parameterValue = request.getParameterValues(keyName);
+			for (int i = 0; i < parameterValue.length; i++) {
+				String paramValue = parameterValue[i];
+				dataMap.put(keyName, paramValue);
+			}
+		}
+
+		IntegrationProcessServices integrationProcessServices = new IntegrationProcessServices();
+		Map<String, Object> verificationResponseMap = integrationProcessServices
+				.getVerificationProcessForRequestDataMap(dataMap);
+		ModelAndView model = new ModelAndView();
+		model.addObject("dataMap", verificationResponseMap);
+		model.setViewName("test/verify_response");
+		return model;
+	}
+
+	@RequestMapping(value = "/refundRequestData", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getPaymentRefundRequestProcess(HttpServletRequest request, HttpServletResponse response)
+			throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+		// reading form data into map
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements()) {
+			String keyName = enumeration.nextElement();
+			String[] parameterValue = request.getParameterValues(keyName);
+			for (int i = 0; i < parameterValue.length; i++) {
+				String paramValue = parameterValue[i];
+				dataMap.put(keyName, paramValue);
+			}
+		}
+		IntegrationProcessServices integrationProcessServices = new IntegrationProcessServices();
+		Map<String, Object> verificationResponseMap = integrationProcessServices.getRefundRequestProcess(dataMap);
+		ModelAndView model = new ModelAndView();
+		model.addObject("dataMap", verificationResponseMap);
+		model.setViewName("test/refund_response");
+		return model;
+	}
+
+	// return verification request form
+	@RequestMapping(value = "verifyProcess", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getVerifyProcess(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("test/verify_request");
+		return mv;
+	}
+
+	// return refund request form
+	@RequestMapping(value = "/refundProcess", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView getRefundProcess(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("test/refund_request");
+		return mv;
+	}
+}

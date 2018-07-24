@@ -1,0 +1,218 @@
+package com.zs.cws.superadmin.schooldivision.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name = "cwas_division_details")
+public class SchoolDivModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int schoolDivId;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@Column(name = "division")
+	String division;
+
+	@Column(name = "standard")
+	String standard;
+
+	@Column(name = "division_username")
+	String divisionUserName;
+
+	@Column(name = "password")
+	String password;
+
+
+	@OneToOne
+	@JoinColumn(name="class_teacher_id")
+	SchoolStaffModel schoolStaffModel;
+	
+	@OneToOne
+	@JoinColumn(name="co_class_teacher_id")
+	SchoolStaffModel coschoolStaffModel;
+
+	@Column(name = "created_by")
+	String createdUser;
+
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+
+	@Column(name = "updated_by")
+	String updatedUser;
+
+	@Column(name = "update_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public SchoolDivModel() {
+		super();
+		
+	}
+
+
+
+	public SchoolDivModel(int schoolDivId, SchoolModel schoolModel, String division, String standard, String divisionUserName,
+			String password, SchoolStaffModel schoolStaffModel, SchoolStaffModel coschoolStaffModel, String createdUser,
+			Date createdDate, String updatedUser, Date updatedDate) {
+		super();
+		this.schoolDivId = schoolDivId;
+		this.schoolModel = schoolModel;
+		this.division = division;
+		this.standard = standard;
+		this.divisionUserName = divisionUserName;
+		this.password = password;
+		this.schoolStaffModel = schoolStaffModel;
+		this.coschoolStaffModel = coschoolStaffModel;
+		this.createdUser = createdUser;
+		this.createdDate = createdDate;
+		this.updatedUser = updatedUser;
+		this.updatedDate = updatedDate;
+	}
+
+
+
+
+	public SchoolStaffModel getCoschoolStaffModel() {
+		return coschoolStaffModel;
+	}
+
+
+
+	public void setCoschoolStaffModel(SchoolStaffModel coschoolStaffModel) {
+		this.coschoolStaffModel = coschoolStaffModel;
+	}
+
+
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+
+	
+
+	public int getSchoolDivId() {
+		return schoolDivId;
+	}
+
+
+
+	public void setSchoolDivId(int schoolDivId) {
+		this.schoolDivId = schoolDivId;
+	}
+
+
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+
+	public String getDivisionUserName() {
+		return divisionUserName;
+	}
+
+	public void setDivisionUserName(String divisionUserName) {
+		this.divisionUserName = divisionUserName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "SchoolDivModel [schoolDivId=" + schoolDivId + ", schoolModel=" + schoolModel + ", division=" + division
+				+ ", standard=" + standard + ", divisionUserName=" + divisionUserName + ", password=" + password
+				+ ", schoolStaffModel=" + schoolStaffModel + ", coschoolStaffModel=" + coschoolStaffModel
+				+ ", createdUser=" + createdUser + ", createdDate=" + createdDate + ", updatedUser=" + updatedUser
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+
+
+
+
+}

@@ -1,0 +1,10 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+
+public interface ManagementMeetingStatusRepository extends JpaRepository<ManagementPrincipalMeetingStatusModel, Integer>{
+
+}

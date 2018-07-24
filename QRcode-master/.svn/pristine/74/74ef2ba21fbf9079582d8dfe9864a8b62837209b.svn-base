@@ -1,0 +1,187 @@
+package com.zs.cws.superadmin.management.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+@Table(name = "cwas_management_details")
+public class ManagementModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int managementID;
+
+	@Column(name = "management_name")
+	private String managementName;
+
+	@Column(name = "management_head")
+	private String managementHead;
+
+	@Column(name = "country")
+	private String country;
+
+	@Column(name = "state")
+	private String state;
+
+	@Column(name = "district")
+	private String district;
+
+	@Column(name = "location")
+	private String location;
+
+	@Column(name = "email_id",unique=true)
+	private String emailID;
+
+	@Column(name = "phone")
+	private String phone;
+
+	@Column(name = "created_by")
+	private String createdBy;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "created_date")
+	private Date createdDate;
+
+	@Column(name = "updated_by")
+	private String updatedBy;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "updated_date")
+	private Date updatedDate;
+
+	@Column(name = "image_url")
+	private String imageURL;
+
+	public ManagementModel() {
+	}
+
+	public int getManagementID() {
+		return managementID;
+	}
+
+	public void setManagementID(int managementID) {
+		this.managementID = managementID;
+	}
+
+	public String getManagementName() {
+		return managementName;
+	}
+
+	public void setManagementName(String managementName) {
+		this.managementName = managementName;
+	}
+
+	public String getManagementHead() {
+		return managementHead;
+	}
+
+	public void setManagementHead(String managementHead) {
+		this.managementHead = managementHead;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getEmailID() {
+		return emailID;
+	}
+
+	public void setEmailID(String emailID) {
+		this.emailID = emailID;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementModel [managementID=" + managementID + ", managementName=" + managementName
+				+ ", managementHead=" + managementHead + ", country=" + country + ", state=" + state + ", district="
+				+ district + ", location=" + location + ", emailID=" + emailID + ", phone=" + phone + ", createdBy="
+				+ createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate="
+				+ updatedDate + ", imageURL=" + imageURL + "]";
+	}
+
+}

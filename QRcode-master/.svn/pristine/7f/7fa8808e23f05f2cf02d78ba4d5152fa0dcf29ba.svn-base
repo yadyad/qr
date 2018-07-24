@@ -1,0 +1,113 @@
+package com.zs.cws.ws.hybrid.news.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import com.zs.cws.schooladmin.news.dao.NewstDAO;
+import com.zs.cws.superadmin.managementmembers.dao.ManagementMemberDAO;
+import com.zs.cws.superadmin.managementmembers.repository.ManagementMemberRepository;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.ws.hybrid.kudos.model.KudosResponseModel;
+import com.zs.cws.ws.hybrid.news.model.NewsFinalModel;
+import com.zs.cws.ws.hybrid.news.model.NewsRequestModel;
+import com.zs.cws.ws.hybrid.news.model.NewsResponseModel;
+
+@RestController
+public class NewsServiceController {
+	@Autowired
+	NewstDAO newstDAO;
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	ManagementMemberDAO managementMemberDAO;
+
+	@Autowired
+	ManagementMemberRepository managementRepository;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+
+	@RequestMapping(value = "/news", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllNews(HttpServletRequest request,
+			@RequestBody NewsRequestModel newsRequestModel) {
+		try {
+			NewsFinalModel newsFinalModel = new NewsFinalModel();
+			if (schoolDAO.isValidSchool(newsRequestModel.getSchoolID())) {
+
+				if (newsRequestModel.getMemberType().equalsIgnoreCase("Principal")
+						|| newsRequestModel.getMemberType().equalsIgnoreCase("T")) {
+					if (schoolStaffDAO.isValidMemberStaff(newsRequestModel.getMemberId())) {// staff
+						List<NewsResponseModel> newsResponseList = newstDAO.getNewsList(newsRequestModel);
+						newsFinalModel.setNewsResponseModel(newsResponseList);
+
+						newsFinalModel.setResponseStatus("Success");
+						newsFinalModel.setStatus(newsRequestModel.getStatus());
+					} else {
+						newsFinalModel.setResponseStatus("Invalid User");
+						newsFinalModel.setNewsResponseModel(new ArrayList<>());
+					}
+
+				} else if (newsRequestModel.getMemberType().equalsIgnoreCase("Management")) {// management
+					if (managementMemberDAO.isValidMember(newsRequestModel.getMemberId())) {
+						List<NewsResponseModel> newsResponseList = newstDAO.getNewsList(newsRequestModel);
+						newsFinalModel.setNewsResponseModel(newsResponseList);
+						newsFinalModel.setResponseStatus("Success");
+						newsFinalModel.setStatus(newsRequestModel.getStatus());
+					} else {
+
+						newsFinalModel.setResponseStatus("Invalid User");
+					}
+				} 
+				
+				
+				
+				
+				
+				
+				
+				else if (newsRequestModel.getMemberType().equalsIgnoreCase("Parent")
+						|| newsRequestModel.getMemberType().equalsIgnoreCase("P")) {
+					if (managementMemberDAO.isValidMemberParent(newsRequestModel.getMemberId())) {
+						List<NewsResponseModel> newsResponseList = newstDAO.getNewsList(newsRequestModel);
+						newsFinalModel.setNewsResponseModel(newsResponseList);
+						newsFinalModel.setResponseStatus("Success");
+						newsFinalModel.setStatus(newsRequestModel.getStatus());
+					} else {
+						newsFinalModel.setResponseStatus("Invalid User");
+					}
+
+				} else {
+					newsFinalModel.setResponseStatus("Invalid Type");
+				}
+				
+				
+				
+				
+
+			} else {
+				newsFinalModel.setResponseStatus("Invalid User");
+				newsFinalModel.setNewsResponseModel(new ArrayList<>());
+
+			}
+
+			return newsFinalModel;
+		} catch (Exception e) {
+			NewsFinalModel newsFinalModel = new NewsFinalModel();
+			newsFinalModel.setResponseStatus("Failed");
+			return newsFinalModel;
+		}
+	}
+
+}

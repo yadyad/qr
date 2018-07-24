@@ -1,0 +1,269 @@
+<!-- <body class="lgn-page-bg-home">
+ -->
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<script type="text/javascript"
+	src="${myUrl}resources/controller/schoolAdmin/driverprofile/driverprofile.js"></script>
+
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<div class="title-form">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+				<h2>
+					Driver details<small></small>
+				</h2>
+
+			</div>
+
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<p class="pull-right mandatory">
+					<span class="required" style="color: red">*</span>represents
+					mandatory
+
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div ng-app="driverProfile" id="cntrlID"
+		ng-controller="driverProfileCtrl">
+		<div style="">
+
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+					<div class="mrg-lg-btm-top">
+
+						<button id="btnDelete" ng-click="hide()"
+							class="btn btn-primary pull-right">{{Show}}</button>
+						<!-- 	<button id="btnDelete" ng-click="show()"
+					class="btn btn-primary pull-right">New</button> -->
+
+					</div>
+					<div class="alert-box success" id="success">Saved or updated
+						successfully!</div>
+					<div class="alert-box failure" id="deleted">Deleted
+						Successfully!</div>
+					<div class="alert-box failure" id="duplicate">Duplicate
+						Entry!</div>
+
+				</div>
+			</div>
+			<div id="driver-profile-form" class="contain-space1">
+
+				<div class="form-field">
+					<div class="row">
+						<form id="demo-form2" name="form" ng-submit="submit()"
+							class="form-horizontal form-label-left">
+
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="first-name">Driver name <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" name="driverName" pattern="^[^\s]+(\s.*)?$"
+											ng-model="driverDetailsModel.driverName" required
+											maxlength="255" id="driverName"
+											class="form-control col-md-7 col-xs-12"> <span
+											id="dn" style="color: green"></span>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="phone">Phone <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" ng-model="driverDetailsModel.phone"
+											name="phone"
+											class="form-control col-md-7 col-xs-12 schoolSpace"
+											pattern="^\d{10}$" title="Phone number must be 10 digits"
+											required><br />
+									</div>
+								</div>
+
+
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="first-name">Email <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input ng-model="driverDetailsModel.email" type="email"
+											name="email" id="email" maxlength="254"
+											pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+											class="form-control col-md-7 col-xs-12"
+											title="Enter valid email"> <span id="de"
+											style="color: green"></span>
+
+
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="first-name">Bus number <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" name="busNumber" pattern="^[^\s]+(\s.*)?$"
+											ng-model="driverDetailsModel.busNumber" required
+											maxlength="255" id="busNumber"
+											class="form-control col-md-7 col-xs-12"> <span
+											id="fr" style="color: green"></span>
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="first-name">License number <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<input type="text" name="licenseNumber"
+											pattern="^[^\s]+(\s.*)?$"
+											ng-model="driverDetailsModel.licenseNumber" required
+											maxlength="255" id="licenseNumber"
+											class="form-control col-md-7 col-xs-12"> <span
+											id="lno" style="color: green"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="last-name">Address <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<textarea type="text" ng-model="driverDetailsModel.address"
+											id="address" name="address" pattern="^[^\s]+(\s.*)?$"
+											class="form-control col-md-7 col-xs-12"></textarea>
+										<span id="rd" style="color: green"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<div class="form-group">
+									<label class="control-label col-md-5 col-sm-5 col-xs-12"
+										for="phone">Route <span class="required"
+										style="color: red">*</span>
+									</label>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+										<select class="form-control" name="category"
+											data-ng-model=driverDetailsModel.driverRoutesModel.driverRouteID
+											data-ng-options="key as value for (key, value) in driverRouteList"
+											id="rowId" value="key" required>
+											<option value="">Please choose a Route</option>
+
+										</select>
+									</div>
+								</div>
+
+
+
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+									<div class="form-group">
+										<button class="btn btn-primary pull-right mrg-right-none"
+											ng-click="submitted=true" type="submit">Save</button>
+										<button class="btn btn-primary pull-right" ng-click="reset()"
+											type="reset">Clear</button>
+
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="contain-space1">
+			<div class="j-table-responsive">
+
+
+				<div class="table-field">
+					<table id="datatable-buttons" datatable="ng" border="0"
+						class="display table table-striped table-bordered table-bordered-color dataTable no-footer"
+						cellspacing="0" width="100%" class="">
+						<thead>
+							<tr>
+								<th>Driver Name</th>
+								<th>Phone number</th>
+								<th>Email</th>
+								<th>Bus number</th>
+								<th>Route</th>
+								<th>License number</th>
+								<th>Address</th>
+
+								<th style="text-align: center;">Edit</th>
+								<th class="text-center"><i ng-click="remove()"
+									class="fa fa-trash ico-action-red icon-deleteall"></i><input
+									type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>Driver Name</th>
+								<th>Phone number</th>
+								<th>Email</th>
+								<th>Bus number</th>
+								<th>Route</th>
+								<th>License number</th>
+								<th>Address</th>
+								<th style="text-align: center;">Edit</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+
+							<tr ng-repeat="driverDetailsModel in driverDetailsModelList">
+								<td>{{driverDetailsModel.driverName}}</td>
+								<td>{{driverDetailsModel.phone}}</td>
+								<td>{{driverDetailsModel.email}}</td>
+								<td>{{driverDetailsModel.busNumber}}</td>
+								<td>{{driverDetailsModel.driverRoutesModel.routeFrom}}-{{driverDetailsModel.driverRoutesModel.routeTo}}</td>
+								<td>{{driverDetailsModel.licenseNumber}}</td>
+								<td>{{driverDetailsModel.address}}</td>
+
+								<td style="text-align: center;"><a
+									ng-click="edit(driverDetailsModel,$index)"><i
+										class="btn fa fa-edit ico-action"></i></a> <!-- <a
+									ng-click="deleteCat(categoryModel.rowId,$index)"><i
+										class="btn fa fa-trash ico-action-red"></i></a> --></td>
+								<td class="text-center"><input type="checkbox"
+									ng-model="driverDetailsModel.selected"
+									style="margin-left: 18px;" /></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+

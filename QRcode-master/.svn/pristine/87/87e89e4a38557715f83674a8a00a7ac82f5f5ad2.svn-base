@@ -1,0 +1,127 @@
+package com.zs.cws.superadmin.master.paymentmode.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="cwas_payment_mode_master")
+public class PaymentModeModel {
+
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int paymentModeId;
+	
+	
+	@Column(name="payment_type")
+	private String paymentType;
+	
+	@Column(name="description")
+	private String paymentDesc;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+
+
+	public PaymentModeModel() {
+	
+	}
+
+
+	public int getPaymentModeId() {
+		return paymentModeId;
+	}
+
+
+	public void setPaymentModeId(int paymentModeId) {
+		this.paymentModeId = paymentModeId;
+	}
+
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+
+
+	public String getPaymentDesc() {
+		return paymentDesc;
+	}
+
+
+	public void setPaymentDesc(String paymentDesc) {
+		this.paymentDesc = paymentDesc;
+	}
+
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	@Override
+	public String toString() {
+		return "PaymentModeModel [paymentModeId=" + paymentModeId + ", paymentType=" + paymentType + ", paymentDesc="
+				+ paymentDesc + ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+	
+	
+	
+	
+}

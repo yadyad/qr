@@ -1,0 +1,8 @@
+package com.zs.cws.superadmin.master.tax.dao;
+
+import com.zs.cws.superadmin.master.tax.model.TaxModel;
+
+public interface TaxDAO {
+
+	public TaxModel getCurrentTax();
+}

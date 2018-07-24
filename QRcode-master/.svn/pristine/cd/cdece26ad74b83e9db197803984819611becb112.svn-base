@@ -1,0 +1,122 @@
+package com.zs.cws.schooladmin.myclass.dao;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.myclass.model.MyClassModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.ws.android.license.model.SchoolClassModel;
+
+@Repository
+public class MyClassIMPL implements MyClassDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<MyClassModel> getMyClassDetails(int schoolID) {
+		String query = "From MyClassModel where schoolId = '" + schoolID + "'";
+		@SuppressWarnings("unchecked")
+		List<MyClassModel> classModels = entityManager.createQuery(query).getResultList();
+
+		return classModels;
+	}
+
+	@Override
+	public Object isSubjectExist(String subjectId, int schoolId, String schoolDivId) {
+
+		String query = "SELECT COUNT(subject_id) FROM MyClassModel WHERE subjectModel.subjectId= '" + subjectId
+				+ "' and schoolId = '" + schoolId + "' and schoolDivModel.schoolDivId='" + schoolDivId + "'  ";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public List<SchoolClassModel> getAllClassesByStaff(int schoolID, String phone) {
+		String query = "From MyClassModel where schoolId = " + schoolID + " AND schoolStaffModel.phone='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<MyClassModel> classModels = entityManager.createQuery(query).getResultList();
+		List<SchoolClassModel> classList = new ArrayList<>();
+		for (MyClassModel myClassModel : classModels) {
+			SchoolClassModel schoolClassModel = new SchoolClassModel();
+			schoolClassModel.setClassID(myClassModel.getSchoolDivModel().getSchoolDivId());
+			schoolClassModel.setClassName(myClassModel.getSchoolDivModel().getStandard() + "-"
+					+ myClassModel.getSchoolDivModel().getDivision());
+			schoolClassModel.setStatus("no");
+			if (myClassModel.getSchoolDivModel().getSchoolStaffModel().getSchoolStaffId() == myClassModel
+					.getSchoolStaffModel().getSchoolStaffId()) {
+				schoolClassModel.setStatus("yes");
+			}
+
+			classList.add(schoolClassModel);
+		}
+		return classList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SchoolStaffModel> getMyClassDetails1(Integer[] selectedDivisions, Integer[] selectedSubjects,
+			int schoolID) {
+		List<Integer> divisionList = new ArrayList<>();
+		List<Integer> subjectList = new ArrayList<>();
+		if (selectedDivisions != null) {
+			divisionList = Arrays.asList(selectedDivisions);
+		}
+		if (selectedSubjects != null) {
+			subjectList = Arrays.asList(selectedSubjects);
+		}
+		String query = "";
+		Query queryString;
+
+		List<SchoolStaffModel> staffList = new ArrayList<>();
+		List<MyClassModel> resultList = new ArrayList<>();
+		if (divisionList.size() > 0 && subjectList.size() > 0) {
+			query = "From MyClassModel where schoolId = " + schoolID
+					+ " AND schoolDivModel.schoolDivId IN :divisonList AND  subjectModel.subjectId IN :subjectList";
+			queryString = entityManager.createQuery(query);
+			queryString.setParameter("divisonList", divisionList);
+			queryString.setParameter("subjectList", subjectList);
+		} else if (divisionList.size() > 0 && subjectList.size() <= 0) {
+			query = "From MyClassModel where schoolId = " + schoolID
+					+ " AND schoolDivModel.schoolDivId IN :divisonList";
+			queryString = entityManager.createQuery(query);
+			queryString.setParameter("divisonList", divisionList);
+		} else {
+			query = "From MyClassModel where schoolId = " + schoolID + "AND  subjectModel.subjectId IN :subjectList";
+			queryString = entityManager.createQuery(query);
+			queryString.setParameter("subjectList", subjectList);
+		}
+		resultList = queryString.getResultList();
+
+		for (MyClassModel myClassModel : resultList) {
+			staffList.add(myClassModel.getSchoolStaffModel());
+		}
+		return staffList;
+	}
+
+	@Override
+	public List<MyClassModel> getStaffDetails(int divisionID, int schoolID, String modeifiedDate) {
+		String query = "From MyClassModel where schoolDivModel.schoolDivId = '" + divisionID + "' and schoolId = '"
+				+ schoolID + "' and updatedDate >'" + modeifiedDate + "'";
+		@SuppressWarnings("unchecked")
+		List<MyClassModel> classModels = entityManager.createQuery(query).getResultList();
+		return classModels;
+	}
+
+	@Override
+	public List<MyClassModel> getMyClassByDivision(int divisionID) {
+		String query = "From MyClassModel where schoolDivModel.schoolDivId = " + divisionID + "";
+		@SuppressWarnings("unchecked")
+		List<MyClassModel> classModels = entityManager.createQuery(query).getResultList();
+
+		return classModels;
+	}
+
+}

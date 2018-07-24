@@ -1,0 +1,186 @@
+package com.zs.cws.ws.android.attendence.controller;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.settings.dao.AcademicYearDAO;
+import com.zs.cws.schooladmin.settings.model.AcademicModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schooldivision.repository.SchoolDivRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.attendence.dao.AttendanceDAO;
+import com.zs.cws.ws.android.attendence.model.AttendanceDate;
+import com.zs.cws.ws.android.attendence.model.AttendanceFinalResonse;
+import com.zs.cws.ws.android.attendence.model.AttendanceModel;
+import com.zs.cws.ws.android.attendence.model.AttendanceRequestModel;
+import com.zs.cws.ws.android.attendence.model.FinaStudentAttenceResponseModel;
+import com.zs.cws.ws.android.attendence.model.StudentAttendanceResponseModel;
+import com.zs.cws.ws.android.attendence.model.Students;
+import com.zs.cws.ws.android.attendence.repository.AttendanceRepository;
+@RestController
+@RequestMapping("android/attendance")
+public class AttendanceServiceController {
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	AttendanceRepository attendanceRepository;
+	@Autowired
+	SchoolDivRepository schoolDivRepository;
+	@Autowired
+	StudentRepository studentRepository;
+	@Autowired
+	AttendanceDAO attendanceDAO;
+	@Autowired
+	SchoolDivDAO schoolDiv;
+	@Autowired
+	StudentDAO studentDAO;
+
+	@Autowired
+	AcademicYearDAO academicYearDAO;
+
+	@RequestMapping(value = "/studentsList", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody AttendanceRequestModel attendanceRequestModel) {
+
+		attendanceDAO.deleteGivenDateAttendance(attendanceRequestModel.getAttendanceDate(),
+				attendanceRequestModel.getSchoolID(), attendanceRequestModel.getDivisionID());
+
+		try {
+			AttendanceFinalResonse attendanceFinalResonse = new AttendanceFinalResonse();
+			if (schoolDAO.isValidSchool(attendanceRequestModel.getSchoolID())) {
+				List<Students> students = attendanceRequestModel.getStudentsList();
+
+				for (int i = 0; i < students.size(); i++) {
+					AttendanceModel attendanceModel = new AttendanceModel();
+
+					SchoolModel schoolModel = schoolRepository.findOne(attendanceRequestModel.getSchoolID());
+					attendanceModel.setSchoolModel(schoolModel);
+
+					SchoolDivModel divModel = schoolDivRepository.findOne(attendanceRequestModel.getDivisionID());
+					attendanceModel.setSchoolDivModel(divModel);
+					StudentModel studentModel = studentRepository
+							.findOne(attendanceRequestModel.getStudentsList().get(i).getStudentID());
+					attendanceModel.setStudentModel(studentModel);
+					attendanceModel.setAbsent("false");
+					attendanceModel.setIsLate(attendanceRequestModel.getStudentsList().get(i).getIsLate());
+					if (attendanceRequestModel.getStudentsList().get(i).getLateTime().isEmpty()) {
+						attendanceModel.setAbsent(attendanceRequestModel.getStudentsList().get(i).getIsAbsent());
+						attendanceModel.setLateTime("0");
+
+					} else {
+						attendanceModel.setAbsent(attendanceRequestModel.getStudentsList().get(i).getIsAbsent());
+						attendanceModel.setLateTime(attendanceRequestModel.getStudentsList().get(i).getLateTime());
+					}
+
+					attendanceModel.setCreatedDate(new Date());
+
+					String attendanceDate = attendanceRequestModel.getAttendanceDate();
+
+					attendanceModel.setDate(attendanceDate);
+					attendanceRepository.save(attendanceModel);
+				}
+				attendanceFinalResonse.setStatus("Success");
+
+			} else {
+				attendanceFinalResonse.setStatus("Invalid User");
+			}
+			return attendanceFinalResonse;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			AttendanceFinalResonse attendanceFinalResonse = new AttendanceFinalResonse();
+			attendanceFinalResonse.setStatus("Failed");
+			return attendanceFinalResonse;
+
+		}
+	}
+
+	@RequestMapping(value = "/studentsListForDate", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudentsForDate(HttpServletRequest request,
+			@RequestBody AttendanceRequestModel attendanceRequestModel) {
+		AttendanceDate attendanceDate = new AttendanceDate();
+		if (schoolDAO.isValidSchool(attendanceRequestModel.getSchoolID())) {
+			List<AttendanceModel> attendanceModels = attendanceDAO.getAttendanceForDate(
+					attendanceRequestModel.getSchoolID(), attendanceRequestModel.getDivisionID(),
+					attendanceRequestModel.getAttendanceDate());
+			System.out.println("STUDENTS:::>" + attendanceModels.toString());
+			if (attendanceModels.size() != 0) {
+
+				attendanceDate.setStatus("Success");
+				attendanceDate.setDate(attendanceRequestModel.getAttendanceDate());
+				attendanceDate.setDivisionID(attendanceRequestModel.getDivisionID());
+				attendanceDate.setSchoolID(attendanceRequestModel.getSchoolID());
+				List<Students> students = new ArrayList<>();
+				for (AttendanceModel AttendanceModel : attendanceModels) {
+					Students student = new Students();
+					student.setStudentID(AttendanceModel.getStudentModel().getStudentId());
+					student.setLateTime(AttendanceModel.getLateTime());
+					student.setIsLate(AttendanceModel.getIsLate());
+					student.setIsAbsent(AttendanceModel.getIsAbsent());
+					students.add(student);
+				}
+				attendanceDate.setStudentsList(students);
+				return attendanceDate;
+
+			} else {
+				attendanceDate = new AttendanceDate();
+				attendanceDate.setStatus("No Attendance");
+				return attendanceDate;
+			}
+
+		} else {
+
+			attendanceDate.setStatus("Invalid school");
+			return attendanceDate;
+		}
+	}
+
+	@RequestMapping(value = "/attendanceforparents", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object parentsAttendanceViewF(HttpServletRequest request,
+			@RequestBody AttendanceRequestModel attendanceRequestModel) {
+		FinaStudentAttenceResponseModel finaStudentAttenceResponseModel = new FinaStudentAttenceResponseModel();
+     
+		try {
+			if (studentDAO.isValidStudent(attendanceRequestModel.getStudentID())) {
+				AcademicModel AcademicModel = academicYearDAO.getAcademicYear(attendanceRequestModel.getSchoolID());
+				String[] startYear = String.valueOf(AcademicModel.getAcademicStartYear()).split("-");
+
+				String[] endYear = String.valueOf(AcademicModel.getAcademicEndYear()).split("-");
+				List<StudentAttendanceResponseModel> attendanceList = attendanceDAO.getStudentsAttendanceList(
+						Integer.parseInt(startYear[0]), Integer.parseInt(startYear[1]), Integer.parseInt(endYear[0]),
+						Integer.parseInt(endYear[1]), attendanceRequestModel.getStudentID());
+				  System.err.println(AcademicModel.toString());
+				finaStudentAttenceResponseModel.setStatus("Success");
+				finaStudentAttenceResponseModel.setAttendanceList(attendanceList);
+				return finaStudentAttenceResponseModel;
+			} else {
+				finaStudentAttenceResponseModel.setStatus("Invalid Student");
+				finaStudentAttenceResponseModel.setAttendanceList(new ArrayList<>());
+				return finaStudentAttenceResponseModel;
+			}
+		} catch (Exception e) {
+			finaStudentAttenceResponseModel.setStatus("Failed");
+			e.printStackTrace();
+			finaStudentAttenceResponseModel.setAttendanceList(new ArrayList<>());
+			return finaStudentAttenceResponseModel;
+		}
+	}
+}

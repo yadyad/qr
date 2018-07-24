@@ -1,0 +1,11 @@
+package com.zs.cws.superadmin.master.category.dao;
+
+import com.zs.cws.superadmin.master.category.model.CategoryModel;
+
+
+public interface CategoryDAO {
+	
+	boolean isAvailable(CategoryModel categoryModel);
+
+	CategoryModel selectCategoryByname(String categoryName);
+}

@@ -1,0 +1,191 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+
+@Entity
+@Table(name="cwas_student_progress_report")
+public class ProgressReportModel {
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int progressReportID;
+	
+	@OneToOne
+	@JoinColumn(name="student_id")
+	private StudentModel studentModel;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	@OneToOne
+	@JoinColumn(name="staff_id")
+	private SchoolStaffModel schoolStaffModel;
+	
+	@OneToOne
+	@JoinColumn(name="subject_id")
+	private SubjectModel subjectModel;
+	
+	@OneToOne
+	@JoinColumn(name="division_id")
+	private SchoolDivModel schoolDivModel;
+	
+	@OneToOne
+	@JoinColumn(name="exam_id")
+	private ExamDetailsModel examDetailsModel;
+	
+	@Column(name="marks_secured")
+	private String marksSecured;
+	
+	@Column(name="cgpa")
+	private String cgpa;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+
+	public ProgressReportModel() {
+		
+	}
+
+	public int getProgressReportID() {
+		return progressReportID;
+	}
+
+	public void setProgressReportID(int progressReportID) {
+		this.progressReportID = progressReportID;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	public SubjectModel getSubjectModel() {
+		return subjectModel;
+	}
+
+	public void setSubjectModel(SubjectModel subjectModel) {
+		this.subjectModel = subjectModel;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public ExamDetailsModel getExamDetailsModel() {
+		return examDetailsModel;
+	}
+
+	public void setExamDetailsModel(ExamDetailsModel examDetailsModel) {
+		this.examDetailsModel = examDetailsModel;
+	}
+
+	public String getMarksSecured() {
+		return marksSecured;
+	}
+
+	public void setMarksSecured(String marksSecured) {
+		this.marksSecured = marksSecured;
+	}
+
+	public String getCgpa() {
+		return cgpa;
+	}
+
+	public void setCgpa(String cgpa) {
+		this.cgpa = cgpa;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "ProgressReportModel [progressReportID=" + progressReportID + ", studentModel=" + studentModel
+				+ ", schoolModel=" + schoolModel + ", schoolStaffModel=" + schoolStaffModel + ", subjectModel="
+				+ subjectModel + ", schoolDivModel=" + schoolDivModel + ", examDetailsModel=" + examDetailsModel
+				+ ", marksSecured=" + marksSecured + ", cgpa=" + cgpa + ", createdDate=" + createdDate + ", createdBy="
+				+ createdBy + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy + "]";
+	}
+	
+	
+	
+
+}

@@ -1,0 +1,52 @@
+package com.zs.cws.superadmin.master.category.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.category.model.CategoryModel;
+
+@Repository
+@Transactional
+public class CategoryIMPL implements CategoryDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	@Transactional
+	public boolean isAvailable(CategoryModel categoryModel) {
+
+		String query = "";
+		if (categoryModel.getRowId() != 0) {
+			query = "select count(*) from CategoryModel where category=? and rowId <> " + categoryModel.getRowId() + "";
+		} else {
+			query = "select count(*) from CategoryModel where category=? ";
+		}
+		Query query1= entityManager.createQuery(query);
+		query1.setParameter(1, categoryModel.getCategory());
+		boolean exists = (Long) query1.getSingleResult() > 0;
+		return exists;
+	}
+
+	public CategoryModel selectCategoryByname(String categoryName) {
+
+		String query = "from CategoryModel where category='" + categoryName + "'";
+		CategoryModel categoryModel  = (CategoryModel) entityManager.createQuery(query).getSingleResult();
+		return categoryModel;
+		/*@SuppressWarnings("unchecked")
+		List<CategoryModel> categoryModel = entityManager.createQuery(query).getResultList();
+		if (!categoryModel.isEmpty()) {
+			return categoryModel.get(0);
+		} else {
+			return null;
+		}*/
+	}
+
+}

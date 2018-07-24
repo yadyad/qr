@@ -1,0 +1,12 @@
+package com.zs.cws.errorhandler;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+
+@ControllerAdvice
+public class ErrorHandlerController {
+/*	@ExceptionHandler(Exception.class)
+	public String handleResourceNotFoundException() {
+		System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRORRRRRRRRR");
+		return "redirect:/logout";
+	}*/
+}

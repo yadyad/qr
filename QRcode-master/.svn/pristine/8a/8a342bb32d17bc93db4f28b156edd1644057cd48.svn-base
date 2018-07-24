@@ -1,0 +1,336 @@
+package com.zs.cws.ws.android.principalmeeeting.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import com.zs.cws.schooladmin.meetingtask.dao.PrincipalMeetingTaskDAO;
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.schooladmin.meetingtask.repository.PrincipalMeetingTaskRepository;
+import com.zs.cws.schooladmin.principalmeeting.dao.PrincipalMeetingDAO;
+import com.zs.cws.superadmin.managementmembers.dao.ManagementMemberDAO;
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.master.subject.repository.SubjectRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.ws.android.principalmeeeting.model.FinalMeetingResponseModel;
+import com.zs.cws.ws.android.principalmeeeting.model.FinalTaskReponseModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingResponseModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalUpcomingMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.TaskResponseModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementTaskAssignmentModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingTaskRepository;
+
+@RestController
+@RequestMapping("/android")
+public class PrincipalMeetingServiceController {
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	ManagementMemberDAO managementMemberDAO;
+	@Autowired
+	PrincipalMeetingDAO principalMeetingDAO;
+
+	@Autowired
+	PrincipalMeetingTaskDAO principalMeetingTaskDAO;
+
+	@Autowired
+	PrincipalMeetingTaskRepository principalMeetingTaskRepository;
+
+	@Autowired
+	ManagementMeetingTaskRepository managementMeetingTaskRepository;
+
+	@Autowired
+	SubjectRepository subjectRepository;
+
+	@RequestMapping(value = "/subject/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		List<SubjectModel> subjectList = subjectRepository.findAll();
+		return subjectList;
+	}
+
+	@RequestMapping(value = "/upcomingmeetings", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listUpcomingMeetings(HttpServletRequest request,
+			@RequestBody PrincipalUpcomingMeetingRequestModel principalUpcomingMeetingRequestModel) {
+
+		System.out.println("UPCOM<IMMMMM");
+
+		try {
+			if (schoolStaffDAO.isValidMemberStaffLike(principalUpcomingMeetingRequestModel.getMemberID())) {
+				List<PrincipalMeetingResponseModel> upcomingMetingResponseList=new ArrayList<>();
+				if (principalUpcomingMeetingRequestModel.getMemberType().equalsIgnoreCase("Staff")) {
+					principalUpcomingMeetingRequestModel.setMemberType("Principal");
+					 upcomingMetingResponseList = principalMeetingDAO
+							.getAllUpcomingMeetings(principalUpcomingMeetingRequestModel);
+				} else {
+					principalUpcomingMeetingRequestModel.setMemberType("Management");
+					List<PrincipalMeetingResponseModel> upcomingMetingResponseList1=	principalMeetingDAO
+					.getAllUpcomingMeetings(principalUpcomingMeetingRequestModel);
+					principalUpcomingMeetingRequestModel.setMemberType("Principal");
+					List<PrincipalMeetingResponseModel> upcomingMetingResponseList2=	principalMeetingDAO
+							.getAllUpcomingMeetings(principalUpcomingMeetingRequestModel);
+					upcomingMetingResponseList.addAll(upcomingMetingResponseList1);
+					upcomingMetingResponseList.addAll(upcomingMetingResponseList2);
+				}
+			
+
+				FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+				finalMeetingResponseModel.setResponseStatus("Success");
+				finalMeetingResponseModel.setMeetingList(upcomingMetingResponseList);
+				return finalMeetingResponseModel;
+			} else if (managementMemberDAO.isValidMember(principalUpcomingMeetingRequestModel.getMemberID())) {
+				List<PrincipalMeetingResponseModel> upcomingMetingResponseList = principalMeetingDAO
+						.getAllUpcomingMeetings(principalUpcomingMeetingRequestModel);
+
+				FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+				finalMeetingResponseModel.setResponseStatus("Success");
+				finalMeetingResponseModel.setMeetingList(upcomingMetingResponseList);
+				return finalMeetingResponseModel;
+
+			} else {
+				FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+				finalMeetingResponseModel.setResponseStatus("Invalid User");
+				finalMeetingResponseModel.setMeetingList(new ArrayList<>());
+				return finalMeetingResponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+			finalMeetingResponseModel.setResponseStatus("Failed");
+			finalMeetingResponseModel.setMeetingList(new ArrayList<>());
+			return finalMeetingResponseModel;
+		}
+
+	}
+
+	@RequestMapping(value = "/meetings", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listMeetings(HttpServletRequest request,
+			@RequestBody PrincipalMeetingRequestModel principalMeetingRequestModel) {
+		try {
+			if (schoolStaffDAO.isValidMemberStaffLike(principalMeetingRequestModel.getMemberID())
+					|| managementMemberDAO.isValidMember(principalMeetingRequestModel.getMemberID())) {
+				List<PrincipalMeetingResponseModel> meetingList = principalMeetingDAO
+						.getAllMeetings(principalMeetingRequestModel);
+
+				FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+				finalMeetingResponseModel.setResponseStatus("Success");
+				finalMeetingResponseModel.setMeetingList(meetingList);
+				return finalMeetingResponseModel;
+
+			} else {
+				FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+				finalMeetingResponseModel.setResponseStatus("Invalid User");
+				finalMeetingResponseModel.setMeetingList(new ArrayList<>());
+				return finalMeetingResponseModel;
+			}
+		} catch (Exception e) {
+			FinalMeetingResponseModel finalMeetingResponseModel = new FinalMeetingResponseModel();
+			e.printStackTrace();
+			finalMeetingResponseModel.setResponseStatus("Failed");
+			finalMeetingResponseModel.setMeetingList(new ArrayList<>());
+			return finalMeetingResponseModel;
+		}
+	}
+
+	@RequestMapping(value = "/task", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object task(HttpServletRequest request,
+			@RequestBody PrincipalMeetingRequestModel principalMeetingRequestModel) {
+
+		try {
+			if (principalMeetingRequestModel.getMemberType().equalsIgnoreCase("Principal")
+					|| schoolStaffDAO.isValidMemberStaffLike(principalMeetingRequestModel.getMemberID())||principalMeetingRequestModel.getMemberType().equalsIgnoreCase("staff")) {
+				List<PrincipalMeetingTaskModel> taskList = principalMeetingTaskDAO
+						.getCurrentTasks(principalMeetingRequestModel.getMeetingID());
+				
+				
+				List<TaskResponseModel> taskResponseList = new ArrayList<>();
+				for (PrincipalMeetingTaskModel PrincipalMeetingTaskModel : taskList) {
+					TaskResponseModel taskResponseModel = new TaskResponseModel();
+					taskResponseModel.setTaskID(PrincipalMeetingTaskModel.getTaskID());
+					taskResponseModel.setTaskName(PrincipalMeetingTaskModel.getTaskName());
+					taskResponseModel.setStartDate(PrincipalMeetingTaskModel.getStartDate());
+					taskResponseModel.setEndDate(PrincipalMeetingTaskModel.getEndDate());
+					taskResponseModel.setPercentageCompletion(PrincipalMeetingTaskModel.getCompletionPercentage());
+					taskResponseModel.setMemberName(PrincipalMeetingTaskModel.getSchoolStaffModel().getFirstName() + " "
+							+ PrincipalMeetingTaskModel.getSchoolStaffModel().getLastName());
+					taskResponseModel
+							.setMeetingID(PrincipalMeetingTaskModel.getPrincipalMeetingModel().getMeetingRequestID());
+					taskResponseList.add(taskResponseModel);
+				}
+				
+				
+				if(principalMeetingRequestModel.getMemberType().equalsIgnoreCase("Principal")){
+					principalMeetingRequestModel.setMemberType("Management");
+					List<ManagementTaskAssignmentModel> taskList2 = principalMeetingTaskDAO.getCurrentTasksForMgmt(
+							principalMeetingRequestModel.getMeetingID(), principalMeetingRequestModel.getMemberType());
+					
+					for (ManagementTaskAssignmentModel managementTaskAssignmentModel : taskList2) {
+						TaskResponseModel taskResponseModel = new TaskResponseModel();
+						taskResponseModel.setTaskID(managementTaskAssignmentModel.getTaskID());
+						taskResponseModel.setTaskName(managementTaskAssignmentModel.getTaskName());
+						taskResponseModel.setStartDate(managementTaskAssignmentModel.getStartDate());
+						taskResponseModel.setEndDate(managementTaskAssignmentModel.getEndDate());
+						taskResponseModel.setPercentageCompletion(managementTaskAssignmentModel.getCompletionPercentage());
+						taskResponseModel.setMemberName(managementTaskAssignmentModel.getSchoolStaffModel().getFirstName()
+								+ " " + managementTaskAssignmentModel.getSchoolStaffModel().getLastName());
+						taskResponseModel
+								.setMeetingID(managementTaskAssignmentModel.getManagementMeetingModel().getMeetingID());
+						taskResponseList.add(taskResponseModel);
+					}
+
+				}
+				
+
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Success");
+				if (taskList.size() > 0) {
+					finalTaskReponseModel
+							.setNextMeetingDate(taskList.get(0).getPrincipalMeetingModel().getNextMeetingDate());
+					finalTaskReponseModel.setKeyPoints(taskList.get(0).getPrincipalMeetingModel().getKeyPoints());
+				}
+				finalTaskReponseModel.setTaskList(taskResponseList);
+				finalTaskReponseModel.setTaskList(taskResponseList);
+				return finalTaskReponseModel;
+			}
+
+			if (managementMemberDAO.isValidMember(principalMeetingRequestModel.getMemberID())) {
+				System.out.println("MANAGEMENT");
+				List<ManagementTaskAssignmentModel> taskList = principalMeetingTaskDAO.getCurrentTasksForMgmt(
+						principalMeetingRequestModel.getMeetingID(), principalMeetingRequestModel.getMemberType());
+				List<TaskResponseModel> taskResponseList = new ArrayList<>();
+
+				for (ManagementTaskAssignmentModel managementTaskAssignmentModel : taskList) {
+					TaskResponseModel taskResponseModel = new TaskResponseModel();
+					taskResponseModel.setTaskID(managementTaskAssignmentModel.getTaskID());
+					taskResponseModel.setTaskName(managementTaskAssignmentModel.getTaskName());
+					taskResponseModel.setStartDate(managementTaskAssignmentModel.getStartDate());
+					taskResponseModel.setEndDate(managementTaskAssignmentModel.getEndDate());
+					taskResponseModel.setPercentageCompletion(managementTaskAssignmentModel.getCompletionPercentage());
+					taskResponseModel.setMemberName(managementTaskAssignmentModel.getSchoolStaffModel().getFirstName()
+							+ " " + managementTaskAssignmentModel.getSchoolStaffModel().getLastName());
+					taskResponseModel
+							.setMeetingID(managementTaskAssignmentModel.getManagementMeetingModel().getMeetingID());
+					taskResponseList.add(taskResponseModel);
+				}
+
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Success");
+				if (taskList.size() > 0) {
+					finalTaskReponseModel
+							.setNextMeetingDate(taskList.get(0).getManagementMeetingModel().getNextMeetingDate());
+					finalTaskReponseModel.setKeyPoints(taskList.get(0).getManagementMeetingModel().getKeyPoints());
+				}
+				finalTaskReponseModel.setTaskList(taskResponseList);
+				return finalTaskReponseModel;
+
+			} else {
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Invalid User");
+				finalTaskReponseModel.setTaskList(new ArrayList<>());
+				return finalTaskReponseModel;
+			}
+		} catch (Exception e) {
+			FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+			e.printStackTrace();
+			finalTaskReponseModel.setResponseStatus("Failed");
+			finalTaskReponseModel.setTaskList(new ArrayList<>());
+			return finalTaskReponseModel;
+		}
+	}
+
+	@RequestMapping(value = "/mytask", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object mytask(HttpServletRequest request,
+			@RequestBody PrincipalMeetingRequestModel principalMeetingRequestModel) {
+		try {
+			if (schoolStaffDAO.isValidMemberStaffLike(principalMeetingRequestModel.getMemberID())) {
+				if (principalMeetingRequestModel.getMemberType().equalsIgnoreCase("staff")) {
+					principalMeetingRequestModel.setMemberType("Principal");
+
+				} else {
+					principalMeetingRequestModel.setMemberType("Management");
+				}
+
+				List<TaskResponseModel> taskResponseList = principalMeetingTaskDAO
+						.getMyTasks(principalMeetingRequestModel);
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Success");
+				finalTaskReponseModel.setStatus(principalMeetingRequestModel.getStatus());
+				finalTaskReponseModel.setTaskList(taskResponseList);
+				return finalTaskReponseModel;
+
+			} else {
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Invalid User");
+				finalTaskReponseModel.setTaskList(new ArrayList<>());
+				return finalTaskReponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+			finalTaskReponseModel.setResponseStatus("Failed");
+			finalTaskReponseModel.setTaskList(new ArrayList<>());
+			return finalTaskReponseModel;
+		}
+	}
+
+	@RequestMapping(value = "/updatetask", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object taskupdation(HttpServletRequest request,
+			@RequestBody PrincipalMeetingRequestModel principalMeetingRequestModel) {
+		try {
+			if (schoolStaffDAO.isValidMemberStaffLike(principalMeetingRequestModel.getMemberID())) {
+				System.out.println("TASK IDDD::>" + principalMeetingRequestModel.getTaskID());
+				if (principalMeetingRequestModel.getMemberType().equalsIgnoreCase("Management")) {
+					ManagementTaskAssignmentModel managementTaskAssignmentModel = managementMeetingTaskRepository
+							.findOne(principalMeetingRequestModel.getTaskID());
+					managementTaskAssignmentModel
+							.setCompletionPercentage(principalMeetingRequestModel.getPercentageCompletion());
+
+					managementMeetingTaskRepository.save(managementTaskAssignmentModel);
+
+			/*		PrincipalMeetingTaskModel principalMeetingTaskModel = principalMeetingTaskRepository
+							.findOne(principalMeetingRequestModel.getTaskID());
+					System.out.println("MEETINGLLL:::>>>>" + principalMeetingTaskModel.getTaskID());
+					principalMeetingTaskModel
+							.setCompletionPercentage(principalMeetingRequestModel.getPercentageCompletion());
+					principalMeetingTaskRepository.save(principalMeetingTaskModel);*/
+
+					FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+					finalTaskReponseModel.setTaskList(new ArrayList<>());
+					finalTaskReponseModel.setResponseStatus("Success");
+					return finalTaskReponseModel;
+				} else {
+
+					System.out.println("PERCENTAGE COMPL::>>>" + principalMeetingRequestModel.getTaskID());
+					PrincipalMeetingTaskModel principalMeetingTaskModel = principalMeetingTaskRepository
+							.findOne(principalMeetingRequestModel.getTaskID());
+					System.out.println("MEETINGLLL:::>>>>" + principalMeetingTaskModel.getTaskID());
+					principalMeetingTaskModel
+							.setCompletionPercentage(principalMeetingRequestModel.getPercentageCompletion());
+					principalMeetingTaskRepository.save(principalMeetingTaskModel);
+					FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+					finalTaskReponseModel.setTaskList(new ArrayList<>());
+					finalTaskReponseModel.setResponseStatus("Success");
+					return finalTaskReponseModel;
+				}
+			} else {
+				FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+				finalTaskReponseModel.setResponseStatus("Invalid User");
+				finalTaskReponseModel.setTaskList(new ArrayList<>());
+				return finalTaskReponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FinalTaskReponseModel finalTaskReponseModel = new FinalTaskReponseModel();
+			e.printStackTrace();
+			finalTaskReponseModel.setResponseStatus("Failed");
+			finalTaskReponseModel.setTaskList(new ArrayList<>());
+			return finalTaskReponseModel;
+		}
+	}
+}

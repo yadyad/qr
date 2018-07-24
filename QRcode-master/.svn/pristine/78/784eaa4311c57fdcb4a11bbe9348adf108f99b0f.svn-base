@@ -1,0 +1,17 @@
+package com.zs.cws.schooladmin.kudos.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.kudos.model.KudosModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosLikesModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosRequestModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosResponseModel;
+
+public interface KudosDAO {
+
+	List<KudosResponseModel> getKudosDetails(KudosRequestModel kudosRequestModel);
+
+	void insertKudosLikes(KudosLikesModel kudosLikesModel);
+	List<KudosModel> getAllKudos(int schoolID);
+
+}

@@ -1,0 +1,88 @@
+package com.zs.cws.ws.android.student.model;
+
+import java.util.Date;
+
+public class StudentServiceModel {
+	int schoolID;
+	int divisionID;
+	String firstName;
+	String lastName;
+	String dob;
+	int studentID;
+	String enrollmentNumber;
+	String modifiedDate;
+
+	public StudentServiceModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getEnrollmentNumber() {
+		return enrollmentNumber;
+	}
+
+	public void setEnrollmentNumber(String enrollmentNumber) {
+		this.enrollmentNumber = enrollmentNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "StudentServiceModel [schoolID=" + schoolID + ", divisionID=" + divisionID + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", dob=" + dob + "]";
+	}
+
+}

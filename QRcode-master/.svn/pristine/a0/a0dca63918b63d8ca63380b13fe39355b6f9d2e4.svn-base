@@ -1,0 +1,18 @@
+package com.zs.cws.superadmin.div;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/div")
+public class DivCOntroller {
+@RequestMapping()
+
+public ModelAndView jhgjk(){
+System.out.println("sssssssssssssssssssssssssssssssssssssssss");
+	return new ModelAndView("div_search");
+}
+}

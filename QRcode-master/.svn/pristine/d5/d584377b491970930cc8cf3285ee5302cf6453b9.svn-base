@@ -1,0 +1,125 @@
+package com.zs.cws.schooladmin.timetable.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+
+@Entity
+@Table(name = "cwas_time_table_url_details")
+public class TimeTableModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int timeTableID;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@OneToOne
+	@JoinColumn(name = "division_id")
+	SchoolDivModel schoolDivModel;
+
+	@Column(name = "image_url")
+	String imageURL;
+	
+	@Column(name="created_date")
+	Date createdDate;
+	
+	@Column(name="created_user")
+	String createdUser;
+	
+	@Column(name="updated_date")
+	Date updatedDate;
+	
+	@Column(name="updated_user")
+	String updatedUser;
+	
+	public TimeTableModel() {
+	}
+
+	public int getTimeTableID() {
+		return timeTableID;
+	}
+
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public void setTimeTableID(int timeTableID) {
+		this.timeTableID = timeTableID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	@Override
+	public String toString() {
+		return "TimeTableModel [timeTableID=" + timeTableID + ", schoolModel=" + schoolModel + ", schoolDivModel="
+				+ schoolDivModel + ", imageURL=" + imageURL + ", createdDate=" + createdDate + ", createdUser="
+				+ createdUser + ", updatedDate=" + updatedDate + ", updatedUser=" + updatedUser + "]";
+	}
+
+	
+
+}

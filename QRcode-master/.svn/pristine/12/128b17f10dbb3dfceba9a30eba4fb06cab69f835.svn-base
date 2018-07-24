@@ -1,0 +1,63 @@
+package com.zs.cws.ws.android.principalmeeeting.model;
+
+import java.util.List;
+
+public class FinalTaskReponseModel {
+
+	String status;
+	String responseStatus;
+	String nextMeetingDate;
+	String keyPoints;
+	List<TaskResponseModel> taskList;
+
+	public FinalTaskReponseModel() {
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<TaskResponseModel> getTaskList() {
+		return taskList;
+	}
+
+	public void setTaskList(List<TaskResponseModel> taskList) {
+		this.taskList = taskList;
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalTaskReponseModel [status=" + status + ", responseStatus=" + responseStatus + ", taskList="
+				+ taskList + "]";
+	}
+
+	public String getNextMeetingDate() {
+		return nextMeetingDate;
+	}
+
+	public void setNextMeetingDate(String nextMeetingDate) {
+		this.nextMeetingDate = nextMeetingDate;
+	}
+
+	public String getKeyPoints() {
+		return keyPoints;
+	}
+
+	public void setKeyPoints(String keyPoints) {
+		this.keyPoints = keyPoints;
+	}
+
+
+}

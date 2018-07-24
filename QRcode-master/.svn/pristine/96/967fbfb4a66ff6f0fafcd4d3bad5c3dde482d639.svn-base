@@ -1,0 +1,54 @@
+package com.zs.cws.ws.android.feesstructure.model;
+
+public class FeesStructureResponseModel {
+	
+	String status="";
+	String feesPath="";
+	String feesUploadedDate="";
+	
+	
+	public FeesStructureResponseModel() {
+		
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public String getFeesUploadedDate() {
+		return feesUploadedDate;
+	}
+
+
+	public void setFeesUploadedDate(String feesUploadedDate) {
+		this.feesUploadedDate = feesUploadedDate;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	public String getFeesPath() {
+		return feesPath;
+	}
+
+
+	public void setFeesPath(String feesPath) {
+		this.feesPath = feesPath;
+	}
+
+
+	@Override
+	public String toString() {
+		return "FeesStructureResponseModel [status=" + status + ", feesPath=" + feesPath + ", feesUploadedDate="
+				+ feesUploadedDate + "]";
+	}
+
+
+	
+	
+}

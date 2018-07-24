@@ -1,0 +1,42 @@
+package com.zs.cws.superadmin.managementmembers.dao;
+
+import java.util.List;
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+import com.zs.cws.ws.hybrid.license.model.FeatureResponsePOJO;
+import com.zs.cws.ws.hybrid.license.model.FinalResultPOJO;
+public interface ManagementMemberDAO {
+	public boolean isAvailable(ManagementMemberModel managementMemberModel);
+
+	public List<ManagementMemberModel> getMembersByManagement(int managementID);
+
+	public boolean phoneNumberExist(String phoneNumber);
+
+	public int getManagementId(int phoneNumber);
+
+	public FinalResultPOJO getMgmtDetails(String phone);
+
+	public List<FeatureResponsePOJO> getFeature(int schoolId);
+
+	public boolean checkPhoneNumber(String phoneNumber);
+
+	public boolean phoneNumbrExistStaff(String phoneNumber);
+
+	public int getSchoolID(String phoneNumber);
+
+	public FinalResultPOJO getSchoolDetails(int schoolID, String phNo);
+
+	public boolean isValidMember(int memberId);
+
+	public boolean isValidMemberParent(int memberId);
+
+	public Object isRegisteredMemberPhone(String phone, int managementID);
+
+	public Object isRegisteredEmail(String emailID, int managementID);
+
+	public boolean isValidMgmt(int managementID);
+
+
+	// public String getPrincipal(SchoolStaffModel schoolStaffModel);
+
+	// public List getFeatureDeatils(int schoolId);
+}

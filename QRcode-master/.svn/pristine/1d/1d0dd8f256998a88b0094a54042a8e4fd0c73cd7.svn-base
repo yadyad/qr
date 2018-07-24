@@ -1,0 +1,122 @@
+package com.zs.cws.utils;
+
+import java.io.File;
+import java.util.List;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
+
+
+
+public class MailMail {
+//	@Autowired
+//	UploadImageDAO uploadImageDAO;
+
+	private JavaMailSender mailSender;
+
+	public void setMailSender(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	/*
+	 * ======================SEND MAIL WITHOUT ATTACHMENT============
+	 */
+	@Async
+	public void sendMail(final String from, final String to, final String subject, final String msg,
+			final String ccList) {
+		System.out.println("MAIL SENDING............");
+		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				try {
+					mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+					if (ccList != null && !ccList.equalsIgnoreCase("")) {
+						mimeMessage.setRecipients(Message.RecipientType.CC, InternetAddress.parse(ccList));
+					}
+
+				} catch (NullPointerException exception) {
+					exception.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+//				mimeMessage.setFrom(new InternetAddress(uploadImageDAO.getCompanyEmail()));
+				mimeMessage.setSubject(subject);
+				mimeMessage.setContent(msg, "text/html");
+			}
+		};
+		mailSender.send(messagePreparator);
+	}
+
+	/*
+	 * =================================ATTACH SINGLE FILES=================
+	 */
+	public void sendMail(final String from, final String to, final String subject, final String msg, File file) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//			helper.setFrom(new InternetAddress(uploadImageDAO.getCompanyEmail()));
+			helper.setTo(InternetAddress.parse(to));
+			helper.setSubject(subject);
+			helper.setText(msg);
+			helper.addAttachment("DailyFollowupDetail.xlsx", file);
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//<---------mailsend in leave-------------->
+	
+	
+	public  void sendMails(final String from, final String to, final String subject, final String msg,
+			final String ccList) {
+
+		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+				mimeMessage.setRecipients(Message.RecipientType.CC, InternetAddress.parse(ccList));
+				mimeMessage.setFrom(new InternetAddress(from));
+				mimeMessage.setSubject(subject);
+				// mimeMessage.setText(msg);
+				mimeMessage.setContent(msg, "text/html");
+				
+			}
+		};
+		mailSender.send(messagePreparator);
+		
+		
+	}
+	
+	
+
+	/*
+	 * =================================ATTACH MULTIPLE FILES=================
+	 */
+	public void sendMultipleFile(final String from, final String[] to, final String subject, final String msg,
+			List<File> fileList) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//			helper.setFrom(new InternetAddress(uploadImageDAO.getCompanyEmail()));
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setText("", msg);
+			for (File file : fileList) {
+				helper.addAttachment(file.getName(), file);
+			}
+
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+}

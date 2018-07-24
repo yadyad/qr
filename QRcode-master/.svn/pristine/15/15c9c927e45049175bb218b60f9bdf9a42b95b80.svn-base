@@ -1,0 +1,78 @@
+package com.zs.cws.ws.hybrid.license.model;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+
+public class SchoolResponsePOJO {
+
+	
+	int row_id;
+	private String schoolName="";
+	private String description="";
+	private String principal="";
+	private String logo="";
+	
+	//List<FeatureResponsePOJO>featureList;
+	String[] featureResponse;
+	
+	public SchoolResponsePOJO() {
+	}
+	//List<FeatureResponsePOJO>featureResponsePOJOs;
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getPrincipal() {
+		return principal;
+	}
+	public void setPrincipal(String principal) {
+		this.principal = principal;
+	}
+	public String getLogo() {
+		return logo;
+	}
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+	public String[] getFeatureResponse() {
+		return featureResponse;
+	}
+	public void setFeatureResponse(String[] featureResponse) {
+		this.featureResponse = featureResponse;
+	}
+	/*public List<FeatureResponsePOJO> getFeatureResponsePOJOs() {
+		return featureResponsePOJOs;
+	}
+	public void setFeatureResponsePOJOs(List<FeatureResponsePOJO> featureResponsePOJOs) {
+		this.featureResponsePOJOs = featureResponsePOJOs;
+	}*/
+	public int getRow_id() {
+		return row_id;
+	}
+	public void setRow_id(int row_id) {
+		this.row_id = row_id;
+	}
+	@Override
+	public String toString() {
+		return "SchoolResponsePOJO [row_id=" + row_id + ", schoolName=" + schoolName + ", description=" + description
+				+ ", principal=" + principal + ", logo=" + logo + ", featureResponse="
+				+ Arrays.toString(featureResponse) + ", getSchoolName()=" + getSchoolName() + ", getDescription()="
+				+ getDescription() + ", getPrincipal()=" + getPrincipal() + ", getLogo()=" + getLogo()
+				+ ", getFeatureResponse()=" + Arrays.toString(getFeatureResponse()) + ", getRow_id()=" + getRow_id()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
+	}
+	
+	
+}

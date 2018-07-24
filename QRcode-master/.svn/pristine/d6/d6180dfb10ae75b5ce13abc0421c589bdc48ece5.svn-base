@@ -1,0 +1,14 @@
+package com.zs.cws.utils;
+
+import java.sql.Date;
+import java.util.Calendar;
+
+public class CurrentDate {
+
+	public static Date getCurrentDate() {
+		Calendar currenttime = Calendar.getInstance();
+		Date sqldate = new Date((currenttime.getTime()).getTime());
+		System.out.println("current date from main:::>" + sqldate);
+		return sqldate;
+	}
+}

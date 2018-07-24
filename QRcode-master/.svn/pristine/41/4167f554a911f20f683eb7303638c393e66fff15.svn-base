@@ -1,0 +1,62 @@
+package com.zs.cws.ws.android.attendence.model;
+
+import java.util.List;
+
+public class AttendanceRequestModel {
+
+	int schoolID;
+	int divisionID;
+	int studentID;
+	String attendanceDate;
+	List<Students> studentsList;
+
+	public AttendanceRequestModel() {
+
+	}
+
+	public String getAttendanceDate() {
+		return attendanceDate;
+	}
+
+	public void setAttendanceDate(String attendanceDate) {
+		this.attendanceDate = attendanceDate;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public List<Students> getStudentsList() {
+		return studentsList;
+	}
+
+	public void setStudentsList(List<Students> studentsList) {
+		this.studentsList = studentsList;
+	}
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+	@Override
+	public String toString() {
+		return "AttendanceRequestModel [schoolID=" + schoolID + ", divisionID=" + divisionID + ", studentID="
+				+ studentID + ", attendanceDate=" + attendanceDate + ", studentsList=" + studentsList + "]";
+	}
+}

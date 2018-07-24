@@ -1,0 +1,107 @@
+package com.zs.cws.ws.android.feespayment.model;
+
+public class FeesPaymentRequestModel {
+	private int schoolID;
+	private int studentID;
+	private double amount;
+	private String remarks;
+	private String tcStatus;
+	private String transactionId;
+	private String orderId;
+	private String transactionType;
+	private String paymentBrand;
+	private String paymentMethod;
+
+	public FeesPaymentRequestModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getTcStatus() {
+		return tcStatus;
+	}
+
+	public void setTcStatus(String tcStatus) {
+		this.tcStatus = tcStatus;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
+
+	public String getPaymentBrand() {
+		return paymentBrand;
+	}
+
+	public void setPaymentBrand(String paymentBrand) {
+		this.paymentBrand = paymentBrand;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	@Override
+	public String toString() {
+		return "FeesPaymentRequestModel [schoolID=" + schoolID + ", studentID=" + studentID + ", amount=" + amount
+				+ ", remarks=" + remarks + ", tcStatus=" + tcStatus + ", transactionId=" + transactionId + ", orderId="
+				+ orderId + ", transactionType=" + transactionType + ", paymentBrand=" + paymentBrand
+				+ ", paymentMethod=" + paymentMethod + "]";
+	}
+
+
+}

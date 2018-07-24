@@ -1,0 +1,142 @@
+package com.zs.cws.schooladmin.principalquotes.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_principal_quotes")
+public class PrincipalQuoteModel {
+
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int principalQuoteID;
+	
+	@Column(name="title")
+	private String title;
+	
+	@Column(name="description")
+	private String desc;
+	
+	@Column(name="principal_image")
+	private String principalImage;
+	
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="created_user")
+	private String createdUser;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	@Column(name="updated_user")
+	private String updatedUser;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+
+	public PrincipalQuoteModel() {
+		
+	}
+
+	public int getPrincipalQuoteID() {
+		return principalQuoteID;
+	}
+
+	public void setPrincipalQuoteID(int principalQuoteID) {
+		this.principalQuoteID = principalQuoteID;
+	}
+
+	
+	
+	public String getPrincipalImage() {
+		return principalImage;
+	}
+
+	public void setPrincipalImage(String principalImage) {
+		this.principalImage = principalImage;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	@Override
+	public String toString() {
+		return "PrincipalQuoteModel [principalQuoteID=" + principalQuoteID + ", title=" + title + ", desc=" + desc
+				+ ", principalImage=" + principalImage + ", createdDate=" + createdDate + ", createdUser=" + createdUser
+				+ ", updatedDate=" + updatedDate + ", updatedUser=" + updatedUser + ", schoolModel=" + schoolModel
+				+ "]";
+	}
+
+	
+	
+	
+}

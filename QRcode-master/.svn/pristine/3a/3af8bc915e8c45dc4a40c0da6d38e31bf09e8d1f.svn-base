@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.tax.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.tax.model.TaxModel;
+
+public interface TaxRepository extends JpaRepository<TaxModel, Integer> {
+
+}

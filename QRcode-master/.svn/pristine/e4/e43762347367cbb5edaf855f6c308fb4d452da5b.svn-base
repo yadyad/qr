@@ -1,0 +1,41 @@
+package com.zs.cws.schooladmin.subscriptionactivation.model;
+
+public class suscriptionDetailsModel {
+
+	int memberCount;
+	double staorageSpace;
+	String planType;
+
+	public suscriptionDetailsModel() {
+	}
+
+	public int getMemberCount() {
+		return memberCount;
+	}
+
+	public void setMemberCount(int memberCount) {
+		this.memberCount = memberCount;
+	}
+
+	public double getStaorageSpace() {
+		return staorageSpace;
+	}
+
+	public void setStaorageSpace(double staorageSpace) {
+		this.staorageSpace = staorageSpace;
+	}
+
+	public String getPlanType() {
+		return planType;
+	}
+
+	public void setPlanType(String planType) {
+		this.planType = planType;
+	}
+
+	@Override
+	public String toString() {
+		return "suscriptionDetailsModel [memberCount=" + memberCount + ", staorageSpace=" + staorageSpace
+				+ ", planType=" + planType + "]";
+	}
+}

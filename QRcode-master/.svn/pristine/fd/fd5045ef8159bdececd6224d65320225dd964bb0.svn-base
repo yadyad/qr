@@ -1,0 +1,117 @@
+package com.zs.cws.superadmin.master.tax.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="cwas_tax_master")
+public class TaxModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int taxId;
+	
+	
+	@Column(name="tax_name")
+	private String taxName;
+	
+	@Column(name="tax_percentage")
+	private double taxPercentage;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+
+	public TaxModel() {
+		
+	}
+
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+	public int getTaxId() {
+		return taxId;
+	}
+
+	public void setTaxId(int taxId) {
+		this.taxId = taxId;
+	}
+
+	public String getTaxName() {
+		return taxName;
+	}
+
+	public void setTaxName(String taxName) {
+		this.taxName = taxName;
+	}
+
+	public double getTaxPercentage() {
+		return taxPercentage;
+	}
+
+	public void setTaxPercentage(double taxPercentage) {
+		this.taxPercentage = taxPercentage;
+	}
+
+
+	@Override
+	public String toString() {
+		return "TaxModel [taxId=" + taxId + ", taxName=" + taxName + ", taxPercentage=" + taxPercentage + ", createdBy="
+				+ createdBy + ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy="
+				+ updatedBy + "]";
+	}
+
+	
+}

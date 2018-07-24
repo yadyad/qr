@@ -1,0 +1,34 @@
+package com.zs.cws.schooladmin.examdetails.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+import com.zs.cws.schooladmin.myclass.model.MyClassModel;
+
+@Repository
+public class ExamDetailsIMPL implements ExamDetailsDAO {
+	
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<ExamDetailsModel> findEaxmBySchool(int schoolID) {
+String query = "From ExamDetailsModel where schoolModel.schoolId = '"+schoolID+"'";
+List<ExamDetailsModel>detailsModels = entityManager.createQuery(query).getResultList();
+		return detailsModels;
+	}
+
+	@Override
+	public String getExamName(int schoolID) {
+	String query="From ExamDetailsModel where schoolModel.schoolId = '"+schoolID+"'";
+	ExamDetailsModel examDetailsModel = (ExamDetailsModel) entityManager.createQuery(query).getSingleResult();
+	 return examDetailsModel.getExamName();
+	}
+
+}

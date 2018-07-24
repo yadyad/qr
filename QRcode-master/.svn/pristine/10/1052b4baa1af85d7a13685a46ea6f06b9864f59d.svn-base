@@ -1,0 +1,194 @@
+package com.zs.cws.ws.android.leave.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schooldivision.repository.SchoolDivRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.leave.dao.LeaveApplyDAO;
+import com.zs.cws.ws.android.leave.model.FinalLeaveForParents;
+import com.zs.cws.ws.android.leave.model.FinalLeaveStatusResponse;
+import com.zs.cws.ws.android.leave.model.FinalViewResponseModel;
+import com.zs.cws.ws.android.leave.model.LeaveApplyModel;
+import com.zs.cws.ws.android.leave.model.LeaveApplyRequestServiceModel;
+import com.zs.cws.ws.android.leave.model.LeaveApplyServiceResponseModel;
+import com.zs.cws.ws.android.leave.model.LeaveRequestModel;
+import com.zs.cws.ws.android.leave.model.LeaveStatusRequest;
+import com.zs.cws.ws.android.leave.model.LeaveViewRequestModel;
+import com.zs.cws.ws.android.leave.model.LeaveViewResponseModel;
+import com.zs.cws.ws.android.leave.repository.LeaveApplyRepository;
+
+@RestController
+@RequestMapping("android/applyleave")
+public class LeaveApplyServiceController {
+
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+
+	@Autowired
+	SchoolDivRepository schoolDivRepository;
+
+	@Autowired
+	LeaveApplyRepository leaveApplyRepository;
+
+	@Autowired
+	StudentRepository studentRepository;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	LeaveApplyDAO leaveApplyDAO;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody LeaveApplyRequestServiceModel leaveApplyRequestServiceModel) {
+		System.out.println("REQ POJO::>" + leaveApplyRequestServiceModel.toString());
+		LeaveApplyServiceResponseModel LeaveApplyServiceResponseModel = new LeaveApplyServiceResponseModel();
+		SchoolDivModel schoolDivModel = schoolDivRepository.findOne(leaveApplyRequestServiceModel.getDivisionID());
+		try {
+			if (schoolDivModel.getSchoolStaffModel().getSchoolStaffId() != 0) {
+				LeaveApplyModel leaveApplyModel = new LeaveApplyModel();
+				leaveApplyModel.setFromDate(leaveApplyRequestServiceModel.getFromDate());
+				leaveApplyModel.setToDate(leaveApplyRequestServiceModel.getToDate());
+				leaveApplyModel.setNoOfDays(leaveApplyRequestServiceModel.getNoOfDays());
+				leaveApplyModel.setSchoolDivModel(schoolDivModel);
+				leaveApplyModel.setSchoolModel(schoolRepository.findOne(leaveApplyRequestServiceModel.getSchoolID()));
+				leaveApplyModel.setStudentModel(studentRepository.findOne(leaveApplyRequestServiceModel.getParentID()));
+				leaveApplyModel.setSchoolStaffModel(schoolDivModel.getSchoolStaffModel());
+				leaveApplyModel.setLeaveStatus(0);
+				leaveApplyModel.setAppliedDate(new Date());
+				leaveApplyModel.setReason(leaveApplyRequestServiceModel.getLeaveReason());
+				
+				leaveApplyRepository.save(leaveApplyModel);
+				LeaveApplyServiceResponseModel.setResponseStatus("Success");
+				return LeaveApplyServiceResponseModel;
+
+			} else {
+				LeaveApplyServiceResponseModel.setResponseStatus("Invalid User");
+				return LeaveApplyServiceResponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LeaveApplyServiceResponseModel.setResponseStatus("Failed");
+			return LeaveApplyServiceResponseModel;
+		}
+	}
+
+	@RequestMapping(value = "/viewleaves", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAppliedLeaves(HttpServletRequest request,
+			@RequestBody LeaveViewRequestModel leaveViewRequestModel) {
+		FinalViewResponseModel finalViewResponseModel = new FinalViewResponseModel();
+		if (schoolDAO.isValidSchool(leaveViewRequestModel.getSchoolID())) {
+			try {
+				List<LeaveViewResponseModel> leaveList = leaveApplyDAO.getLeaveDetails(leaveViewRequestModel);
+				finalViewResponseModel.setResponseStatus("Success");
+				finalViewResponseModel.setStatus(leaveViewRequestModel.getStatus());
+				finalViewResponseModel.setLeaveViewResponseModels(leaveList);
+				return finalViewResponseModel;
+			} catch (Exception e) {
+				finalViewResponseModel.setResponseStatus("Failed");
+				finalViewResponseModel.setLeaveViewResponseModels(new ArrayList<>());
+				return finalViewResponseModel;
+			}
+		} else {
+			finalViewResponseModel.setResponseStatus("Invalid User");
+			finalViewResponseModel.setLeaveViewResponseModels(new ArrayList<>());
+			return finalViewResponseModel;
+		}
+	}
+
+	@RequestMapping(value = "/leaveStatus", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object leaveStatus(HttpServletRequest request,
+			@RequestBody LeaveStatusRequest leaveStatusRequest) {
+		try {
+			FinalLeaveStatusResponse finalLeaveStatusResponse = new FinalLeaveStatusResponse();
+			LeaveApplyModel applyModel = leaveApplyRepository.findOne(leaveStatusRequest.getLeaveID());
+			applyModel.setLeaveStatus(1);
+			leaveApplyRepository.save(applyModel);
+			finalLeaveStatusResponse.setStatus("Success");
+			return finalLeaveStatusResponse;
+
+		} catch (Exception e) {
+			FinalLeaveStatusResponse finalLeaveStatusResponse = new FinalLeaveStatusResponse();
+			finalLeaveStatusResponse.setStatus("Failed");
+			return finalLeaveStatusResponse;
+		}
+	}
+
+	@RequestMapping(value = "/leaveStatusForparent", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object leave(HttpServletRequest request, @RequestBody LeaveRequestModel leaveRequestModel) {
+		try {
+			if (studentDAO.isValidStudent(leaveRequestModel.getStudentID())) {
+				FinalLeaveForParents finalLeaveForParents = new FinalLeaveForParents();
+				if (leaveApplyDAO.leaveApplied(leaveRequestModel.getStudentID())) {
+					List<LeaveApplyModel> applyModels = leaveApplyDAO.getStudentDetails(leaveRequestModel.getStudentID());
+					List<LeaveViewResponseModel> leaveViewResponseModels = new ArrayList<>();
+					for (LeaveApplyModel leaveApplyModel : applyModels) {
+						finalLeaveForParents.setStatus("Success");
+						LeaveViewResponseModel leaveViewResponseModel = new LeaveViewResponseModel();
+
+						leaveViewResponseModel.setFromDate(leaveApplyModel.getFromDate());
+						leaveViewResponseModel.setToDate(leaveApplyModel.getToDate());
+						leaveViewResponseModel.setNoOfDays(leaveApplyModel.getNoOfDays());
+						leaveViewResponseModel.setReadStatus(leaveApplyModel.getLeaveStatus());
+						Date date = new Date();
+						date = leaveApplyModel.getAppliedDate();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						String s = sdf1.format(date);
+						try {
+							date = sdf1.parse(s);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						leaveViewResponseModel.setAppliedDate(s);
+						leaveViewResponseModel.setReason(leaveApplyModel.getReason());
+						leaveViewResponseModels.add(leaveViewResponseModel);
+					}
+					finalLeaveForParents.setLeaveDetails(leaveViewResponseModels);
+					return finalLeaveForParents;
+				}else{
+					finalLeaveForParents.setStatus("No leave applied");
+					finalLeaveForParents.setLeaveDetails(new ArrayList<>());
+					return finalLeaveForParents;
+				}
+
+			} else {
+				FinalLeaveForParents finalLeaveForParents = new FinalLeaveForParents();
+				finalLeaveForParents.setStatus("Invalid User");
+				return finalLeaveForParents;
+			}
+		} catch (Exception e) {
+			FinalLeaveForParents finalLeaveForParents = new FinalLeaveForParents();
+			e.printStackTrace();
+			finalLeaveForParents.setStatus("Failed");
+			return finalLeaveForParents;
+		}
+	}
+}

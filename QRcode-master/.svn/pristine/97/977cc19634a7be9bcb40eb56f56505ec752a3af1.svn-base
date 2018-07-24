@@ -1,0 +1,37 @@
+package com.zs.cws.superadmin.school.dao;
+
+import java.util.List;
+
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.ws.hybrid.license.model.SchoolResponsePOJO;
+
+
+public interface SchoolDAO {
+
+	public boolean isAvailable(SchoolModel schoolModel);
+
+	public SchoolModel getLastInsertedEntry();
+
+	public List<SchoolModel> getSchoolsByManagement(int managementID);
+
+	public List<SchoolResponsePOJO> getSchoolsByManagementResponse(int mgmtId);
+
+	public int getSchoolIDByFeature(int mgmtId);
+
+	public String getPrincipal(int row_id, String Principal);
+
+	public int getSchoolID(String phone);
+
+	public List<ManagementMemberModel> getManagements(String phone);
+
+	public List<ManagementMemberModel> getManagementsForSchool(int managementID);
+
+	public boolean isValidSchool(int schoolId);
+
+	public long getStudentsCount(int schoolID);
+
+	public List<SchoolModel> getSchoolByPrincipal(List<Integer> principalLists);
+
+	
+}

@@ -1,0 +1,55 @@
+package com.zs.cws.utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+
+public class GlobalVariables {
+
+	public static int SCHOOL_ID;
+	public static int PLAN_ID;
+	public static List<FilePropertyModel> FILE_LIST;
+	public static String PARENT_PATH = "";
+	public static String BASE_PATH = "";
+	public static List<FilePropertyModel> FOLDER_LIST;
+	public static List<SchoolFeatureModel> SCHOOL_FEATURE_LIST;
+
+	@SuppressWarnings("serial")
+	public static ArrayList<String> bloodGroups = new ArrayList<String>() {
+		{
+			add("A+VE");
+			add("A-VE");
+			add("B+VE");
+			add("B-VE");
+			add("O+VE");
+			add("O-VE");
+			add("AB+VE");
+			add("AB-VE");
+		}
+	};
+
+	public static Map<Integer, String> MONTH_NAMES = new HashMap<Integer, String>();
+
+	public static Map<String, String> getMonthAbbrevations() {
+		Map<String, String> monthAbbre = new HashMap<>();
+		monthAbbre.put("01", "JAN");
+		monthAbbre.put("02", "FEB");
+		monthAbbre.put("03", "MAR");
+		monthAbbre.put("04", "APR");
+		monthAbbre.put("05", "MAY");
+		monthAbbre.put("06", "JUN");
+		monthAbbre.put("07", "JUL");
+		monthAbbre.put("08", "AUG");
+		monthAbbre.put("09", "SEP");
+		monthAbbre.put("10", "OCT");
+		monthAbbre.put("11", "NOV");
+		monthAbbre.put("12", "DEC");
+		
+		return monthAbbre;
+
+	}
+
+}

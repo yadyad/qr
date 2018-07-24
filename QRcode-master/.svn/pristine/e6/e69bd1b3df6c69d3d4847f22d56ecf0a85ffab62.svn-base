@@ -1,0 +1,87 @@
+package com.zs.cws.ws.android.dairy.model;
+
+public class MessageReplyRequestModel {
+	int deliverID;
+	int fromStaffID;
+	int parentID;
+	int schoolID;
+	String messageFlow;// PT or TP
+	String message;
+	int messageID;
+	int position;
+
+	public MessageReplyRequestModel() {
+	}
+
+	public int getDeliverID() {
+		return deliverID;
+	}
+
+	public void setDeliverID(int deliverID) {
+		this.deliverID = deliverID;
+	}
+
+	public int getFromStaffID() {
+		return fromStaffID;
+	}
+
+	public void setFromStaffID(int fromStaffID) {
+		this.fromStaffID = fromStaffID;
+	}
+
+	public int getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getMessageID() {
+		return messageID;
+	}
+
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	@Override
+	public String toString() {
+		return "MessageReplyRequestModel [deliverID=" + deliverID + ", fromStaffID=" + fromStaffID + ", parentID="
+				+ parentID + ", schoolID=" + schoolID + ", messageFlow=" + messageFlow + ", message=" + message
+				+ ", messageID=" + messageID + "]";
+	}
+
+}

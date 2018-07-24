@@ -1,0 +1,10 @@
+package com.zs.cws.schooladmin.news.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.news.model.NewsModel;
+
+
+public interface NewsRepository extends JpaRepository<NewsModel, Integer>{
+
+}

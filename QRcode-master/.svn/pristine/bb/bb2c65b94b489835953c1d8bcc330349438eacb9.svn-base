@@ -1,0 +1,37 @@
+package com.zs.cws.ws.android.leave.model;
+
+import java.util.List;
+
+public class FinalViewResponseModel {
+
+	String responseStatus;
+	String status;
+	List<LeaveViewResponseModel> leaveViewResponseModels;
+	public FinalViewResponseModel() {
+	}
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+	public List<LeaveViewResponseModel> getLeaveViewResponseModels() {
+		return leaveViewResponseModels;
+	}
+	public void setLeaveViewResponseModels(List<LeaveViewResponseModel> leaveViewResponseModels) {
+		this.leaveViewResponseModels = leaveViewResponseModels;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "FinalViewResponseModel [responseStatus=" + responseStatus + ", status=" + status
+				+ ", leaveViewResponseModels=" + leaveViewResponseModels + "]";
+	}
+	
+}

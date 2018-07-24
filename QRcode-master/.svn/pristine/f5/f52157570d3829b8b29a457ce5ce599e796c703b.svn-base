@@ -1,0 +1,74 @@
+package com.zs.cws.ws.android.driverdetails.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.driverdetails.dao.DriverDetailsDAO;
+import com.zs.cws.schooladmin.driverdetails.model.DriverDetailsModel;
+import com.zs.cws.schooladmin.driverroutes.dao.DriverRouteDAO;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.ws.android.driverdetails.model.DriverDetailsRequest;
+import com.zs.cws.ws.android.driverdetails.model.DriverDetailsResponse;
+import com.zs.cws.ws.android.driverdetails.model.FinalDriverDetails;
+
+@RestController
+@RequestMapping("android/driverdetails")
+public class DriverServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	DriverRouteDAO driverRouteDAO;
+	@Autowired
+	DriverDetailsDAO driverDetailsDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentDairyMeaages(HttpServletRequest request,
+			@RequestBody DriverDetailsRequest driverDetailsRequest) {
+
+		try {
+			FinalDriverDetails finalDriverDetails = new FinalDriverDetails();
+			if (schoolDAO.isValidSchool(driverDetailsRequest.getSchoolID())) {
+				List<DriverDetailsResponse> details = new ArrayList<>();
+				List<DriverDetailsModel> detailsModels = driverDetailsDAO
+						.getDriverDetails(driverDetailsRequest.getSchoolID());
+				for (DriverDetailsModel driverDetailsModel : detailsModels) {
+
+					DriverDetailsResponse detailsResponse = new DriverDetailsResponse();
+					detailsResponse.setDriverName(driverDetailsModel.getDriverName());
+					detailsResponse.setPhone(driverDetailsModel.getPhone());
+					detailsResponse.setEmail(driverDetailsModel.getEmail());
+					detailsResponse.setAddress(driverDetailsModel.getAddress());
+					detailsResponse.setBusNumber(driverDetailsModel.getBusNumber());
+					detailsResponse.setLicenseNumber(driverDetailsModel.getLicenseNumber());
+					detailsResponse.setRoute(driverDetailsModel.getDriverRoutesModel().getRouteFrom()+ "-" +driverDetailsModel.getDriverRoutesModel().getRouteTo());
+					details.add(detailsResponse);
+					finalDriverDetails.setStatus("Success");
+
+				}
+				finalDriverDetails.setDriverDetails(details);
+				return finalDriverDetails;
+
+			} else {
+				finalDriverDetails.setStatus("Invalid User");
+				finalDriverDetails.setDriverDetails(new ArrayList<>());
+				return finalDriverDetails;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FinalDriverDetails finalDriverDetails = new FinalDriverDetails();
+			finalDriverDetails.setStatus("Failed");
+			finalDriverDetails.setDriverDetails(new ArrayList<>());
+			return finalDriverDetails;
+		}
+	}
+}

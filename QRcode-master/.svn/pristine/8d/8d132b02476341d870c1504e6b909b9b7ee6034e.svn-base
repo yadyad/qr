@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.schooldivision.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+
+public interface SchoolDivRepository extends JpaRepository<SchoolDivModel, Integer>{
+
+}

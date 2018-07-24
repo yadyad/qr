@@ -1,0 +1,88 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name = "cwas_management_meeting_status_details")
+public class ManagementPrincipalMeetingStatusModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int meetingStatusID;
+
+	@OneToOne
+	@JoinColumn(name = "meeting_id")
+	private ManagementMeetingModel managementMeetingModel;
+
+	@Column(name = "status")
+	private int status;
+
+	@OneToOne
+	@JoinColumn(name = "management_id")
+	private ManagementModel managementModel;
+
+	@OneToOne
+	@JoinColumn(name = "principal_id")
+	private SchoolStaffModel schoolStaffModel;
+
+	public ManagementPrincipalMeetingStatusModel() {
+	}
+
+	public int getMeetingStatusID() {
+		return meetingStatusID;
+	}
+
+	public void setMeetingStatusID(int meetingStatusID) {
+		this.meetingStatusID = meetingStatusID;
+	}
+
+	public ManagementMeetingModel getManagementMeetingModel() {
+		return managementMeetingModel;
+	}
+
+	public void setManagementMeetingModel(ManagementMeetingModel managementMeetingModel) {
+		this.managementMeetingModel = managementMeetingModel;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public ManagementModel getManagementModel() {
+		return managementModel;
+	}
+
+	public void setManagementModel(ManagementModel managementModel) {
+		this.managementModel = managementModel;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementPrincipalMeetingStatusModel [meetingStatusID=" + meetingStatusID + ", managementMeetingModel="
+				+ managementMeetingModel + ", status=" + status + ", managementModel=" + managementModel
+				+ ", schoolStaffModel=" + schoolStaffModel + "]";
+	}
+
+}

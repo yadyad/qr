@@ -1,0 +1,74 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.zs.cws.utils;
+
+import com.google.gson.Gson;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.ws.android.feesstructure.model.FeesServiceRequestModel;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+
+
+/**
+ *
+ * @author 100019
+ */
+public class FCMSender {
+	
+	
+	public static void fcmTest1(Object object,String fcmTocken,String key) throws ProtocolException, IOException {
+
+		
+		final String apiKey = "AIzaSyBLizNi8G4yKi-3HT_ZNL3p8YoPepXmWhA";
+		
+		
+	//	final String apiKey = "AAAA-zrQ1bA:APA91bF9Whe8x7jqQepNcTacsiDqhN3CMVTti0bMjYSPy17tugBqMRGkHQjjtKWYIO9m_IOdBFCeBIY_kNAB2nzKeeiB6Xd3mMAcKkV4qdrTgtLfJYkev5Jp2niDS2U2CWcGJ-MSpohk";
+		//final String apiKey = "AIzaSyBIKf6a4cOOznQlLuZODirbxxVL9MXA01s";
+		
+		//final String apiKey = "AIzaSyBCMXyNUcR6c9vMWDLV8EXZNtI4LNVCPRE";
+		URL url = new URL("https://fcm.googleapis.com/fcm/send");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Authorization", "key=" + apiKey);
+		conn.setDoOutput(true);
+		Gson gson = new Gson();
+	
+//		FOR SWITCHING BADGE
+		String json = gson.toJson(object);
+		String input = "{ \"content_available\" : true, \"notification\":{},\"data\" :  {\"msg\" : " + json + ",\"key\" : \""+key+"\"}, \"to\":\""+fcmTocken+"\"}";
+		System.out.println("stringggg" + input);
+		OutputStream os = conn.getOutputStream();
+		os.write(input.getBytes());
+		os.flush(); 
+		os.close();
+		int responseCode = conn.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + input);
+		System.out.println("Response Code : " + responseCode);
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+		// print result
+		System.out.println(response.toString());
+	}
+	public static void main(String[] args) throws IOException {
+		/*FeesServiceRequestModel FeesServiceRequestModel=new FeesServiceRequestModel();
+		FeesServiceRequestModel.setSchoolID(11);
+		fcmTest1(FeesServiceRequestModel);*/
+	}
+}

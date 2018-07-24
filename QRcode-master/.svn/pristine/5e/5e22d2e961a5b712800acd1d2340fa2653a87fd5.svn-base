@@ -1,0 +1,24 @@
+package com.zs.cws.ws.hybrid.divisionandsubject.model;
+
+public class DivisionServiceRequestModel {
+
+	int schoolID;
+
+	public DivisionServiceRequestModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	@Override
+	public String toString() {
+		return "DivisionServiceRequestModel [schoolID=" + schoolID + "]";
+	}
+	
+	
+}

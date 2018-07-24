@@ -1,0 +1,68 @@
+package com.zs.cws.ws.android.feesstructure.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.settings.dao.AcademicYearDAO;
+import com.zs.cws.schooladmin.settings.model.FeesStructureModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.ws.android.feesstructure.model.FeesServiceRequestModel;
+import com.zs.cws.ws.android.feesstructure.model.FeesStructureResponseModel;
+
+@RestController
+@RequestMapping("android/fees")
+public class FeesServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	AcademicYearDAO academicYearDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listFeesStructure(HttpServletRequest request,
+			@RequestBody FeesServiceRequestModel feesServiceRequestModel) { 
+		try {
+			if (schoolDAO.isValidSchool(feesServiceRequestModel.getSchoolID())) {
+				FeesStructureResponseModel feesStructureResponseModel = new FeesStructureResponseModel();
+				List<FeesStructureModel> feesStructureModels = academicYearDAO
+						.getFees(feesServiceRequestModel.getSchoolID());
+				for (FeesStructureModel feesStructureModel : feesStructureModels) {
+					feesStructureResponseModel.setStatus("Success");
+					feesStructureResponseModel.setFeesPath(feesStructureModel.getFeesStructure());
+					Date date = new Date();
+					date = feesStructureModel.getCreatedDate();
+					SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String s = sdf1.format(date);
+					try {
+						date = sdf1.parse(s);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					feesStructureResponseModel.setFeesUploadedDate(s);
+				}
+				return feesStructureResponseModel;
+			} else {
+				FeesStructureResponseModel feesStructureResponseModel = new FeesStructureResponseModel();
+				feesStructureResponseModel.setStatus("Invalid User");
+				return feesStructureResponseModel;
+			}
+
+		} catch (Exception e) {
+			FeesStructureResponseModel feesStructureResponseModel = new FeesStructureResponseModel();
+			feesStructureResponseModel.setStatus("Failed");
+			return feesStructureResponseModel;
+		}
+	}
+
+}

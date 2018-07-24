@@ -1,0 +1,45 @@
+package com.zs.cws.ws.hybrid.license.model;
+
+import java.util.List;
+
+public class FinalResultPOJO {
+
+	private String status = "";
+	private List<ManagementLicenseResponsePOJO> managements;
+	private String memberType = "";
+
+	public FinalResultPOJO() {
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<ManagementLicenseResponsePOJO> getManagements() {
+		return managements;
+	}
+
+	public void setManagements(List<ManagementLicenseResponsePOJO> managements) {
+		this.managements = managements;
+	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalResultPOJO [status=" + status + ", managements=" + managements + ", memberType=" + memberType
+				+ "]";
+	}
+
+	
+}

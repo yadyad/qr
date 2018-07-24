@@ -1,0 +1,175 @@
+package com.zs.cws.payment.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_payment_history_details")
+public class PaymentModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int rowID;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@Column(name = "payment_id")
+	String paymentID;
+
+	@Column(name = "transaction_id")
+	String transactionID;
+
+	@Column(name = "order_ref_no")
+	String orderRefNo;
+
+	@Column(name = "response_status")
+	String responseStatus;
+
+	@Column(name = "response_code")
+	String responseCode;
+
+	@Column(name = "amount")
+	String amount;
+
+	@Column(name = "merchant_id")
+	String merchantID;
+
+	@Column(name = "payment_method")
+	String paymentMethod;
+
+	@Column(name = "payment_brand")
+	String paymentBrand;
+
+	@Column(name = "transaction_date")
+	Date transaction_date;
+
+	@Column(name = "currency_code")
+	String currencyCode;
+
+	public PaymentModel() {
+	}
+
+	public int getRowID() {
+		return rowID;
+	}
+
+	public void setRowID(int rowID) {
+		this.rowID = rowID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getPaymentID() {
+		return paymentID;
+	}
+
+	public void setPaymentID(String paymentID) {
+		this.paymentID = paymentID;
+	}
+
+	public String getTransactionID() {
+		return transactionID;
+	}
+
+	public void setTransactionID(String transactionID) {
+		this.transactionID = transactionID;
+	}
+
+	public String getOrderRefNo() {
+		return orderRefNo;
+	}
+
+	public void setOrderRefNo(String orderRefNo) {
+		this.orderRefNo = orderRefNo;
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public String getResponseCode() {
+		return responseCode;
+	}
+
+	public void setResponseCode(String responseCode) {
+		this.responseCode = responseCode;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getMerchantID() {
+		return merchantID;
+	}
+
+	public void setMerchantID(String merchantID) {
+		this.merchantID = merchantID;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public String getPaymentBrand() {
+		return paymentBrand;
+	}
+
+	public void setPaymentBrand(String paymentBrand) {
+		this.paymentBrand = paymentBrand;
+	}
+
+	public Date getTransaction_date() {
+		return transaction_date;
+	}
+
+	public void setTransaction_date(Date transaction_date) {
+		this.transaction_date = transaction_date;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
+	@Override
+	public String toString() {
+		return "PaymentModel [rowID=" + rowID + ", schoolModel=" + schoolModel + ", paymentID=" + paymentID
+				+ ", transactionID=" + transactionID + ", orderRefNo=" + orderRefNo + ", responseStatus="
+				+ responseStatus + ", responseCode=" + responseCode + ", amount=" + amount + ", merchantID="
+				+ merchantID + ", paymentMethod=" + paymentMethod + ", paymentBrand=" + paymentBrand
+				+ ", transaction_date=" + transaction_date + ", currencyCode=" + currencyCode + "]";
+	}
+}

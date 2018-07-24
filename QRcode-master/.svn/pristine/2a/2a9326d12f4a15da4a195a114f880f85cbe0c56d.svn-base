@@ -1,0 +1,38 @@
+package com.zs.cws.ws.android.timetable.model;
+
+public class TimeTableResponse {
+	
+	String status="";
+	String timeTableURL="";
+	String uploadedDate="";
+	public TimeTableResponse() {
+		
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getTimeTableURL() {
+		return timeTableURL;
+	}
+	public void setTimeTableURL(String timeTableURL) {
+		this.timeTableURL = timeTableURL;
+	}
+	public String getUploadedDate() {
+		return uploadedDate;
+	}
+	public void setUploadedDate(String uploadedDate) {
+		this.uploadedDate = uploadedDate;
+	}
+	@Override
+	public String toString() {
+		return "TimeTableResponse [status=" + status + ", timeTableURL=" + timeTableURL + ", uploadedDate="
+				+ uploadedDate + "]";
+	}
+	
+	
+	
+
+}

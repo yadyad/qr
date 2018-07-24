@@ -1,0 +1,135 @@
+package com.zs.cws.superadmin.school.dao;
+
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.ws.hybrid.license.model.SchoolResponsePOJO;
+
+
+@Repository
+@Transactional
+public class SchoolIMPL implements SchoolDAO {
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Override
+	public boolean isAvailable(SchoolModel schoolModel) {
+		System.out.println("SCHOOL MODEL >>>>>"+schoolModel.toString());
+		String query = "";
+		if (schoolModel.getSchoolId() != 0) {
+			query = "select count(*) from SchoolModel where schoolName=? and schoolId <> " + schoolModel.getSchoolId() + "";
+		} else {
+			query = "select count(*) from SchoolModel where schoolName=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, schoolModel.getSchoolName().trim()).getSingleResult()>0;
+		return exists;
+
+	}
+
+	@Override
+	public SchoolModel getLastInsertedEntry() {
+		String query = "FROM SchoolModel ORDER BY schoolId DESC";
+		SchoolModel schoolModel = (SchoolModel) entityManager.createQuery(query).setMaxResults(1).getSingleResult();
+		return schoolModel;
+	}
+
+	@Override
+	public List<SchoolModel> getSchoolsByManagement(int managementID) {
+		String query = "FROM SchoolModel WHERE managementModel.managementID=" + managementID + "";
+		@SuppressWarnings("unchecked")
+		List<SchoolModel> schoolList = entityManager.createQuery(query).getResultList();
+		return schoolList;
+	}
+
+	@Override
+	@Transactional
+	public List<SchoolResponsePOJO> getSchoolsByManagementResponse(int mgmtId) {
+		String query = "FROM SchoolModel WHERE managementModel.managementID=" + mgmtId + "";
+		@SuppressWarnings("unchecked")
+		List<SchoolResponsePOJO> schoolList = entityManager.createQuery(query).getResultList();
+		return schoolList;
+	}
+
+	@Override
+	@Transactional
+	public int getSchoolIDByFeature(int mgmtId) {
+		Query query = entityManager.createNativeQuery(
+				"SELECT row_id FROM cwas_school_details csd WHERE csd.management_id  = " + mgmtId + "");
+		int result = (int) query.getSingleResult();
+		System.out.println("MGMT id>>>>>>" + result);
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public String getPrincipal(int row_id, String Principal) {
+		String query = "From SchoolStaffModel where schoolModel.schoolId=" + row_id
+				+ " and designationModel.designation='" + Principal + "'";
+		@SuppressWarnings("unchecked")
+		List<SchoolStaffModel> staffModel = entityManager.createQuery(query).getResultList();
+		if (staffModel.size() > 0) {
+			return staffModel.get(0).getFirstName() + " " + staffModel.get(0).getLastName();
+		}
+		return "No Principal";
+	}
+
+	@Override
+	public int getSchoolID(String phone) {
+		String query = "SELECT schoolModel.schoolId FROM SchoolStaffModel  WHERE phone='" + phone + "'";
+		int schoolID = (Integer) entityManager.createQuery(query).getSingleResult();
+		return schoolID;
+	}
+
+	@Override
+	@Transactional
+	public List<ManagementMemberModel> getManagements(String phone) {
+		String query = "FROM ManagementMemberModel WHERE phone='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<ManagementMemberModel> managementList = entityManager.createQuery(query).getResultList();
+		return managementList;
+	}
+
+	@Override
+	public List<ManagementMemberModel> getManagementsForSchool(int managementID) {
+		String query = "FROM ManagementMemberModel WHERE managementModel.managementID='" + managementID + "'";
+		@SuppressWarnings("unchecked")
+		List<ManagementMemberModel> managementList = entityManager.createQuery(query).getResultList();
+		return managementList;
+	}
+
+	@Override
+	public boolean isValidSchool(int schoolId) {
+		String query = "From SchoolModel where schoolId = '" + schoolId + "'";
+		List<SchoolModel> schoolModels = entityManager.createQuery(query).getResultList();
+		if (schoolModels.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public long getStudentsCount(int schoolID) {
+		String query = "select count(*) from SchoolModel where schoolId = " + schoolID + "";
+		long studentCount = (long) entityManager.createQuery(query).getSingleResult();
+		return studentCount;
+
+	}
+
+	@Override
+	public List<SchoolModel> getSchoolByPrincipal(List<Integer> principalLists) {
+		return null;
+		
+	}
+
+	
+
+}

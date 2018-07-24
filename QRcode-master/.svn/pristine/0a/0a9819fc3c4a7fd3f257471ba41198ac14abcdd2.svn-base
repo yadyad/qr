@@ -1,0 +1,74 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+public class StudentList {
+	
+	int studentId;
+	String studentName;
+	String studentMarks;
+	String rollNo;
+	
+	public StudentList() {
+		
+	}
+
+	
+
+	public int getStudentId() {
+		return studentId;
+	}
+
+
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
+
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	
+
+	public String getStudentMarks() {
+		return studentMarks;
+	}
+
+
+
+	public void setStudentMarks(String studentMarks) {
+		this.studentMarks = studentMarks;
+	}
+
+
+
+	public String getRollNo() {
+		return rollNo;
+	}
+
+	public void setRollNo(String rollNo) {
+		this.rollNo = rollNo;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "StudentList [studentId=" + studentId + ", studentName=" + studentName + ", studentMarks=" + studentMarks
+				+ ", rollNo=" + rollNo + "]";
+	}
+
+
+
+	
+	
+	
+	
+	
+
+}

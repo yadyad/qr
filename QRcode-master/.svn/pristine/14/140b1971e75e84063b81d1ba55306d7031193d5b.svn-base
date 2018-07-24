@@ -1,0 +1,7 @@
+package com.zs.cws.superadmin.master.suscription.dao;
+
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+
+public interface SubscriptionPlanDAO {
+	boolean isAvailable(SubsciptionPlanModel subsciptionPlanModel);
+}

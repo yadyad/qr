@@ -1,0 +1,62 @@
+package com.zs.cws.ws.hybrid.news.model;
+
+import java.util.List;
+
+public class NewsFinalModel {
+	
+	
+	private String status="";
+	private String responseStatus="";
+	private List<NewsResponseModel>newsResponseModel;
+	
+	
+	
+	public NewsFinalModel() {
+		
+	}
+
+
+	
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	public List<NewsResponseModel> getNewsResponseModel() {
+		return newsResponseModel;
+	}
+
+
+	public void setNewsResponseModel(List<NewsResponseModel> newsResponseModel) {
+		this.newsResponseModel = newsResponseModel;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "NewsFinalModel [status=" + status + ", responseStatus=" + responseStatus + ", newsResponseModel="
+				+ newsResponseModel + "]";
+	}
+
+
+
+
+}

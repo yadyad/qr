@@ -1,0 +1,13 @@
+package com.zs.cws.ws.android.feesdetails.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+
+public interface FeesDetailsDAO {
+
+	List<FeesPaymentModel> getFeesDetails(int schoolID, int studentID);
+
+	boolean isPayed(int studentID);
+
+}

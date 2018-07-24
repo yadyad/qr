@@ -1,0 +1,68 @@
+package com.zs.cws.ws.android.aboutschool.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.ws.android.aboutschool.model.AboutSchoolRequest;
+import com.zs.cws.ws.android.aboutschool.model.AboutSchoolResponse;
+
+@RestController
+@RequestMapping("android/aboutschool")
+public class AboutSchoolServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	SchoolRepository schoolrepository;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object aboutSchool(HttpServletRequest request,
+			@RequestBody AboutSchoolRequest aboutSchoolRequest) {
+		try {
+			AboutSchoolResponse aboutSchoolResponse = new AboutSchoolResponse();
+			if (schoolDAO.isValidSchool(aboutSchoolRequest.getSchoolID())) {
+
+				SchoolModel schoolModels = schoolrepository.findOne(aboutSchoolRequest.getSchoolID());
+				aboutSchoolResponse.setStatus("Success");
+				aboutSchoolResponse.setSchoolName(schoolModels.getSchoolName());
+				aboutSchoolResponse.setSchoolAddress(schoolModels.getAddress());
+				aboutSchoolResponse.setAboutSchoolMsg(schoolModels.getDescription());
+				Date date = new Date();
+				date = schoolModels.getUpdatedDate();
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+				String s = sdf1.format(date);
+				try {
+					date = sdf1.parse(s);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				aboutSchoolResponse.setLastUpdatedDate(s);
+				return aboutSchoolResponse;
+
+			} else {
+				AboutSchoolResponse aboutSchoolResponse2 = new AboutSchoolResponse();
+				aboutSchoolResponse2.setStatus("Invalid User");
+				return aboutSchoolResponse2;
+			}
+
+		} catch (Exception e) {
+			AboutSchoolResponse aboutSchoolResponse = new AboutSchoolResponse();
+			aboutSchoolResponse.setStatus("Failed");
+			return aboutSchoolResponse;
+		}
+	}
+
+}

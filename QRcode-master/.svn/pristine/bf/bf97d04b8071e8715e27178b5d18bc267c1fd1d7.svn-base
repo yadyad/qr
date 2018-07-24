@@ -1,0 +1,80 @@
+package com.zs.cws.superadmin.schooldivision.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+
+@Repository
+
+public class SchoolDivIMPL implements SchoolDivDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Transactional
+	@Override
+	public boolean isAvailable(SchoolDivModel schoolDivModel) {
+		String query = "";
+
+		if (schoolDivModel.getSchoolDivId() != 0) {
+		System.out.println("EXISTING.....DIV");
+			query = "select count(*) from SchoolDivModel where division=? and standard=? and schoolDivId <> "
+					+ schoolDivModel.getSchoolDivId() + " AND schoolModel.schoolId=?";
+		} else {
+			System.out.println("NEW.....DIV");
+			query = "select count(*) from SchoolDivModel where division=? AND standard=? AND schoolModel.schoolId=?";
+		}
+		Query query1= entityManager.createQuery(query);
+		query1.setParameter(1, schoolDivModel.getDivision().trim());
+		query1.setParameter(2, schoolDivModel.getStandard().trim());
+		query1.setParameter(3, schoolDivModel.getSchoolModel().getSchoolId());
+		boolean exists = (Long)(query1).getSingleResult() > 0;
+		
+		return exists;
+
+	}
+
+	@Override
+	public List<SchoolDivModel> getDivisionLists(int schoolID) {
+		String query = "from SchoolDivModel where schoolModel.schoolId=" + schoolID;
+		@SuppressWarnings("unchecked")
+		List<SchoolDivModel> schoolDivisionList = entityManager.createQuery(query).getResultList();
+		return schoolDivisionList;
+	}
+	@Override
+	public SchoolDivModel getDivision(SchoolDivModel schoolDivModel,int schoolId) {
+		
+		String query = "from SchoolDivModel where schoolModel.schoolId=" + schoolId +" AND (division='"+schoolDivModel.getDivision().trim()+"' AND standard='"+schoolDivModel.getStandard().trim()+"')";
+		System.out.println("QUERRYY DIVISION::>>"+query);
+		SchoolDivModel schoolDivisionList = (SchoolDivModel) entityManager.createQuery(query).getSingleResult();
+		return schoolDivisionList;
+	}
+
+	@Override
+	public int getDivisionCount(int schoolID) {
+		String query = "SELECT COUNT(*) FROM SchoolDivModel WHERE schoolModel.schoolId=" + schoolID + "";
+		long divisionCount = (Long) entityManager.createQuery(query).getSingleResult();
+		return (int) divisionCount;
+	}
+
+	@Override
+	public boolean validDivision(int divisionID, int schoolID) {
+		System.out.println("DIVIVSION IDDDDDDDD>>>>"+divisionID    +schoolID);
+	String query="From SchoolDivModel where schoolModel.schoolId=" + schoolID +" AND schoolDivId='"+divisionID+"' ";
+	@SuppressWarnings("unchecked")
+	List<SchoolDivModel>divModels = entityManager.createQuery(query).getResultList();
+	if (divModels.size()!=0) {
+		return true;
+	}
+		return false;
+	}
+
+	
+}

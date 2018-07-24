@@ -1,0 +1,91 @@
+package com.zs.cws.ws.hybrid.kudos.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.schooladmin.kudos.model.KudosModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_kudos_likes")
+public class KudosLikesModel {
+	
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int kudosLikeId;
+	
+
+	@OneToOne
+	@JoinColumn(name="kudos_id")
+	private KudosModel kudosModel;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	
+	@Column(name="member_type")
+	private String memberType;
+	
+	@Column(name="staff_id")
+	private int staffID;
+
+	public KudosLikesModel() {
+	
+	}
+
+	public int getKudosLikeId() {
+		return kudosLikeId;
+	}
+
+	public void setKudosLikeId(int kudosLikeId) {
+		this.kudosLikeId = kudosLikeId;
+	}
+
+	public KudosModel getKudosModel() {
+		return kudosModel;
+	}
+
+	public void setKudosModel(KudosModel kudosModel) {
+		this.kudosModel = kudosModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	public int getStaffID() {
+		return staffID;
+	}
+
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	@Override
+	public String toString() {
+		return "KudosLikesModel [kudosLikeId=" + kudosLikeId + ", kudosModel=" + kudosModel + ", schoolModel="
+				+ schoolModel + ", memberType=" + memberType + ", staffID=" + staffID + "]";
+	}
+	
+	
+}

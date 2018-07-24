@@ -1,0 +1,42 @@
+package com.zs.cws.ws.android.myclass.model;
+
+public class MyClassServiceResponseModel {
+
+	String staffName;
+	String subject;
+	String phone;
+	String email;
+	public MyClassServiceResponseModel() {
+	}
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	@Override
+	public String toString() {
+		return "MyClassServiceResponseModel [staffName=" + staffName + ", subject=" + subject + ", phone=" + phone
+				+ ", email=" + email + "]";
+	}
+	
+	
+}

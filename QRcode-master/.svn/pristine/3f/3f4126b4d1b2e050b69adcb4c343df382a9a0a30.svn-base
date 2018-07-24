@@ -1,0 +1,45 @@
+package com.zs.cws.ws.android.searchparent.model;
+
+public class SearchParentRequest {
+	
+	int schoolID;
+	String searchStudName;
+	int divisionID;
+	
+	public SearchParentRequest() {
+	
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getSearchStudName() {
+		return searchStudName;
+	}
+
+	public void setSearchStudName(String searchStudName) {
+		this.searchStudName = searchStudName;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	@Override
+	public String toString() {
+		return "SearchParentRequest [schoolID=" + schoolID + ", searchStudName=" + searchStudName + ", divisionID="
+				+ divisionID + "]";
+	}
+	
+	
+
+}

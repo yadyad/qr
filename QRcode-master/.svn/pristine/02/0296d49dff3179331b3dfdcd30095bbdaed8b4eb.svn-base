@@ -1,0 +1,96 @@
+package com.zs.cws.ws.android.dairy.model;
+
+public class DairyFcmModel {
+	int messageID;
+	int deliverID;
+	String type;// "T or P
+	int memberID;
+	int divisionID;
+	int schoolID;
+	String sender;
+	String reciever;
+	String modifiedDate;
+
+	public DairyFcmModel() {
+	}
+
+	public int getMessageID() {
+		return messageID;
+	}
+
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
+	public int getDeliverID() {
+		return deliverID;
+	}
+
+	public void setDeliverID(int deliverID) {
+		this.deliverID = deliverID;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+
+	public String getReciever() {
+		return reciever;
+	}
+
+	public void setReciever(String reciever) {
+		this.reciever = reciever;
+	}
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "DairyFcmModel [messageID=" + messageID + ", deliverID=" + deliverID + ", type=" + type + ", memberID="
+				+ memberID + ", divisionID=" + divisionID + ", schoolID=" + schoolID + ", sender=" + sender
+				+ ", reciever=" + reciever + "]";
+	}
+
+}

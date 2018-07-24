@@ -1,0 +1,68 @@
+package com.zs.cws.ws.hybrid.attendance.model;
+
+public class Division {
+	
+	String division;
+	String present;
+	String absent;
+	String total;
+	int divisionID;
+	
+	public Division() {
+		
+	}
+
+	public String getPresent() {
+		return present;
+	}
+
+	public void setPresent(String present) {
+		this.present = present;
+	}
+
+	public String getAbsent() {
+		return absent;
+	}
+
+	public void setAbsent(String absent) {
+		this.absent = absent;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+	@Override
+	public String toString() {
+		return "Division [division=" + division + ", present=" + present + ", absent=" + absent + ", total=" + total
+				+ ", divisionID=" + divisionID + "]";
+	}
+
+	
+	
+
+
+
+}

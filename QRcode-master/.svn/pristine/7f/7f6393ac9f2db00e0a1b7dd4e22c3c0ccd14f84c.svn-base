@@ -1,0 +1,122 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.List;
+
+public class DairyMessageResponseModel {
+
+	 int messageID;
+	 int deliverID;
+	 String title;
+	 String message;
+	 int parentID;
+	 int staffID;
+	 String messageFlow;
+	 String messageDate;
+	 String groupStatus;
+	 String parentName;
+	 String staffName;
+	 
+	 List<MessageReplyResponseModel> messageReplyList;
+	 
+	public DairyMessageResponseModel() {
+	}
+	
+	public int getMessageID() {
+		return messageID;
+	}
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+	public int getDeliverID() {
+		return deliverID;
+	}
+	public void setDeliverID(int deliverID) {
+		this.deliverID = deliverID;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public int getStaffID() {
+		return staffID;
+	}
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	public int getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
+	}
+
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+
+	public String getMessageDate() {
+		return messageDate;
+	}
+
+	public void setMessageDate(String messageDate) {
+		this.messageDate = messageDate;
+	}
+
+	public String getGroupStatus() {
+		return groupStatus;
+	}
+
+	public void setGroupStatus(String groupStatus) {
+		this.groupStatus = groupStatus;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public List<MessageReplyResponseModel> getMessageReplyList() {
+		return messageReplyList;
+	}
+
+	public void setMessageReplyList(List<MessageReplyResponseModel> messageReplyList) {
+		this.messageReplyList = messageReplyList;
+	}
+
+	@Override
+	public String toString() {
+		return "DairyMessageResponseModel [messageID=" + messageID + ", deliverID=" + deliverID + ", title=" + title
+				+ ", message=" + message + ", parentID=" + parentID + ", staffID=" + staffID + ", messageFlow="
+				+ messageFlow + ", messageDate=" + messageDate + ", groupStatus=" + groupStatus + ", parentName="
+				+ parentName + ", staffName=" + staffName + ", messageReplyList=" + messageReplyList + "]";
+	}
+
+
+
+}

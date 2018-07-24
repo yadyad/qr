@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.schoolstaff.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+public interface SchoolStaffRepository extends JpaRepository<SchoolStaffModel, Integer>{
+
+}

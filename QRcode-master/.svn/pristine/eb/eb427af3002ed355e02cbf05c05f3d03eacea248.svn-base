@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.plancreation.dao;
+
+import com.zs.cws.superadmin.master.plancreation.model.PlanCreationModel;
+
+public interface PlanCreationDAO {
+
+	boolean isAvailable(PlanCreationModel planCreationModel);
+
+}

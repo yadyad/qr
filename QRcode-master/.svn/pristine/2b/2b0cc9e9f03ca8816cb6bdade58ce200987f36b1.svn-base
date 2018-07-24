@@ -1,0 +1,93 @@
+package com.zs.cws.schooladmin.news.dao;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.news.model.NewsModel;
+import com.zs.cws.schooladmin.news.repository.NewsRepository;
+import com.zs.cws.ws.hybrid.news.model.NewsRequestModel;
+import com.zs.cws.ws.hybrid.news.model.NewsResponseModel;
+
+@Repository
+@Transactional
+public class NewsIMPL implements NewstDAO {
+
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	NewsRepository newsRepository;
+
+	public boolean isAvailable(NewsModel newsModel) {
+		String query = "";
+		if (newsModel.getNewsId() != 0) {
+			query = "select count(*) from NewsModel where news='" + newsModel.getNews() + "' and newsId <> "
+					+ newsModel.getNewsId() + "";
+		} else {
+			query = "select count(*) from NewsModel where news='" + newsModel.getNews() + "' ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public NewsModel getLastInsertedEntry() {
+		String query = "FROM NewsModel ORDER BY newsId DESC";
+		NewsModel newsModel = (NewsModel) entityManager.createQuery(query).setMaxResults(1).getSingleResult();
+		return newsModel;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<NewsResponseModel> getNewsList(NewsRequestModel newsRequestModel) {
+		String query = "";
+		List<NewsModel> newsList = new ArrayList<>();
+		System.out.println("NESSS:::>>>"+newsRequestModel.toString());
+		if (newsRequestModel.getStatus().equalsIgnoreCase("After")) {
+			query = "FROM NewsModel WHERE newsId>" + newsRequestModel.getNewsID() + "AND schoolId="
+					+ newsRequestModel.getSchoolID();
+			newsList = entityManager.createQuery(query).getResultList();
+		} else {
+			query = "FROM NewsModel WHERE newsId<" + newsRequestModel.getNewsID() + "AND schoolId="
+					+ newsRequestModel.getSchoolID()+" order by newsId DESC";
+			newsList = entityManager.createQuery(query).setMaxResults(10).getResultList();
+		}
+		List<NewsResponseModel> newsResponseList = new ArrayList<>();
+		for (NewsModel newsModel : newsList) {
+			NewsResponseModel newsResponseModel = new NewsResponseModel();
+			newsResponseModel.setNewsID(newsModel.getNewsId());
+			newsResponseModel.setNews(newsModel.getNews());
+			newsResponseModel.setDescription(newsModel.getDescription());
+			if (newsModel.getNewsImage()!= null) {
+				newsResponseModel.setImageURL(newsModel.getNewsImage());
+			}else{
+				newsResponseModel.setImageURL("");
+			}
+			
+			
+			//newsResponseModel.setImageURL(newsModel.getNewsImage());
+			newsResponseModel.setSchoolID(newsRequestModel.getSchoolID());
+			Date date = newsModel.getCreatedDate();
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+			String s = sdf1.format(date);
+			newsResponseModel.setNewsDate(s);
+			newsResponseList.add(newsResponseModel);
+		}
+		return newsResponseList;
+	}
+
+	@Override
+	public List<NewsModel> getNewsList(int schoolID) {
+		String query = "FROM NewsModel WHERE  schoolId="+schoolID;
+		List<NewsModel> newsList =  entityManager.createQuery(query).getResultList();
+		return newsList;
+	}
+
+}

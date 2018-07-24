@@ -1,0 +1,54 @@
+package com.zs.cws.schooladmin.subscriptionactivation.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+
+@Repository
+@Transactional
+public class SubscriptionActivationIMPL implements SubscriptionActivationDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public boolean isSubscribed(int schoolID) {
+		String query = "select count(*) FROM SubscriptionPlanActivationModel where schoolModel.schoolId=" + schoolID
+				+ " AND graceEndDate > CURRENT_DATE";
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public SubscriptionPlanActivationModel getCurrentPlanDetails(int schoolID) {
+		String query = "FROM SubscriptionPlanActivationModel where schoolModel.schoolId=" + schoolID
+				+ " AND graceEndDate > CURRENT_DATE order by subActivationID desc";
+		List<SubscriptionPlanActivationModel> subscriptionPlanActivationModel = entityManager.createQuery(query)
+				.getResultList();
+		if (subscriptionPlanActivationModel.size() > 0) {
+			return subscriptionPlanActivationModel.get(0);
+		}
+
+		return new SubscriptionPlanActivationModel();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public SubscriptionPlanActivationModel getLastSubscribedPlan(int schoolID) {
+		String query = "FROM SubscriptionPlanActivationModel where schoolModel.schoolId=" + schoolID
+				+ " order by subActivationID desc ";
+		List<SubscriptionPlanActivationModel> subscriptionPlanActivationModel = entityManager.createQuery(query)
+				.getResultList();
+		if (subscriptionPlanActivationModel.size() > 0) {
+			return subscriptionPlanActivationModel.get(0);
+		}
+
+		return new SubscriptionPlanActivationModel();
+	}
+
+}

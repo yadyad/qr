@@ -1,0 +1,163 @@
+package com.zs.cws.ws.android.leave.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+@Entity
+@Table(name = "cwas_leave_apply_details")
+public class LeaveApplyModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int leaveApplyID;
+
+	@Column(name = "from_date")
+	private String fromDate;
+
+	@Column(name = "to_date")
+	private String toDate;
+
+	@Column(name = "no_of_days")
+	private int noOfDays;
+
+	@OneToOne
+	@JoinColumn(name = "parent_id")
+	private StudentModel studentModel;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	private SchoolModel schoolModel;
+
+	@OneToOne
+	@JoinColumn(name = "division_id")
+	private SchoolDivModel schoolDivModel;
+
+	@OneToOne
+	@JoinColumn(name = "teacher_id")
+	private SchoolStaffModel schoolStaffModel;
+
+	@Column(name = "leave_status")
+	private int leaveStatus;
+	
+	@Column(name = "reason")
+	private String reason;
+	
+
+	@Column(name = "aplied_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date appliedDate;
+
+	public LeaveApplyModel() {
+	}
+
+	public int getLeaveApplyID() {
+		return leaveApplyID;
+	}
+
+	public void setLeaveApplyID(int leaveApplyID) {
+		this.leaveApplyID = leaveApplyID;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+
+	public int getNoOfDays() {
+		return noOfDays;
+	}
+
+	public void setNoOfDays(int noOfDays) {
+		this.noOfDays = noOfDays;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	public int getLeaveStatus() {
+		return leaveStatus;
+	}
+
+	public void setLeaveStatus(int leaveStatus) {
+		this.leaveStatus = leaveStatus;
+	}
+
+	public Date getAppliedDate() {
+		return appliedDate;
+	}
+
+	public void setAppliedDate(Date appliedDate) {
+		this.appliedDate = appliedDate;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	@Override
+	public String toString() {
+		return "LeaveApplyModel [leaveApplyID=" + leaveApplyID + ", fromDate=" + fromDate + ", toDate=" + toDate
+				+ ", noOfDays=" + noOfDays + ", studentModel=" + studentModel + ", schoolModel=" + schoolModel
+				+ ", schoolDivModel=" + schoolDivModel + ", schoolStaffModel=" + schoolStaffModel + ", leaveStatus="
+				+ leaveStatus + ", appliedDate=" + appliedDate + "]";
+	}
+
+}

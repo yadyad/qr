@@ -1,0 +1,388 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div class="container-fluid">
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Design Group 'pending request' -->
+			<div class="container-fluid">
+				<div class="contain">
+					<div class="row">
+						<c:forEach var="featureModel" items="${featureList}">
+							<a
+								href="${myUrl}/clubwizard-school/${featureModel.featureModel.url}">
+								<div class="col-md-4 col-sm-6">
+									<div class="card-style">
+										<div class="media">
+
+											<div class="media-left">
+												<div class="">
+													<i
+														class="${featureModel.featureModel.css} text-large stat-icon info-text fe-icon faa-pulse"></i>
+												</div>
+											</div>
+
+											<div class="media-body">
+												<div class="members">
+													${featureModel.featureModel.featureName}</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</c:forEach>
+
+						<a href="${myUrl}/clubwizard-school/schooladmin/news">
+							<div class="col-md-4 col-sm-6">
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<div class="">
+												<i
+													class="fa fa-newspaper-o info-text fe-icon faa-pulse "></i>
+
+											</div>
+										</div>
+
+										<div class="media-body">
+											<div class="members">News</div>
+											<!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/kudos">
+							<div class="col-md-4 col-sm-6">
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-trophy fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Kudos</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+
+						<!-- <div class="col-md-4 col-sm-6">
+							<div class="card-style">
+								<div class="media">
+
+									<div class="media-left">
+										<i
+											class="fa fa-user-circle-o fe-icon info-text faa-pulse animated-hover"
+											aria-hidden="true"></i>
+									</div>
+
+									<div class="media-body">
+										<a href="#"></a>
+										<div class="members">Staff Directory</div>
+										  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div>
+									</div>
+								</div>
+							</div>
+						</div>
+ -->
+						<a href="${myUrl}/clubwizard-school/schooladmin/meeting">
+							<div class="col-md-4 col-sm-6">
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-meetup fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Parents Meeting</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/principalmeeting">
+							<div class="col-md-4 col-sm-6">
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-meetup fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Principal Meeting</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+						
+						
+						<a href="${myUrl}/clubwizard-school/schooladmin/examdetails">
+							<div class="col-md-4 col-sm-6">
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-book fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Exam details</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+						
+						<!-- <div class="col-md-4 col-sm-6">
+							<div class="card-style">
+								<div class="media">
+
+									<div class="media-left">
+										<i class="fa fa-envelope-o fe-icon info-text faa-pulse "
+											aria-hidden="true"></i>
+									</div>
+
+									<div class="media-body">
+										<a href="#"></a>
+										<div class="members">Feedback Messages</div>
+										  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<a href="${myUrl}/clubwizard-school/schooladmin/specialdays">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-gift - o fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Special Days</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							
+							
+							<a href="${myUrl}/clubwizard-school/schooladmin/driverroutes">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-user-circle-o fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Driver routes</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							<a href="${myUrl}/clubwizard-school/schooladmin/driverdetails">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-address-card fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Driver details</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/timetable">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-calendar-o fe-icon fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Time Table</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/myclass">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-graduation-cap fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">My Class</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/principalquotes">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-quote-right fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Principal Quotes</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a> <a href="${myUrl}/clubwizard-school/schooladmin/announcements">
+							<div class="col-md-4 col-sm-6">
+
+								<div class="card-style">
+									<div class="media">
+
+										<div class="media-left">
+											<i
+												class="fa fa-bullhorn fe-icon info-text faa-pulse "
+												aria-hidden="true"></i>
+										</div>
+
+										<div class="media-body">
+
+											<div class="members">Announcements</div>
+											<!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+
+	</div>
+</div>
+
+<script>
+	$(function() {
+
+		function countUp(count) {
+			var div_by = 100, speed = Math.round(count / div_by), $display = $('.countdown_first'), run_count = 1, int_speed = 24;
+			var int = setInterval(function() {
+				if (run_count < div_by) {
+					$display.text(speed * run_count);
+					run_count++;
+				} else if (parseInt($display.text()) < count) {
+					var curr_count = parseInt($display.text()) + 1;
+					$display.text(curr_count);
+				} else {
+					clearInterval(int);
+				}
+			}, int_speed);
+		}
+		//		countUp(6791);
+
+		function countUp2(count) {
+			var div_by = 100, speed = Math.round(count / div_by), $display = $('.countdown_second'), run_count = 1, int_speed = 24;
+			var int = setInterval(function() {
+				if (run_count < div_by) {
+					$display.text(speed * run_count);
+					run_count++;
+				} else if (parseInt($display.text()) < count) {
+					var curr_count = parseInt($display.text()) + 1;
+					$display.text(curr_count);
+				} else {
+					clearInterval(int);
+				}
+			}, int_speed);
+		}
+		//countUp2(555);
+
+		function countUp3(count) {
+			var div_by = 100, speed = Math.round(count / div_by), $display = $('.countdown_fourth'), run_count = 1, int_speed = 24;
+			var int = setInterval(function() {
+				if (run_count < div_by) {
+					$display.text(speed * run_count);
+					run_count++;
+				} else if (parseInt($display.text()) < count) {
+					var curr_count = parseInt($display.text()) + 1;
+					$display.text(curr_count);
+				} else {
+					clearInterval(int);
+				}
+			}, int_speed);
+		}
+		//countUp3(999);
+
+	});
+</script>

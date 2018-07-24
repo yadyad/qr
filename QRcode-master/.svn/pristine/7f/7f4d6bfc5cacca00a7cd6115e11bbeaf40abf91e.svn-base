@@ -1,0 +1,36 @@
+package com.zs.cws.superadmin.specialdays.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.specialdays.model.SpecialDaysModel;
+import com.zs.cws.ws.hybrid.calendar.model.CalendarEvents;
+
+@Repository
+public class SpecialDaysIMPL implements SpecialDaysDAO {
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<SpecialDaysModel> findSpclDaysBySchool(int schoolId) {
+	String query="From SpecialDaysModel where schoolModel.schoolId =" + schoolId + " ";
+	List<SpecialDaysModel>specialDaysModels = entityManager.createQuery(query).getResultList();
+		return specialDaysModels;
+	}
+
+	@Override
+	public List<SpecialDaysModel> findSpclDaysBySchoolService(int schoolID, String modDate) {
+		String query="From SpecialDaysModel where schoolModel.schoolId =" + schoolID + " and updatedDate >'" + modDate + "'";
+		List<SpecialDaysModel>specialDaysModels = entityManager.createQuery(query).getResultList();
+		System.out.println("SPECIAL SIXE>>>>>"+specialDaysModels.size());
+			return specialDaysModels;
+	}
+
+	
+}

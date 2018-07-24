@@ -1,0 +1,16 @@
+package com.zs.cws.superadmin.management.dao;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+
+public interface ManagementDAO {
+	public boolean isAvailable(ManagementModel managementModel);
+	
+	
+	public  ManagementModel getLastInsertedEntry();
+
+
+	public Object isRegisteredPhone(String phone);
+
+
+	public Object isRegisteredEmail(String emailID);
+}

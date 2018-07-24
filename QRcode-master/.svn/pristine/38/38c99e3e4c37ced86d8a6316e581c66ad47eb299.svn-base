@@ -1,0 +1,249 @@
+package com.zs.cws.superadmin.student.dao;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+import com.zs.cws.ws.android.license.model.SchoolChildrenModel;
+import com.zs.cws.ws.android.license.model.SchoolLicenceModel;
+
+@Repository
+@Transactional
+public class StudentIMPL implements StudentDAO {
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Override
+	public boolean isAvailable(StudentModel studentModel) {
+
+		String query = "";
+		if (studentModel.getStudentId() != 0) {
+			query = "select count(*) from StudentModel where enrollmentNumber='"
+					+ studentModel.getEnrollmentNumber().trim() + "' and schoolId <> " + studentModel.getStudentId()
+					+ "";
+		} else {
+			query = "select count(*) from StudentModel where enrollmentNumber='"
+					+ studentModel.getEnrollmentNumber().trim() + "' ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public StudentModel getLastInsertedEntry() {
+		String query = "FROM StudentModel ORDER BY studentId DESC";
+		StudentModel studentModel = (StudentModel) entityManager.createQuery(query).setMaxResults(1).getSingleResult();
+		return studentModel;
+	}
+
+	@Override
+	public List<StudentModel> getStudentBySchool(int schoolId) {
+		String query = "FROM StudentModel WHERE schoolModel.schoolId=" + schoolId + "";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> studentList = entityManager.createQuery(query).getResultList();
+		return studentList;
+	}
+
+	@Override
+	public Object isEnrollment(String enrollmentNumber) {
+		String query = "SELECT COUNT(enrollmentNumber) FROM StudentModel WHERE enrollmentNumber='" + enrollmentNumber
+				+ "'";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public long getStudentsCount(int schoolID) {
+		long studentCount = 0;
+		if (schoolID != 0) {
+			String query = "select count(*) from StudentModel where  schoolModel.schoolId = " + schoolID;
+			studentCount = (Long) entityManager.createQuery(query).getSingleResult();
+		}
+		return studentCount;
+	}
+
+	@Override
+	public boolean isParentPhoneNumberExists(String phone) {
+		String query = "From StudentModel where fatherNumber ='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		if (resultList.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<SchoolLicenceModel> getSchoolsByPhone(String phone) {
+		String query = "From StudentModel where fatherNumber ='" + phone + "'";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		List<SchoolModel> schoolModels = new ArrayList<>();
+		for (int i = 0; i < resultList.size(); i++) {
+			boolean status = false;
+			for (int j = 0; j < schoolModels.size(); j++) {
+				if (resultList.get(i).getSchoolModel().getSchoolId() == schoolModels.get(j).getSchoolId()) {
+					status = true;
+				}
+			}
+			if (!status) {
+				schoolModels.add(resultList.get(i).getSchoolModel());
+			}
+		}
+		List<SchoolLicenceModel> finalSchoolList = new ArrayList<>();
+		for (SchoolModel schoolModel : schoolModels) {
+			SchoolLicenceModel schoolLicenceModel = new SchoolLicenceModel();
+			schoolLicenceModel.setSchoolID(schoolModel.getSchoolId());
+			schoolLicenceModel.setSchoolName(schoolModel.getSchoolName());
+			schoolLicenceModel.setSchoolLogo(schoolModel.getSchoolLogo());
+			finalSchoolList.add(schoolLicenceModel);
+		}
+		return finalSchoolList;
+	}
+
+	@Override
+	public boolean isParent(String phone, int schoolID) {
+		String query = "From StudentModel where fatherNumber ='" + phone + "' AND schoolModel.schoolId=" + schoolID;
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		if (resultList.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<SchoolChildrenModel> listStudents(int schooolId, String phone) {
+		String query = "From StudentModel where fatherNumber ='" + phone + "' AND schoolModel.schoolId=" + schooolId;
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		List<SchoolChildrenModel> studentsList = new ArrayList<>();
+		for (StudentModel studentModel : resultList) {
+			SchoolChildrenModel schoolChildrenModel = new SchoolChildrenModel();
+			schoolChildrenModel.setStudentID(studentModel.getStudentId());
+			schoolChildrenModel.setFirstName(studentModel.getFirstName());
+			schoolChildrenModel.setLastName(studentModel.getLastName());
+			Date date = new Date();
+			date = studentModel.getDob();
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+			String formattedDate = sdf1.format(date);
+			schoolChildrenModel.setDob(formattedDate);
+			schoolChildrenModel.setGender(studentModel.getGender());
+			schoolChildrenModel.setEnrollmentNumber(studentModel.getEnrollmentNumber());
+			schoolChildrenModel.setDivision(String.valueOf(studentModel.getSchoolDivModel().getSchoolDivId()));
+			studentsList.add(schoolChildrenModel);
+		}
+		return studentsList;
+	}
+
+	@Override
+	public List<StudentModel> listStudentsByDivison(int schoolID, int divisionID, String modifiedDate) {
+		String query = "From StudentModel  where schoolDivModel.schoolDivId =" + divisionID
+				+ " AND schoolModel.schoolId=" + schoolID + " AND updatedDate >'" + modifiedDate + "'";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		return resultList;
+
+	}
+
+	@Override
+	public List<StudentModel> listAllStudentsByDivision(int schooolId, int divisionID) {
+		String query = "From StudentModel  where schoolDivModel.schoolDivId =" + divisionID
+				+ " AND schoolModel.schoolId=" + schooolId + "";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> resultList = entityManager.createQuery(query).getResultList();
+		return resultList;
+	}
+
+	@Override
+	public boolean isValidStudent(int studentID) {
+		String query = "From StudentModel where studentId = '" + studentID + "'";
+		@SuppressWarnings("unchecked")
+		List<StudentModel> studentModels = entityManager.createQuery(query).getResultList();
+		if (studentModels.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public StudentModel getStudentDetails(int studentID) {
+		String query = "From StudentModel where studentId = '" + studentID + "'";
+		StudentModel studentModel = (StudentModel) entityManager.createQuery(query).getSingleResult();
+		return studentModel;
+	}
+
+	@Override
+	public List<StudentModel> listStudentsByPhone(String phoneNumber) {
+		String query = "From StudentModel where fatherNumber = '" + phoneNumber + "'";
+		List<StudentModel> studentModelList = entityManager.createQuery(query).getResultList();
+		return studentModelList;
+	}
+
+	@Override
+	public List<FeesPaymentModel> getFeesDetails(int schoolID) {
+		String query = "From FeesPaymentModel where schoolModel.schoolId = '" + schoolID + "' ";
+		List<FeesPaymentModel> feesPaymentModels = entityManager.createQuery(query).getResultList();
+		return feesPaymentModels;
+	}
+
+	@Override
+	public List<StudentModel> getParentSerachList(int divisionID, int schoolID, String searchStudName) {
+		String query = "From StudentModel where schoolDivModel.schoolDivId =  '" + divisionID
+				+ "' and schoolModel.schoolId= '" + schoolID + "'and firstName  LIKE '" + searchStudName + "%'";
+		List<StudentModel> studentModels = entityManager.createQuery(query).getResultList();
+		return studentModels;
+	}
+
+	@Override
+	public List<FeesPaymentModel> getFeesDetailsFilter(int schoolID, String std, String divisions, String days) {
+		String query = null;
+		
+		if (!days.equals("0") && std.equals("0") && divisions.equals("0")) {
+			
+			query = "From FeesPaymentModel where schoolModel.schoolId = " + schoolID
+					+ " and  payedDate  >= CURRENT_DATE() - " + days + "  ";
+		}
+
+		if (days.equals("0") && !std.equals("0") && divisions.equals("0")) {
+
+			query = "From FeesPaymentModel where schoolModel.schoolId = " + schoolID
+					+ "  and studentModel.schoolDivModel.standard=" + std + "";
+		}
+
+		if (days.equals("0") && !std.equals("0") && !divisions.equals("0")) {
+
+			query = "From FeesPaymentModel where schoolModel.schoolId = " + schoolID
+					+ "  and studentModel.schoolDivModel.standard=" + std
+					+ "and studentModel.schoolDivModel.schoolDivId='" + divisions + "'";
+		}
+
+		if (!days.equals("0") && !std.equals("0") && divisions.equals("0")) {
+			query = "From FeesPaymentModel where schoolModel.schoolId = " + schoolID
+					+ " and  payedDate  >= CURRENT_DATE() - " + days + " and studentModel.schoolDivModel.standard="
+					+ std + "";
+		}
+
+		if (!days.equals("0") && !std.equals("0") && !divisions.equals("0")) {
+			query = "From FeesPaymentModel where schoolModel.schoolId = " + schoolID
+					+ " and  payedDate  >= CURRENT_DATE() - " + days + " and studentModel.schoolDivModel.standard="
+					+ std + " and studentModel.schoolDivModel.schoolDivId ='" + divisions + "'";
+		}
+		List<FeesPaymentModel> feesPaymentModels = entityManager.createQuery(query).getResultList();
+		return feesPaymentModels;
+	}
+}

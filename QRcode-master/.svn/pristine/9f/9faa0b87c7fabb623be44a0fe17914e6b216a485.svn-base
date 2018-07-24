@@ -1,0 +1,29 @@
+package com.zs.cws.superadmin.master.suscription.dao;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+
+@Repository
+@Transactional
+public class SubscriptionPlanIMPL implements SubscriptionPlanDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public boolean isAvailable(SubsciptionPlanModel subsciptionPlanModel) {
+		String query = "";
+		if (subsciptionPlanModel.getNewPlanId() != 0) {
+			query = "select count(*) from SubsciptionPlanModel where planName=? and newPlanId <> " + subsciptionPlanModel.getNewPlanId() + "";
+		} else {
+			query = "select count(*) from SubsciptionPlanModel where planName=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, subsciptionPlanModel.getPlanName().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+}

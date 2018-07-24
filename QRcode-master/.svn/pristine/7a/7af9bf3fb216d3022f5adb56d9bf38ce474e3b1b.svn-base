@@ -1,0 +1,40 @@
+package com.zs.cws.ws.android.complaintbox.model;
+
+public class ComplaintBoxRequestModel {
+	int schoolID;
+	int studentID;
+	String subject;
+	String complaint;
+	public ComplaintBoxRequestModel() {
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getComplaint() {
+		return complaint;
+	}
+	public void setComplaint(String complaint) {
+		this.complaint = complaint;
+	}
+	@Override
+	public String toString() {
+		return "ComplaintBoxRequestModel [schoolID=" + schoolID + ", studentID=" + studentID + ", subject=" + subject
+				+ ", complaint=" + complaint + "]";
+	}
+	
+}

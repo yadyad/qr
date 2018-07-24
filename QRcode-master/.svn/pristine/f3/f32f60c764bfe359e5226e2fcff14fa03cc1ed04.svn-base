@@ -1,0 +1,27 @@
+package com.zs.cws.schooladmin.driverroutes.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.driverroutes.model.DriverRoutesModel;
+
+@Repository
+public class DriverRouteIMPL implements DriverRouteDAO{
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<DriverRoutesModel> getRouteDetails(int schoolID) {
+	String query = "From DriverRoutesModel where schoolModel.schoolId='"+schoolID+"'";
+	List<DriverRoutesModel>driverRoutesModels = entityManager.createQuery(query).getResultList();
+	
+		return driverRoutesModels;
+	}
+
+	
+}

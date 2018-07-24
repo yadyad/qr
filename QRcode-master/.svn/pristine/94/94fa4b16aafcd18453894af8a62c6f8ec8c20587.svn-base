@@ -1,0 +1,49 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+import java.util.List;
+
+public class ExamsModel {
+	
+	String examName;
+	List<ProgressReport>examResults;
+
+	public ExamsModel() {
+	
+	}
+
+	
+	public String getExamName() {
+		return examName;
+	}
+
+	public void setExamName(String examName) {
+		this.examName = examName;
+	}
+
+	
+	public List<ProgressReport> getExamResults() {
+		return examResults;
+	}
+
+
+	public void setExamResults(List<ProgressReport> examResults) {
+		this.examResults = examResults;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ExamsModel [examName=" + examName + ", examResults=" + examResults + "]";
+	}
+
+
+
+	
+	
+	
+	
+	
+	
+	
+
+}

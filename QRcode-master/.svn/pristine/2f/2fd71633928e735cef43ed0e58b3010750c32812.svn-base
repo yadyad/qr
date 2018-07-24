@@ -1,0 +1,13 @@
+package com.zs.cws.schooladmin.driverdetails.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.driverdetails.model.DriverDetailsModel;
+
+public interface DriverDetailsDAO {
+
+	List<DriverDetailsModel> getDriverDetails(int schoolID);
+
+	boolean isAvailable(DriverDetailsModel driverDetailsModel);
+
+}

@@ -1,0 +1,11 @@
+package com.zs.cws.ws.hybrid.kudos.dao;
+
+import com.zs.cws.ws.hybrid.kudos.model.KudosRequestModel;
+
+public interface KudosServiceDAO {
+
+	long getLikeCounts(int kudosId);
+
+	boolean alreadyLiked(KudosRequestModel kudosRequestModel);
+
+}

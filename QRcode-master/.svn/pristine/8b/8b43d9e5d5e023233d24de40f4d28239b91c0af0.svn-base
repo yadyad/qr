@@ -1,0 +1,21 @@
+package com.zs.cws.ws.android.feespayment.model;
+
+public class FeesPaymentResponseModel {
+	String responseStatus;
+
+	public FeesPaymentResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "FeesPaymentResponseModel [responseStatus=" + responseStatus + "]";
+	}
+}

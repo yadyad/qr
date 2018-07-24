@@ -1,0 +1,15 @@
+package com.zs.cws.resetpassword.dao;
+
+import org.springframework.stereotype.Service;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.resetpassword.model.ResetPasswordModel;
+
+@Service
+public interface ResetPasswordDAO {
+
+	LoginModel checkUserName(ResetPasswordModel resetPasswordModel, String name);
+
+	int updatePassword(ResetPasswordModel resetPasswordModel, String name);
+
+}

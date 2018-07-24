@@ -1,0 +1,96 @@
+package com.zs.cws.schooladmin.principalmom.controller;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.schooladmin.meetingtask.dao.PrincipalMeetingTaskDAO;
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.schooladmin.meetingtask.repository.PrincipalMeetingTaskRepository;
+import com.zs.cws.schooladmin.principalmeeting.dao.PrincipalMeetingDAO;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingRepository;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/principalMeeting/mom")
+public class PrincipalMomController {
+	@Autowired
+	PrincipalMeetingDAO principalMeetingDAO;
+	@Autowired
+	PrincipalMeetingRepository principalMeetingRepository;
+
+	@Autowired
+	PrincipalMeetingTaskRepository principalMeetingTaskRepository;
+	@Autowired
+	PrincipalMeetingTaskDAO principalMeetingTaskDAO;
+	public static int MEETING_ID;
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementPage(@RequestParam(value = "id", required = false) int meetingID) {
+		MEETING_ID = meetingID;
+		ModelAndView model = new ModelAndView("schooladmin_principal_mom");
+		return model;
+	}
+
+	@RequestMapping("/selectedMeeting")
+	public @ResponseBody Object selectedMeeting() {
+		return principalMeetingRepository.findOne(MEETING_ID);
+	}
+
+	@RequestMapping("/currentTasks")
+	public @ResponseBody Object getCurrentTasks() {
+		return principalMeetingTaskDAO.getCurrentTasks(MEETING_ID);
+	}
+
+	@RequestMapping(value = "/getMeetingStaffs", method = RequestMethod.GET)
+	public @ResponseBody Object getMeetingStaffs() {
+		List<SchoolStaffModel> staffList = principalMeetingDAO.getAllStaffs(MEETING_ID);
+		Map<Integer,String> staffMap=new HashMap<>();
+		for(SchoolStaffModel schoolStaffModel:staffList){
+			staffMap.put(schoolStaffModel.getSchoolStaffId(), schoolStaffModel.getFirstName()+" "+schoolStaffModel.getLastName());
+		}
+		
+		return staffMap;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody PrincipalMeetingModel meetingModel,
+			HttpSession session, Principal principal) {
+
+		System.out.println("sss:::>>>" + meetingModel.toString());
+		principalMeetingRepository.save(meetingModel);
+		return meetingModel;
+	}
+
+	@RequestMapping(value = { "/task/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonDatatask(HttpServletRequest request,
+			@RequestBody List<PrincipalMeetingTaskModel> meetingTaskList, HttpSession session, Principal principal) {
+		for (PrincipalMeetingTaskModel principalMeetingTaskModel : meetingTaskList) {
+			principalMeetingTaskModel.setPrincipalMeetingModel(principalMeetingRepository.findOne(MEETING_ID));
+			principalMeetingTaskModel.setCreatedDate(new Date());
+			principalMeetingTaskModel.setUpdatedDate(new Date());
+			principalMeetingTaskRepository.save(principalMeetingTaskModel);
+		}
+		System.out.println("sss:|||||||||||||||||::>>>" + meetingTaskList.toString());
+		// principalMeetingRepository.save(meetingModel);
+		return null;
+	}
+}

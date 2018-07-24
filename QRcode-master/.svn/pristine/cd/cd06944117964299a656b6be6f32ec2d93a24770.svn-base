@@ -1,0 +1,58 @@
+package com.zs.cws.ws.android.timetable.model;
+
+public class TimeTableRequest {
+
+	String memberType;
+	int schoolID;
+	int divisionID;
+	int studentID;
+	
+	public TimeTableRequest() {
+		
+	}
+	
+	
+	public String getMemberType() {
+		return memberType;
+	}
+
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getDivisionID() {
+		return divisionID;
+	}
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+
+	@Override
+	public String toString() {
+		return "TimeTableRequest [memberType=" + memberType + ", schoolID=" + schoolID + ", divisionID=" + divisionID
+				+ ", studentID=" + studentID + "]";
+	}
+
+
+	
+	
+}

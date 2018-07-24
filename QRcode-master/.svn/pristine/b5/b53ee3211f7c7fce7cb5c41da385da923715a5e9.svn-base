@@ -1,0 +1,46 @@
+package com.zs.cws.payment.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.payment.model.PaymentModel;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+
+@Repository
+public class PaymentIMPL implements PaymentDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	
+	public List<PaymentModel> getPaymentHistory(Integer schoolId) {
+		String query = "From PaymentModel where schoolModel.schoolId =" + schoolId;
+		@SuppressWarnings("unchecked")
+		List<PaymentModel> paymentModels = entityManager.createQuery(query).getResultList();
+
+		return paymentModels;
+	}
+
+	public SubscriptionPlanActivationModel getPlanDetails(Integer schoolId) {
+		
+		String query = "From SubscriptionPlanActivationModel where schoolModel.schoolId =" + schoolId
+				+ " order by subActivationID DESC";
+		SubscriptionPlanActivationModel activationModel = null;
+		try {
+			
+			activationModel = (SubscriptionPlanActivationModel) entityManager.createQuery(query).setMaxResults(1)
+					.getSingleResult();
+
+		} catch (NoResultException exception) {
+			
+			return new SubscriptionPlanActivationModel();
+		}
+		
+		return activationModel;
+	}
+
+}

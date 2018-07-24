@@ -1,0 +1,36 @@
+package com.zs.cws.superadmin.master.managementposition.dao;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.managementposition.model.ManagementPositionModel;
+
+@Repository
+@Transactional
+public class ManagementPositionIMPL implements ManagementPositionDAO{
+
+	
+	
+	@Autowired
+	EntityManager entityManager;
+	
+	
+	@Override
+	@Transactional
+	public boolean isAvailable(ManagementPositionModel managementPositionModel) {
+		String query = "";
+		if (managementPositionModel.getPositionID() != 0) {
+			query = "select count(*) from ManagementPositionModel where position=? and positionID <> " + managementPositionModel.getPositionID() + "";
+		} else {
+			query = "select count(*) from ManagementPositionModel where position= ? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, managementPositionModel.getPosition().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+	}
+
+

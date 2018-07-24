@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.feature.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+
+public interface FeatureRepository extends JpaRepository<FeatureModel, Integer> {
+
+}

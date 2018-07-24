@@ -1,0 +1,356 @@
+package com.zs.cws.schooladmin.principalmeeting.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingStatusModel;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.utils.GlobalVariables;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingResponseModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalUpcomingMeetingRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingRepository;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersRequestModel;
+import com.zs.cws.ws.hybrid.notification.model.NotificationServiceRequest;
+
+@Repository
+@Transactional
+public class PrincipalMeetingIMPL implements PrincipalMeetingDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	ManagementMeetingRepository managementMeetingRepository;
+
+	@Override
+	public List<PrincipalMeetingModel> getAllMeetings(int schoolID) {
+		String query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId=" + schoolID
+				+ " ORDER BY meetingRequestID DESC";
+		@SuppressWarnings("unchecked")
+		List<PrincipalMeetingModel> meetingResult = entityManager.createQuery(query).getResultList();
+		return meetingResult;
+	}
+
+	@Override
+	public List<SchoolStaffModel> getAllStaffs(int meetingID) {
+		String query = "FROM PrincipalMeetingStatusModel WHERE principalMeetingModel.meetingRequestID=" + meetingID
+				+ "";
+		@SuppressWarnings("unchecked")
+		List<PrincipalMeetingStatusModel> meetingStatusResult = entityManager.createQuery(query).getResultList();
+
+		List<SchoolStaffModel> staffList = new ArrayList<>();
+		for (PrincipalMeetingStatusModel PrincipalMeetingStatusModel : meetingStatusResult) {
+			staffList.add(PrincipalMeetingStatusModel.getSchoolStaffModel());
+		}
+
+		return staffList;
+	}
+
+	@Override
+	public List<PrincipalMeetingResponseModel> getAllUpcomingMeetings(
+			PrincipalUpcomingMeetingRequestModel principalUpcomingMeetingRequestModel) {
+		List<PrincipalMeetingResponseModel> upcomingMetingResponseList = new ArrayList<>();
+
+		if (principalUpcomingMeetingRequestModel.getMemberType().equalsIgnoreCase("principal")) {
+			System.out.println("PRINCIPALLLLLLLLL");
+			String query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId="
+					+ principalUpcomingMeetingRequestModel.getSchoolID() + " AND meetingDate > CURRENT_DATE";
+			List<PrincipalMeetingModel> meetingResult = entityManager.createQuery(query).getResultList();
+
+			for (PrincipalMeetingModel principalMeetingModel : meetingResult) {
+				PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+				principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+				principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+				principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingRequestID());
+				principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+
+				System.out.println("MEETING DATE::::>>>" + principalMeetingModel.getMeetingDate());
+				String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+
+				principalMeetingResponseModel.setYear(meetingDate[0]);
+				principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+				principalMeetingResponseModel.setDay(meetingDate[2]);
+
+				principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+				// List<ManagementPrincipalMeetingStatusModel>meetingStatusModels
+				// =
+				// principalMeetingDAO.getPrinciplMeetingFromMngr(managementID);
+
+				upcomingMetingResponseList.add(principalMeetingResponseModel);
+
+			}
+		
+		} else {
+			System.out.println("MANAGEMENTTTTTT");
+			String query = "FROM ManagementMeetingModel WHERE  managementModel.managementID="
+					+ principalUpcomingMeetingRequestModel.getManagementID() + " AND meetingDate > CURRENT_DATE";
+			@SuppressWarnings("unchecked")
+			List<ManagementMeetingModel> meetingResult = entityManager.createQuery(query).getResultList();
+			for (ManagementMeetingModel principalMeetingModel : meetingResult) {
+				PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+				principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+				principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+				principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingID());
+				principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+				principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+				String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+				principalMeetingResponseModel.setYear(meetingDate[0]);
+				principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+				principalMeetingResponseModel.setDay(meetingDate[2]);
+				upcomingMetingResponseList.add(principalMeetingResponseModel);
+			}
+		}
+
+		return upcomingMetingResponseList;
+	}
+
+	public int getPrinciplMeetingID(int principalID) {
+		String query = "From ManagementPrincipalMeetingStatusModel where schoolStaffModel.schoolStaffId = "
+				+ principalID + "";
+		List<ManagementPrincipalMeetingStatusModel> managementPrincipalMeetingStatusModels = entityManager
+				.createQuery(query).getResultList();
+		int meetingID = 0;
+		for (ManagementPrincipalMeetingStatusModel managementPrincipalMeetingStatusModel : managementPrincipalMeetingStatusModels) {
+			meetingID = managementPrincipalMeetingStatusModel.getManagementMeetingModel().getMeetingID();
+		}
+		return meetingID;
+	}
+
+	@Override
+	public List<PrincipalMeetingResponseModel> getAllMeetings(
+			PrincipalMeetingRequestModel principalMeetingRequestModel) {
+		String query = "";
+		List<PrincipalMeetingResponseModel> meetingList = new ArrayList<>();
+		if (principalMeetingRequestModel.getMemberType().equalsIgnoreCase("Principal")||principalMeetingRequestModel.getMemberType().equalsIgnoreCase("staff")) {
+		if(principalMeetingRequestModel.getMemberType().equalsIgnoreCase("staff")){
+			if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+				query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId="
+						+ principalMeetingRequestModel.getSchoolID() + " AND meetingRequestID>"
+						+ principalMeetingRequestModel.getMeetingID() + " AND meetingDate <= CURRENT_DATE";
+			} else {
+				query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId="
+						+ principalMeetingRequestModel.getSchoolID() + " AND meetingRequestID<"
+						+ principalMeetingRequestModel.getMeetingID() + " AND meetingDate <= CURRENT_DATE";
+			}
+			@SuppressWarnings("unchecked")
+			List<PrincipalMeetingModel> meetingResult = entityManager.createQuery(query).getResultList();
+			for (PrincipalMeetingModel principalMeetingModel : meetingResult) {
+				PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+				principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+				principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+				principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingRequestID());
+				principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+				principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+				principalMeetingResponseModel.setAgenda(principalMeetingModel.getAgenda());
+				principalMeetingResponseModel.setKeyPoints(principalMeetingModel.getKeyPoints());
+				principalMeetingResponseModel.setNextMeetingDate(principalMeetingModel.getNextMeetingDate());
+				principalMeetingResponseModel.setFromMeetingType("P");
+
+				String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+				principalMeetingResponseModel.setYear(meetingDate[0]);
+				principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+				principalMeetingResponseModel.setDay(meetingDate[2]);
+				meetingList.add(principalMeetingResponseModel);
+			}
+		}
+			if(principalMeetingRequestModel.getMemberType().equalsIgnoreCase("principal")){
+				
+				
+				if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+					query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId="
+							+ principalMeetingRequestModel.getSchoolID() + " AND meetingRequestID>"
+							+ principalMeetingRequestModel.getMeetingIdP() + " AND meetingDate <= CURRENT_DATE";
+				} else {
+					query = "FROM PrincipalMeetingModel WHERE schoolModel.schoolId="
+							+ principalMeetingRequestModel.getSchoolID() + " AND meetingRequestID<"
+							+ principalMeetingRequestModel.getMeetingIdP() + " AND meetingDate <= CURRENT_DATE";
+				}
+				@SuppressWarnings("unchecked")
+				List<PrincipalMeetingModel> meetingResult1 = entityManager.createQuery(query).getResultList();
+				for (PrincipalMeetingModel principalMeetingModel : meetingResult1) {
+					PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+					principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+					principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+					principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingRequestID());
+					principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+					principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+					principalMeetingResponseModel.setAgenda(principalMeetingModel.getAgenda());
+					principalMeetingResponseModel.setKeyPoints(principalMeetingModel.getKeyPoints());
+					principalMeetingResponseModel.setNextMeetingDate(principalMeetingModel.getNextMeetingDate());
+					principalMeetingResponseModel.setFromMeetingType("P");
+
+					String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+					principalMeetingResponseModel.setYear(meetingDate[0]);
+					principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+					principalMeetingResponseModel.setDay(meetingDate[2]);
+					meetingList.add(principalMeetingResponseModel);
+				}
+			/*====================================================================================*/
+
+				System.out.println("PRINCIPAL");
+				if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+					query = "FROM ManagementMeetingModel WHERE managementModel.managementID="
+							+ principalMeetingRequestModel.getManagementID() + " AND meetingID>"
+							+ principalMeetingRequestModel.getMeetingIdM() + " AND meetingDate <= CURRENT_DATE";
+				} else {
+					query = "FROM ManagementMeetingModel WHERE managementModel.managementID="
+							+ principalMeetingRequestModel.getManagementID() + " AND meetingID<"
+							+ principalMeetingRequestModel.getMeetingIdM() + " AND meetingDate <= CURRENT_DATE";
+				}
+				@SuppressWarnings("unchecked")
+				List<ManagementMeetingModel> meetingResult2 = entityManager.createQuery(query).getResultList();
+				for (ManagementMeetingModel principalMeetingModel : meetingResult2) {
+					PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+					principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+					principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+					principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingID());
+					principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+					principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+					principalMeetingResponseModel.setAgenda(principalMeetingModel.getAgenda());
+					principalMeetingResponseModel.setKeyPoints(principalMeetingModel.getKeyPoints());
+					principalMeetingResponseModel.setNextMeetingDate(principalMeetingModel.getNextMeetingDate());
+					String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+					principalMeetingResponseModel.setYear(meetingDate[0]);
+					principalMeetingResponseModel.setFromMeetingType("M");
+					principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+					System.out.println("MONTH::>>>>" + meetingDate[1]);
+					principalMeetingResponseModel.setDay(meetingDate[2]);
+					meetingList.add(principalMeetingResponseModel);
+					System.out.println("QUERY FOR CURRENT DATEEEEEEE" + query);
+				}
+
+			
+				
+			}
+		} else {
+			System.out.println("NON PRINCIPAL");
+			if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+				query = "FROM ManagementMeetingModel WHERE managementModel.managementID="
+						+ principalMeetingRequestModel.getManagementID() + " AND meetingID>"
+						+ principalMeetingRequestModel.getMeetingIdM() + " AND meetingDate <= CURRENT_DATE";
+			} else {
+				query = "FROM ManagementMeetingModel WHERE managementModel.managementID="
+						+ principalMeetingRequestModel.getManagementID() + " AND meetingID<"
+						+ principalMeetingRequestModel.getMeetingIdM() + " AND meetingDate <= CURRENT_DATE";
+			}
+			@SuppressWarnings("unchecked")
+			List<ManagementMeetingModel> meetingResult = entityManager.createQuery(query).getResultList();
+			for (ManagementMeetingModel principalMeetingModel : meetingResult) {
+				PrincipalMeetingResponseModel principalMeetingResponseModel = new PrincipalMeetingResponseModel();
+				principalMeetingResponseModel.setPurpose(principalMeetingModel.getPurpose());
+				principalMeetingResponseModel.setVenue(principalMeetingModel.getVenue());
+				principalMeetingResponseModel.setMeetingID(principalMeetingModel.getMeetingID());
+				principalMeetingResponseModel.setMeetingDate(principalMeetingModel.getMeetingDate());
+				principalMeetingResponseModel.setMeetingTime(principalMeetingModel.getMeetingTime());
+				principalMeetingResponseModel.setAgenda(principalMeetingModel.getAgenda());
+				principalMeetingResponseModel.setKeyPoints(principalMeetingModel.getKeyPoints());
+				principalMeetingResponseModel.setNextMeetingDate(principalMeetingModel.getNextMeetingDate());
+				String[] meetingDate = principalMeetingModel.getMeetingDate().split("-");
+				principalMeetingResponseModel.setYear(meetingDate[0]);
+				principalMeetingResponseModel.setFromMeetingType("M");
+				principalMeetingResponseModel.setMonth(GlobalVariables.getMonthAbbrevations().get(meetingDate[1]));
+				System.out.println("MONTH::>>>>" + meetingDate[1]);
+				principalMeetingResponseModel.setDay(meetingDate[2]);
+				meetingList.add(principalMeetingResponseModel);
+				System.out.println("QUERY FOR CURRENT DATEEEEEEE" + query);
+			}
+
+		}
+		return meetingList;
+	}
+
+	@Override
+	public List<MeetingMembersModel> getMeetingMemberList(MeetingMembersRequestModel meetingMembersRequestModel) {
+		List<SchoolStaffModel> schoolStaffModels = new ArrayList<>();
+		if (meetingMembersRequestModel.getMeetingType().equalsIgnoreCase("principal")) {
+			System.out.println("YESSSSSSSSSSSSSS PPPPPPPPPP");
+			String query = "FROM PrincipalMeetingStatusModel WHERE principalMeetingModel.meetingRequestID="
+					+ meetingMembersRequestModel.getMeetingID() + "";
+			@SuppressWarnings("unchecked")
+			List<PrincipalMeetingStatusModel> meetingStatusResult = entityManager.createQuery(query).getResultList();
+			for (PrincipalMeetingStatusModel principalMeetingStatusModel : meetingStatusResult) {
+				schoolStaffModels.add(principalMeetingStatusModel.getSchoolStaffModel());
+			}
+		} else {
+			System.out.println("NOOOOOOOOOOOOOOO PPPPPPPPPP");
+			String query = "FROM ManagementPrincipalMeetingStatusModel WHERE managementMeetingModel.meetingID="
+					+ meetingMembersRequestModel.getMeetingID() + "";
+			@SuppressWarnings("unchecked")
+			List<ManagementPrincipalMeetingStatusModel> meetingStatusResult = entityManager.createQuery(query)
+					.getResultList();
+
+			for (ManagementPrincipalMeetingStatusModel managementPrincipalMeetingStatusModel : meetingStatusResult) {
+				schoolStaffModels.add(managementPrincipalMeetingStatusModel.getSchoolStaffModel());
+			}
+		}
+		List<MeetingMembersModel> meetingMemberList = new ArrayList<>();
+
+		for (SchoolStaffModel schoolStaffModel : schoolStaffModels) {
+			MeetingMembersModel meetingMembersModel = new MeetingMembersModel();
+			meetingMembersModel.setMemberID(schoolStaffModel.getSchoolStaffId());
+			meetingMembersModel.setStaffName(schoolStaffModel.getFirstName() + " " + schoolStaffModel.getLastName());
+			meetingMemberList.add(meetingMembersModel);
+		}
+
+		return meetingMemberList;
+	}
+
+	@Override
+	public int getAllMeetingAfterMeetingID(NotificationServiceRequest notificationServiceRequest) {
+		
+		String query = "From ManagementMeetingModel where meetingDate>=CURRENT_DATE AND managementModel.managementID="+notificationServiceRequest.getManagementID()+"";
+		List<ManagementMeetingModel> meetingModels = entityManager.createQuery(query).getResultList();
+		return meetingModels.size();
+	}
+
+	@Override
+	public int getAllMeetingCountMgmt(NotificationServiceRequest notificationServiceRequest) {
+		String query = "From ManagementPrincipalMeetingStatusModel where managementMeetingModel.meetingID > '"
+				+ notificationServiceRequest.getMeetingID() + "' and schoolStaffModel.schoolStaffId = '"
+				+ notificationServiceRequest.getMemberID() + "' AND managementMeetingModel.meetingDate>=CURRENT_DATE";
+		@SuppressWarnings("unchecked")
+		List<ManagementPrincipalMeetingStatusModel> managementMeetingModels = entityManager.createQuery(query)
+				.getResultList();
+		
+		
+		
+		String query1 = "From PrincipalMeetingModel where  schoolStaffModel.schoolStaffId = '"
+				+ notificationServiceRequest.getMemberID() + "' AND meetingDate>=CURRENT_DATE";
+		@SuppressWarnings("unchecked")
+		List<PrincipalMeetingModel> PrincipalMeetingModels = entityManager.createQuery(query1)
+				.getResultList();
+		
+		
+		
+		return (managementMeetingModels.size()+PrincipalMeetingModels.size());
+	}
+
+	/*
+	 * @Override public List<PrincipalMeetingResponseModel>
+	 * getAllUpcomingMeetings( PrincipalUpcomingMeetingRequestModel
+	 * principalUpcomingMeetingRequestModel) { // TODO Auto-generated method
+	 * stub return null; }
+	 */
+
+	/*
+	 * @Override public List<ManagementPrincipalMeetingStatusModel>
+	 * getPrinciplMeetingFromMngr(int managementID) { // TODO Auto-generated
+	 * method stub return null; }
+	 */
+}

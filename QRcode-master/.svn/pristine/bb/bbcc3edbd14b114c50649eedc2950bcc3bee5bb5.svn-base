@@ -1,0 +1,17 @@
+package com.zs.cws.ws.android.progressreport.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.progressreport.model.ProgressReportModel;
+
+public interface ProgressReportDAO {
+
+	List<ProgressReportModel> getReportDetails(int divisionID, int schoolID, int studentID, int examID);
+
+	List<ProgressReportModel> getExamMarks(int examDetailsID);
+	
+	String getExamMarksBySubjects(int subjectID,int examID,int studentID);
+
+	ProgressReportModel isProgressExist(int examID, int staffID, int studentId);
+
+}

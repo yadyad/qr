@@ -1,0 +1,153 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.List;
+
+public class DairyRequestServiceModel {
+
+	int fromStaffID;
+	int schoolID;
+	String messageType;
+	String title;
+	String messageContent;
+	int messageID;
+	String status;// After or before
+	String memberType;// P/T
+	int memberID;
+	String groupStatus;// Yes / No
+	List<Integer> parentIDs;
+	int deliverID;
+	String messageFlow;
+	String lastModifiedDate;
+	String fcmCall;
+
+	public DairyRequestServiceModel() {
+	}
+
+	public int getFromStaffID() {
+		return fromStaffID;
+	}
+
+	public void setFromStaffID(int fromStaffID) {
+		this.fromStaffID = fromStaffID;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMessageContent() {
+		return messageContent;
+	}
+
+	public void setMessageContent(String messageContent) {
+		this.messageContent = messageContent;
+	}
+
+	public List<Integer> getParentIDs() {
+		return parentIDs;
+	}
+
+	public void setParentIDs(List<Integer> parentIDs) {
+		this.parentIDs = parentIDs;
+	}
+
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+
+	public int getMessageID() {
+		return messageID;
+	}
+
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	public int getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+	public String getGroupStatus() {
+		return groupStatus;
+	}
+
+	public void setGroupStatus(String groupStatus) {
+		this.groupStatus = groupStatus;
+	}
+
+	public int getDeliverID() {
+		return deliverID;
+	}
+
+	public void setDeliverID(int deliverID) {
+		this.deliverID = deliverID;
+	}
+
+	public String getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(String lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getFcmCall() {
+		return fcmCall;
+	}
+
+	public void setFcmCall(String fcmCall) {
+		this.fcmCall = fcmCall;
+	}
+
+	@Override
+	public String toString() {
+		return "DairyRequestServiceModel [fromStaffID=" + fromStaffID + ", schoolID=" + schoolID + ", messageType="
+				+ messageType + ", title=" + title + ", messageContent=" + messageContent + ", messageID=" + messageID
+				+ ", status=" + status + ", memberType=" + memberType + ", parentIDs=" + parentIDs + ", messageFlow="
+				+ messageFlow + "]";
+	}
+}

@@ -1,0 +1,77 @@
+package com.zs.cws.ws.android.leave.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.ws.android.leave.model.LeaveApplyModel;
+import com.zs.cws.ws.android.leave.model.LeaveViewRequestModel;
+import com.zs.cws.ws.android.leave.model.LeaveViewResponseModel;
+
+@Repository
+@Transactional
+public class LeaveApplyIMPL implements LeaveApplyDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<LeaveViewResponseModel> getLeaveDetails(LeaveViewRequestModel leaveViewRequestModel) {
+		String query = "";
+		if (leaveViewRequestModel.getStatus().equalsIgnoreCase("after")) {
+			query = "FROM LeaveApplyModel WHERE schoolModel.schoolId=" + leaveViewRequestModel.getSchoolID()
+					+ " and schoolDivModel.schoolDivId=" + leaveViewRequestModel.getDivisionID() + " and leaveApplyID>"
+					+ leaveViewRequestModel.getLastAppliedID();
+		} else {
+			query = "FROM LeaveApplyModel WHERE schoolModel.schoolId=" + leaveViewRequestModel.getSchoolID()
+					+ " and schoolDivModel.schoolDivId=" + leaveViewRequestModel.getDivisionID() + " and leaveApplyID<"
+					+ leaveViewRequestModel.getLastAppliedID();
+		}
+
+		@SuppressWarnings("unchecked")
+		List<LeaveApplyModel> leaveModels = entityManager.createQuery(query).getResultList();
+
+		List<LeaveViewResponseModel> leaveViewList = new ArrayList<>();
+
+		for (LeaveApplyModel leaveApplyModel : leaveModels) {
+			LeaveViewResponseModel leaveViewResponseModel = new LeaveViewResponseModel();
+			leaveViewResponseModel.setReadStatus(leaveApplyModel.getLeaveStatus());
+			leaveViewResponseModel.setFromDate(leaveApplyModel.getFromDate());
+			leaveViewResponseModel.setToDate(leaveApplyModel.getToDate());
+			leaveViewResponseModel.setLeaveID(leaveApplyModel.getLeaveApplyID());
+			leaveViewResponseModel.setEnrollmentNumber(leaveApplyModel.getStudentModel().getEnrollmentNumber());
+			leaveViewResponseModel.setNoOfDays(leaveApplyModel.getNoOfDays());
+			leaveViewResponseModel.setStudentName(leaveApplyModel.getStudentModel().getFirstName() + " "
+					+ leaveApplyModel.getStudentModel().getLastName());
+			leaveViewResponseModel.setAppliedDate(String.valueOf(leaveApplyModel.getAppliedDate()));
+			leaveViewResponseModel.setReason(leaveApplyModel.getReason());
+			leaveViewList.add(leaveViewResponseModel);
+		}
+
+		return leaveViewList;
+	}
+
+	@Override
+	public List<LeaveApplyModel> getStudentDetails(int studentID) {
+		String query="From LeaveApplyModel where studentModel.studentId = '"+studentID+"'";
+		List<LeaveApplyModel>applyModels = entityManager.createQuery(query).getResultList();
+		return applyModels;
+	}
+
+	@Override
+	public boolean leaveApplied(int studentID) {
+		String query="From LeaveApplyModel where studentModel.studentId = '"+studentID+"'";
+		List<LeaveApplyModel>applyModels = entityManager.createQuery(query).getResultList();
+		if (applyModels.size()!=0) {
+			return true;
+		}
+		return false;
+	}
+
+}

@@ -1,0 +1,226 @@
+package com.zs.cws.superadmin.schoolstaff.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.master.category.model.CategoryModel;
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_staff_details")
+public class SchoolStaffModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int schoolStaffId;
+
+	@Column(name = "firstname")
+	String firstName;
+	@Column(name = "lastname")
+	String lastName;
+	@Column(name = "qualification")
+	String qualification;
+	@Column(name = "email_id")
+	String emailId;
+	@Column(name = "phone")
+	String phone;
+	@Column(name = "gender")
+	String gender;
+	@OneToOne
+	@JoinColumn(name = "category")
+	CategoryModel categoryModel;
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+	@OneToOne
+	@JoinColumn(name = "department")
+	DepartmentModel departmentModel;
+	@OneToOne
+	@JoinColumn(name = "designation")
+	DesignationModel designationModel;
+
+	@Column(name = "created_by")
+	String createdUser;
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	@Column(name = "updated_by")
+	String updatedUser;
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+	
+	@Column(name="modified_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date modifiedDate;
+	
+	@Column(name = "fcm_tocken")
+	String fcmTocken;
+
+	public SchoolStaffModel() {
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getQualification() {
+		return qualification;
+	}
+
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+	public int getSchoolStaffId() {
+		return schoolStaffId;
+	}
+
+	public void setSchoolStaffId(int schoolStaffId) {
+		this.schoolStaffId = schoolStaffId;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	
+
+	public CategoryModel getCategoryModel() {
+		return categoryModel;
+	}
+
+	public void setCategoryModel(CategoryModel categoryModel) {
+		this.categoryModel = categoryModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public DepartmentModel getDepartmentModel() {
+		return departmentModel;
+	}
+
+	public void setDepartmentModel(DepartmentModel departmentModel) {
+		this.departmentModel = departmentModel;
+	}
+
+	public DesignationModel getDesignationModel() {
+		return designationModel;
+	}
+
+	public void setDesignationModel(DesignationModel designationModel) {
+		this.designationModel = designationModel;
+	}
+
+	public String getFcmTocken() {
+		return fcmTocken;
+	}
+
+	public void setFcmTocken(String fcmTocken) {
+		this.fcmTocken = fcmTocken;
+	}
+
+	
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "SchoolStaffModel [schoolStaffId=" + schoolStaffId + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", qualification=" + qualification + ", emailId=" + emailId + ", phone=" + phone
+				+ ", gender=" + gender + ", categoryModel=" + categoryModel + ", schoolModel=" + schoolModel
+				+ ", departmentModel=" + departmentModel + ", designationModel=" + designationModel + ", createdUser="
+				+ createdUser + ", createdDate=" + createdDate + ", updatedUser=" + updatedUser + ", updatedDate="
+				+ updatedDate + ", modifiedDate=" + modifiedDate + ", fcmTocken=" + fcmTocken + "]";
+	}
+
+	
+	
+}

@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.paymentmode.dao;
+
+import com.zs.cws.superadmin.master.paymentmode.model.PaymentModeModel;
+
+public interface PaymentModeDAO {
+
+	boolean isAvailable(PaymentModeModel paymentModeModel);
+
+}

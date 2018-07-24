@@ -1,0 +1,119 @@
+package com.zs.cws.superadmin.master.designation.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+
+@Entity
+@Table(name = "cwas_designation_master")
+public class DesignationModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int rowId;
+	@Column(name = "designation")
+	String designation;
+	@OneToOne
+	@JoinColumn(name = "department")
+	DepartmentModel departmentModel;
+	@Column(name = "description")
+	String description;
+	@Column(name = "created_by")
+	String createdUser;
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	@Column(name = "updated_by")
+	String updatedUser;
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public DesignationModel() {
+	
+	}
+
+	
+
+	public int getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public DepartmentModel getDepartmentModel() {
+		return departmentModel;
+	}
+
+	public void setDepartmentModel(DepartmentModel departmentModel) {
+		this.departmentModel = departmentModel;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "DesignationModel [rowId=" + rowId + ", designation=" + designation + ", departmentModel="
+				+ departmentModel + ", description=" + description + ", createdUser=" + createdUser + ", createdDate="
+				+ createdDate + ", updatedUser=" + updatedUser + ", updatedDate=" + updatedDate + "]";
+	}
+
+}

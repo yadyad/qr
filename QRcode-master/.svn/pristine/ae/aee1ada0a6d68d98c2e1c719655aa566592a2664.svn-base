@@ -1,0 +1,75 @@
+package com.zs.cws.ws.hybrid.notification.model;
+
+public class NotificationServiceRequest {
+
+	int meetingID;
+	int memberID;
+	String memberType;
+	int managementID;
+	
+	
+	
+	public NotificationServiceRequest() {
+	}
+
+
+
+	public int getMeetingID() {
+		return meetingID;
+	}
+
+
+
+	public void setMeetingID(int meetingID) {
+		this.meetingID = meetingID;
+	}
+
+
+
+	public int getMemberID() {
+		return memberID;
+	}
+
+
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "NotificationServiceRequest [meetingID=" + meetingID + ", memberID=" + memberID + ", memberType="
+				+ memberType + "]";
+	}
+
+
+
+	public int getManagementID() {
+		return managementID;
+	}
+
+
+
+	public void setManagementID(int managementID) {
+		this.managementID = managementID;
+	}
+	
+	
+	
+	
+
+}

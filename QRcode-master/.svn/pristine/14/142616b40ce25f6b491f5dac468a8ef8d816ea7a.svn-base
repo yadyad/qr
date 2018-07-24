@@ -1,0 +1,38 @@
+package com.zs.cws.ws.hybrid.kudos.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.ws.hybrid.kudos.model.KudosLikesModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosRequestModel;
+
+@Repository
+public class KudosServiceIMPL implements KudosServiceDAO {
+
+	@Autowired
+	EntityManager entityManager;
+	
+	@Override
+	public long getLikeCounts(int kudosId) {
+		String query = "SELECT COUNT(kudos_id) FROM KudosLikesModel WHERE kudosModel.kudosId= '"+kudosId+"' ";
+		long a = (Long)  entityManager.createQuery(query).getSingleResult();
+		return a ;
+	}
+
+	@Override
+	public boolean alreadyLiked(KudosRequestModel kudosRequestModel) {
+		String query="From KudosLikesModel where staffID = '"+kudosRequestModel.getMemberId()+"'and kudosModel.kudosId = '"+kudosRequestModel.getKudosId()+"' and schoolModel.schoolId='"+kudosRequestModel.getSchoolId()+"' ";
+		List<KudosLikesModel>kudosLikesModels = entityManager.createQuery(query).getResultList();
+		if (kudosLikesModels.size()!=0) {
+			return true;
+		}
+		return false;
+	}
+
+	
+
+}

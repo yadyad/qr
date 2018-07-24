@@ -1,0 +1,32 @@
+package com.zs.cws.schooladmin.principalmeeting.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingResponseModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalUpcomingMeetingRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersRequestModel;
+import com.zs.cws.ws.hybrid.notification.model.NotificationServiceRequest;
+
+public interface PrincipalMeetingDAO {
+	public List<PrincipalMeetingModel> getAllMeetings(int schoolID);
+
+	public List<SchoolStaffModel> getAllStaffs(int meetingID);
+
+	public List<PrincipalMeetingResponseModel> getAllUpcomingMeetings(PrincipalUpcomingMeetingRequestModel principalUpcomingMeetingRequestModel);
+	
+	public List<PrincipalMeetingResponseModel> getAllMeetings(PrincipalMeetingRequestModel principalMeetingRequestModel);
+
+	public List<MeetingMembersModel> getMeetingMemberList(MeetingMembersRequestModel meetingMembersRequestModel);
+
+	public int getAllMeetingAfterMeetingID(NotificationServiceRequest notificationServiceRequest);
+
+	public int getAllMeetingCountMgmt(NotificationServiceRequest notificationServiceRequest);
+
+	//public List<ManagementPrincipalMeetingStatusModel> getPrinciplMeetingFromMngr(int managementID);
+
+}

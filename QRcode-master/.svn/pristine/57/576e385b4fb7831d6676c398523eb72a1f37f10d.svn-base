@@ -1,0 +1,42 @@
+package com.zs.cws.ws.android.principalmeeeting.model;
+
+import java.util.List;
+
+public class FinalMeetingResponseModel {
+	String status;
+	List<PrincipalMeetingResponseModel> meetingList;
+	String responseStatus;
+	public FinalMeetingResponseModel() {
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<PrincipalMeetingResponseModel> getMeetingList() {
+		return meetingList;
+	}
+
+	public void setMeetingList(List<PrincipalMeetingResponseModel> meetingList) {
+		this.meetingList = meetingList;
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalMeetingResponseModel [status=" + status + ", meetingList=" + meetingList + "]";
+	}	
+	
+	
+}

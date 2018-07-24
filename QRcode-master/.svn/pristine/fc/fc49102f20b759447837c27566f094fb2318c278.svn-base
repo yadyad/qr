@@ -1,0 +1,12 @@
+package com.zs.cws.schooladmin.meeting.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.meeting.model.MeetingRequestModel;
+
+public interface MeetingDAO {
+
+	public List<MeetingRequestModel> getAllMeetings(int schoolID);
+
+	//public Object isMeetingAvail(String meetingDate, String meetingTime, String staffs);
+}

@@ -1,0 +1,29 @@
+package com.zs.cws.ws.android.exams.model;
+
+public class ExamRequest {
+	
+	
+	int schoolID;
+
+	public ExamRequest() {
+		
+	}
+
+	
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	
+	@Override
+	public String toString() {
+		return "ExamRequest [schoolID=" + schoolID + "]";
+	}
+	
+	
+
+}

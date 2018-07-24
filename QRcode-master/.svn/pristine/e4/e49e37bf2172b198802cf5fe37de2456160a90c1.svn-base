@@ -1,0 +1,101 @@
+package com.zs.cws.ws.android.student.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.student.model.StudentServiceModel;
+import com.zs.cws.ws.android.student.model.StudentServiceRequestModel;
+import com.zs.cws.ws.android.student.model.StudentServiceResponseModel;
+
+@RestController
+@RequestMapping("/android")
+public class StudentServiceController {
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@RequestMapping(value = "/studentdetails", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody StudentServiceRequestModel studentServiceRequestModel) {
+		try {
+			String dateString = studentServiceRequestModel.getLastModifieddate();
+			System.out.println("date String" + dateString);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date2 = null;
+			try {
+				date2 = sdf.parse(dateString);
+				System.out.println("DATE::>" + date2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (schoolStaffDAO.isTeacher(studentServiceRequestModel.getPhoneNumber(),
+					studentServiceRequestModel.getSchoolID())) {
+				List<StudentServiceModel> studentServiceList = new ArrayList<>();
+				List<StudentModel> checkStudentList = studentDAO.listStudentsByDivison(
+						studentServiceRequestModel.getSchoolID(), studentServiceRequestModel.getDivisionID(),
+						dateString);
+				if (checkStudentList.size() > 0) {
+
+					List<StudentModel> studentList = studentDAO
+							.listAllStudentsByDivision(studentServiceRequestModel.getSchoolID(), studentServiceRequestModel.getDivisionID());
+					for (StudentModel studentModel : studentList) {
+						StudentServiceModel studentServiceModel = new StudentServiceModel();
+						studentServiceModel.setFirstName(studentModel.getFirstName());
+						studentServiceModel.setLastName(studentModel.getLastName());
+						studentServiceModel.setStudentID(studentModel.getStudentId());
+						studentServiceModel.setEnrollmentNumber(studentModel.getEnrollmentNumber());
+						Date date = new Date();
+						date = studentModel.getDob();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+						// SimpleDateFormat sdf1 = new
+						// SimpleDateFormat("yyyy-MM-dd
+						// HH:mm:ss");
+						String s = sdf1.format(date);
+						studentServiceModel.setDob(s);
+						studentServiceModel.setSchoolID(studentServiceRequestModel.getSchoolID());
+						studentServiceModel.setDivisionID(studentServiceRequestModel.getDivisionID());
+						Date modifiedDate = new Date();
+						modifiedDate = studentModel.getCreatedDate();
+
+						studentServiceModel.setModifiedDate(String.valueOf(modifiedDate));
+						studentServiceList.add(studentServiceModel);
+					}
+				}
+
+				StudentServiceResponseModel studentServiceResponseModel = new StudentServiceResponseModel();
+				studentServiceResponseModel.setStudentList(studentServiceList);
+				studentServiceResponseModel.setStatus("Success");
+				return studentServiceResponseModel;
+			} else {
+				StudentServiceResponseModel studentServiceResponseModel = new StudentServiceResponseModel();
+				studentServiceResponseModel.setStudentList(new ArrayList<>());
+				studentServiceResponseModel.setStatus("Invalid User");
+				return studentServiceResponseModel;
+			}
+		} catch (Exception e) {
+			StudentServiceResponseModel studentServiceResponseModel = new StudentServiceResponseModel();
+			studentServiceResponseModel.setStudentList(new ArrayList<>());
+			studentServiceResponseModel.setStatus("Failed");
+			return studentServiceResponseModel;
+		}
+	}
+}

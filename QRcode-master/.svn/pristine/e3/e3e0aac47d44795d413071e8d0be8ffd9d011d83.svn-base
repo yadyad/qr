@@ -1,0 +1,9 @@
+package com.zs.cws.ws.android.dairy.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.android.dairy.model.DairyMessageReplyModel;
+
+public interface DairyMessageReplyRepository  extends JpaRepository<DairyMessageReplyModel, Integer>{
+
+}

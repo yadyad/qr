@@ -1,0 +1,11 @@
+package com.zs.cws.superadmin.master.subject.dao;
+
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+
+public interface SubjectDAO {
+
+	boolean isAvailable(SubjectModel subjectModel);
+
+	SubjectModel getSubjectID(int divisionID, int staffID);
+
+}

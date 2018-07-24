@@ -1,0 +1,10 @@
+package com.zs.cws.superadmin.master.designation.dao;
+
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+
+public interface DesignationDAO {
+
+	boolean isAvailable(DesignationModel designationModel);
+
+	DesignationModel getDesignationByname(String designation,int departmentId);
+}

@@ -1,0 +1,119 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<!-- <link rel="stylesheet" type="text/css"
+	href="http://cdn.webrupee.com/font">
+ -->
+
+
+<script type="text/javascript"
+	src="${myUrl}resources/controller/schoolAdmin/planhistory/planhistoryController.js"></script>
+<div class="container-fluid plan-details-graph-bg">
+	<div class="">
+		<div ng-app="planHistory" id="cntrlID"
+			ng-controller="planHistoryController">
+
+
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<div class="row mrg-sm-top" style="width: 101%">
+					<a href="${myUrl}schooladmin/subscriptionactivation"
+						class="pull-right anchor col-sm-3 text-right renew "> <i
+						class="fa fa-refresh theam-yellow renewicon"></i> Renew Now
+					</a>
+				</div>
+				<div class="boxshadow">
+					<ul class="cmn bdr-sec">
+						<li class="head-sm">{{PlanModelList.subsciptionPlanModel.planName}}</li>
+						<li>Plan Start Date:{{PlanModelList.startDate |
+							date:'MM/dd/yyyy'}}</li>
+						<li>Plan Expiry Date:{{PlanModelList.endDate |
+							date:'MM/dd/yyyy'}}</li>
+						<li>Total Space : {{totalSpace}} MB</li>
+						<li>Used Space : {{usedSize | number:2}} MB</li>
+						<li>Free Space : {{totalSpace-usedSize | number:2}} MB</li>
+						<li>Student's count : {{PlanModelList.memberCount}} <a
+							href="${myUrl}addstudents" class="btn btn-default"> <i
+								class="fa fa-plus-circle" aria-hidden="true"
+								style="padding-right: 8px;"></i>Add More
+						</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- animation -->
+				<div class="row">
+					<div class="row mrg-sm-top" style="width: 100%">
+						<a
+							<%-- href="${myUrl}schooladmin/subscriptionactivation" --%>
+					class="pull-right anchor col-sm-3 text-right newoffer"
+							id="toggle"><i class="fa fa-tags theam-yellow offer-icon"
+							aria-hidden="true"></i>New Offers </a>
+					</div>
+
+					<div class="target" style="display: none;">
+
+
+						<div class="col-lg-6 col-sm-6 col-xs-12"
+							ng-repeat="quotaListDetails in quotaList">
+							<div class="boxshadow box2">
+								<div class="offer-frm">
+									<div class="offer-head">{{quotaListDetails.quotaName}}</div>
+									<p class="txt-center h1">Get</p>
+									<h4 class="txt-center">{{quotaListDetails.quotaSize}} mb</h4>
+									<h4 class="txt-center">Web Hosting free space</h4>
+									<h4 class="txt-center">
+										<i class="fa fa-inr" aria-hidden="true"></i>
+										{{quotaListDetails.quotaPrice}} INR
+									</h4>
+									<div class="offer-footer">
+									 <a
+							href="${myUrl}quatarenewal?id={{quotaListDetails.quotaId}}" class="btn btn-default"> <i
+								class="fa fa-plus-circle" aria-hidden="true"
+								style="padding-right: 8px;"></i>Subscribe
+						</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<!--1 part -->
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<div id="container" style="width: 100% !important;">
+					<script src="${myUrl}resources/js/highcharts/highcharts.js"></script>
+					<script src="${myUrl}resources/js/highcharts/exporting.js"></script>
+
+					<div class="row">
+						<c:if test="${dataSize eq 0}">
+							<input type="hidden" id="planId" value="0">
+						</c:if>
+						<input type="hidden" id="planId" value="${dataSize}"> <input
+							type="hidden" id="usedID" value="${usedSpace}">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+
+<script>
+	$("#toggle").click(function() {
+		var $target = $('.target'), $toggle = $(this);
+
+		$target.slideToggle(500, function() {
+
+		});
+	});
+</script>
+
+

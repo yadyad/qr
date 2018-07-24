@@ -1,0 +1,64 @@
+package com.zs.cws.ws.android.complaintbox.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxModel;
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxRequestModel;
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxResponseModel;
+import com.zs.cws.ws.android.complaintbox.repository.ComplaintBoxRepository;
+
+@RestController
+@RequestMapping("android/complaintbox")
+public class ComplaintBoxServiceController {
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Autowired
+	StudentRepository studentRepository;
+
+	@Autowired
+	ComplaintBoxRepository complaintBoxRepository;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentDairyMeaages(HttpServletRequest request,
+			@RequestBody ComplaintBoxRequestModel complaintBoxRequestModel) {
+		ComplaintBoxResponseModel complaintBoxResponseModel = new ComplaintBoxResponseModel();
+		if (schoolDAO.isValidSchool(complaintBoxRequestModel.getSchoolID())) {
+			try {
+				ComplaintBoxModel complaintBoxModel = new ComplaintBoxModel();
+				complaintBoxModel.setComplaint(complaintBoxRequestModel.getSubject());
+				complaintBoxModel.setDescription(complaintBoxRequestModel.getComplaint());
+				complaintBoxModel.setSchoolModel(schoolRepository.findOne(complaintBoxRequestModel.getSchoolID()));
+				complaintBoxModel.setStudentModel(studentRepository.findOne(complaintBoxRequestModel.getStudentID()));
+				complaintBoxRepository.save(complaintBoxModel);
+				if (complaintBoxModel.getComplaintID() != 0) {
+					complaintBoxResponseModel.setResponseStatus("Success");
+					return complaintBoxResponseModel;
+				} else {
+					complaintBoxResponseModel.setResponseStatus("Failed");
+					return complaintBoxResponseModel;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				complaintBoxResponseModel.setResponseStatus("Failed");
+				return complaintBoxResponseModel;
+			}
+		} else {
+			complaintBoxResponseModel.setResponseStatus("Invalid User");
+			return complaintBoxResponseModel;
+		}
+	}
+}

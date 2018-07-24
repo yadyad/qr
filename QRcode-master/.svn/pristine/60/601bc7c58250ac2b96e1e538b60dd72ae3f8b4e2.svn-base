@@ -1,0 +1,39 @@
+package com.zs.cws.ws.hybrid.calendar.model;
+
+
+public class CalendarRequestModel {
+
+	int schoolID;
+	String modifiedDate;
+
+	public CalendarRequestModel() {
+	
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "CalendarRequestModel [schoolID=" + schoolID + ", modifiedDate=" + modifiedDate + "]";
+	}
+
+	
+	
+		
+	
+}

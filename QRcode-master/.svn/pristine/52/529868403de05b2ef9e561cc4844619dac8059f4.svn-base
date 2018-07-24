@@ -1,0 +1,75 @@
+package com.zs.cws.ws.hybrid.notification.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.principalmeeting.dao.PrincipalMeetingDAO;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingRepository;
+import com.zs.cws.superadmin.managementmembers.dao.ManagementMemberDAO;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.ws.hybrid.notification.model.NotificationServiceRequest;
+import com.zs.cws.ws.hybrid.notification.model.NotificationServiceResponse;
+
+@RestController
+@RequestMapping("hybrid/notification")
+public class NotificationServiceController {
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	PrincipalMeetingRepository meetingRequestRepository;
+	@Autowired
+	PrincipalMeetingDAO principalMeetingDAO;
+
+	@Autowired
+	ManagementMemberDAO managementMemberDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody NotificationServiceRequest notificationServiceRequest) {
+		System.out.println("SERVER ERRORRRRRR");
+		NotificationServiceResponse notificationServiceResponse = new NotificationServiceResponse();
+		int count = 0;
+		if (notificationServiceRequest.getMemberType().equalsIgnoreCase("Management")) {
+		
+			if (managementMemberDAO.isValidMgmt(notificationServiceRequest.getManagementID())) {
+
+				count = principalMeetingDAO.getAllMeetingAfterMeetingID(notificationServiceRequest);
+				notificationServiceResponse.setStatus("Success");
+				notificationServiceResponse.setCount(count);
+				return notificationServiceResponse;
+
+			} else {
+				notificationServiceResponse.setStatus("Invalid user");
+				notificationServiceResponse.setCount(count);
+				return notificationServiceResponse;
+			}
+		} else {
+
+			if (schoolStaffDAO.isValidMemberStaff(notificationServiceRequest.getMemberID())) {
+
+
+				count = principalMeetingDAO.getAllMeetingCountMgmt(notificationServiceRequest);
+
+				notificationServiceResponse.setStatus("Success");
+				notificationServiceResponse.setCount(count);
+				return notificationServiceResponse;
+		} else {
+
+			notificationServiceResponse.setStatus("Invalid user");
+			notificationServiceResponse.setCount(count);
+			return notificationServiceResponse;
+
+		}
+
+		}
+
+		
+	}
+}

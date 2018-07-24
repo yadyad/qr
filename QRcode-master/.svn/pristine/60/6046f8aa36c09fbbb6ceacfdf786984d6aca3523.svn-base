@@ -1,0 +1,98 @@
+package com.zs.cws.ws.hybrid.attendance.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.ws.android.attendence.dao.AttendanceDAO;
+import com.zs.cws.ws.hybrid.attendance.model.Division;
+import com.zs.cws.ws.hybrid.attendance.model.FinalClassList;
+import com.zs.cws.ws.hybrid.attendance.model.HybridAttendanceRequestModel;
+import com.zs.cws.ws.hybrid.attendance.model.HybridAttendanceResponseModel;
+
+@RestController
+@RequestMapping("hybrid/attendance")
+public class HybridAttendanceServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+
+	@Autowired
+	AttendanceDAO attendanceDAO;
+
+	@RequestMapping(value = "/attendanceList", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody HybridAttendanceRequestModel hybridAttendanceRequestModel) {
+		try {
+			HybridAttendanceResponseModel hybridAttendanceResponseModel = new HybridAttendanceResponseModel();
+
+			if (schoolDAO.isValidSchool(hybridAttendanceRequestModel.getSchoolID())) {
+				
+				if(attendanceDAO.isAttendanceAvailable(hybridAttendanceRequestModel.getAttendanceRequestDate(), hybridAttendanceRequestModel.getSchoolID())){
+				List<SchoolDivModel> divModels = schoolDivDAO
+						.getDivisionLists(hybridAttendanceRequestModel.getSchoolID());
+				Map<String, List<Division>> attendanceMap = new HashMap<>();
+				for (SchoolDivModel i : divModels) {
+					attendanceMap.put(String.valueOf(i.getStandard()), null);
+				}
+
+				for (SchoolDivModel schoolDivModel : divModels) {
+					Division division = new Division();
+					division.setDivision(schoolDivModel.getDivision());
+					division.setDivisionID(schoolDivModel.getSchoolDivId());
+					List<Division> divList = attendanceMap.get(schoolDivModel.getStandard());
+
+					if (divList == null) {
+						divList = new ArrayList<>();
+					}
+					division = attendanceDAO.getPresentCount(hybridAttendanceRequestModel, division);
+					divList.add(division);
+					attendanceMap.put(schoolDivModel.getStandard(), divList);
+				}
+				List<FinalClassList> finalClassLists = new ArrayList<>();
+
+				for (Map.Entry<String, List<Division>> entry : attendanceMap.entrySet()) {
+					FinalClassList finalClassList = new FinalClassList();
+					finalClassList.setStandard(entry.getKey());
+					finalClassList.setDivisionList(entry.getValue());
+					finalClassLists.add(finalClassList);
+				}
+				hybridAttendanceResponseModel.setStatus("Success");
+				hybridAttendanceResponseModel.setFinalClassLists(finalClassLists);
+				return hybridAttendanceResponseModel;
+				}else{
+					hybridAttendanceResponseModel.setStatus("Attendance not available");
+					hybridAttendanceResponseModel.setFinalClassLists(new ArrayList<>());
+					return hybridAttendanceResponseModel;
+				}
+			} else {
+
+				hybridAttendanceResponseModel.setStatus("Invalid User");
+				hybridAttendanceResponseModel.setFinalClassLists(new ArrayList<>());
+				return hybridAttendanceResponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			HybridAttendanceResponseModel hybridAttendanceResponseModel = new HybridAttendanceResponseModel();
+			hybridAttendanceResponseModel.setStatus("Failed");
+			hybridAttendanceResponseModel.setFinalClassLists(new ArrayList<>());
+			return hybridAttendanceResponseModel;
+		}
+	}
+}

@@ -1,0 +1,9 @@
+#DB Config file
+#Mon Jul 25 17:22:24 IST 2016
+smtp.user=support@zoftsolutions.com
+smtp.starttls.enable=true
+smtp.pass=Dssp@2017
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.auth=true
+smtp.ssl=yes

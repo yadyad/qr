@@ -1,0 +1,199 @@
+package com.zs.cws.ws.hybrid.calendar.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.settings.dao.AcademicYearDAO;
+import com.zs.cws.schooladmin.settings.model.AcademicModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.specialdays.dao.SpecialDaysDAO;
+import com.zs.cws.superadmin.specialdays.model.SpecialDaysModel;
+import com.zs.cws.utils.GlobalVariables;
+import com.zs.cws.ws.hybrid.calendar.model.CalendarEvents;
+import com.zs.cws.ws.hybrid.calendar.model.CalendarRequestModel;
+import com.zs.cws.ws.hybrid.calendar.model.CalenderResponseModel;
+
+@RestController
+public class CalendarServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	SpecialDaysDAO specialDaysDAO;
+
+	@Autowired
+	AcademicYearDAO academicYearDAO;
+
+	@RequestMapping(value = "schoolcalendar", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAll(HttpServletRequest request,
+			@RequestBody CalendarRequestModel calendarRequestModel) {
+		GlobalVariables.MONTH_NAMES.put(1, "January");
+		GlobalVariables.MONTH_NAMES.put(2, "February");
+		GlobalVariables.MONTH_NAMES.put(3, "March");
+		GlobalVariables.MONTH_NAMES.put(4, "April");
+		GlobalVariables.MONTH_NAMES.put(5, "May");
+		GlobalVariables.MONTH_NAMES.put(6, "June");
+		GlobalVariables.MONTH_NAMES.put(7, "July");
+		GlobalVariables.MONTH_NAMES.put(8, "August");
+		GlobalVariables.MONTH_NAMES.put(9, "September");
+		GlobalVariables.MONTH_NAMES.put(10, "October");
+		GlobalVariables.MONTH_NAMES.put(11, "November");
+		GlobalVariables.MONTH_NAMES.put(12, "December");
+
+		try {
+			AcademicModel AcademicModel = academicYearDAO.getAcademicYear(calendarRequestModel.getSchoolID());
+
+			String[] startYear = String.valueOf(AcademicModel.getAcademicStartYear()).split("-");
+
+			String[] endYear = String.valueOf(AcademicModel.getAcademicEndYear()).split("-");
+
+			CalenderResponseModel calenderResponseModel = new CalenderResponseModel();
+			calenderResponseModel.setStartYear(startYear[0]);
+			calenderResponseModel.setStartMonth(startYear[1]);
+
+			calenderResponseModel.setEndYear(endYear[0]);
+			calenderResponseModel.setEndMonth(endYear[1]);
+
+			String modDate = calendarRequestModel.getModifiedDate();
+			if (schoolDAO.isValidSchool(calendarRequestModel.getSchoolID())) {
+
+				List<SpecialDaysModel> sample = specialDaysDAO
+						.findSpclDaysBySchoolService(calendarRequestModel.getSchoolID(), modDate);
+
+				Map<String, List<CalendarEvents>> calenderMap = new HashMap<String, List<CalendarEvents>>();
+				List<SpecialDaysModel> specialDaysModels = specialDaysDAO
+						.findSpclDaysBySchool(calendarRequestModel.getSchoolID());
+
+				if (sample.size() > 0) {
+					System.out.println("YEEEEEEEEEEESSSSSSSSSSSSSSSSSSS");
+					for (int i = 1; i <= 12; i++) {
+						calenderMap.put(GlobalVariables.MONTH_NAMES.get(i), new ArrayList<CalendarEvents>());
+					}
+					for (SpecialDaysModel specialDaysModel : specialDaysModels) {
+						Date date = new Date();
+						date = specialDaysModel.getUpdatedDate();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+						String s = sdf1.format(date);
+						try {
+							date = sdf1.parse(s);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						CalendarEvents calendarEvents = new CalendarEvents();
+						calendarEvents.setEventDate(sdf2.format(specialDaysModel.getEventDate()));
+						
+						String[] eventDate=calendarEvents.getEventDate().split("/");
+						calendarEvents.setDay(eventDate[1]);
+						calendarEvents.setMonth(GlobalVariables.getMonthAbbrevations().get(eventDate[0]));
+						
+						calendarEvents.setEventName(specialDaysModel.getEventName());
+						calendarEvents.setEventDesc(specialDaysModel.getEventDesc());
+						calendarEvents.setEventImage(specialDaysModel.getImageUrl());
+						calendarEvents.setModifiedDate(s);
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(specialDaysModel.getEventDate());
+						int month = cal.get(Calendar.MONTH) + 1;
+						int year = cal.get(Calendar.YEAR);
+						calendarEvents.setYear(String.valueOf(year));
+						List<CalendarEvents> tempList = calenderMap.get(GlobalVariables.MONTH_NAMES.get(month));
+						if (tempList == null) {
+							tempList = new ArrayList<>();
+						}
+						tempList.add(calendarEvents);
+						if ((year == Integer.parseInt(startYear[0]) && month >= Integer.parseInt(startYear[1]))
+								|| (year == Integer.parseInt(endYear[0]) && (month <= Integer.parseInt(endYear[1])))) {
+							calenderMap.put(GlobalVariables.MONTH_NAMES.get(month), tempList);
+						}
+						calenderResponseModel.setSchoolID(calendarRequestModel.getSchoolID());
+						calenderResponseModel.setStatus("Success");
+						calenderResponseModel.setCalenderMap(calenderMap);
+
+					}
+					return calenderResponseModel;
+				} else {
+					System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+					for (int i = 1; i <= 12; i++) {
+						calenderMap.put(GlobalVariables.MONTH_NAMES.get(i), new ArrayList<CalendarEvents>());
+					}
+
+					for (SpecialDaysModel specialDaysModel : specialDaysModels) {
+
+						Date date = new Date();
+						date = specialDaysModel.getCreatedDate();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+						String s = sdf1.format(date);
+						try {
+							date = sdf1.parse(s);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+
+						CalendarEvents calendarEvents = new CalendarEvents();
+						calendarEvents.setEventDate(s);
+						
+						String[] eventDate=calendarEvents.getEventDate().split("/");
+						calendarEvents.setDay(eventDate[1]);
+						calendarEvents.setMonth(GlobalVariables.getMonthAbbrevations().get(eventDate[0]));
+						
+						
+						calendarEvents.setEventName(specialDaysModel.getEventName());
+						calendarEvents.setEventDesc(specialDaysModel.getEventDesc());
+						calendarEvents.setEventImage(specialDaysModel.getImageUrl());
+						calendarEvents.setModifiedDate(modDate);
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(specialDaysModel.getEventDate());
+						int month = cal.get(Calendar.MONTH) + 1;
+						int year = cal.get(Calendar.YEAR);
+						calendarEvents.setYear(String.valueOf(year));
+						List<CalendarEvents> tempList = calenderMap.get(GlobalVariables.MONTH_NAMES.get(month));
+						if (tempList == null) {
+							tempList = new ArrayList<>();
+						}
+						tempList.add(calendarEvents);
+						if ((year == Integer.parseInt(startYear[0]) && month >= Integer.parseInt(startYear[1]))
+								|| (year == Integer.parseInt(endYear[0]) && (month <= Integer.parseInt(endYear[1])))) {
+							calenderMap.put(GlobalVariables.MONTH_NAMES.get(month), tempList);
+						}
+
+					}
+					calenderResponseModel.setSchoolID(calendarRequestModel.getSchoolID());
+					calenderResponseModel.setStatus("Success");
+					calenderResponseModel.setCalenderMap(null);
+					return calenderResponseModel;
+				}
+
+			} else {
+				calenderResponseModel = new CalenderResponseModel();
+				calenderResponseModel.setCalenderMap(new HashMap<>());
+				calenderResponseModel.setStatus("Invalid User");
+			}
+			return calenderResponseModel;
+
+		} catch (Exception e) {
+			CalenderResponseModel calenderResponseModel = new CalenderResponseModel();
+			calenderResponseModel.setCalenderMap(new HashMap<>());
+			e.printStackTrace();
+			calenderResponseModel.setStatus("Failed");
+			return calenderResponseModel;
+		}
+
+	}
+
+}

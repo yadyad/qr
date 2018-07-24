@@ -1,0 +1,130 @@
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<script type="text/javascript"
+	src="${myUrl}resources/controller/superAdmin/paymenthistory/PaymentHistoryController.js"></script>
+<body>
+	<div ng-app="payment" id="cntrlID" ng-controller=paymentController>
+		<div class="container-fluid">
+			<!-- <h3 class="p-head">Payment details</h3> -->
+			<h3 class="p-head" ng-if="schoolModel.schoolName !== null">{{schoolModel.schoolName}}</h3>
+			<h3 class="p-head" ng-if="schoolModel.schoolName==null">No
+				Payments yet</h3>
+			<!-- <h3 class="p-head">Payment details</h3> -->
+			<div class="payment-history" ng-repeat="paymentList in paymentList">
+				<p class="p-date">{{paymentList.transaction_date|
+					date:'MM/dd/yyyy'}}</p>
+
+				<form class="form-horizontal">
+					<fieldset>
+
+						<!-- Form Name -->
+
+<div class="row">
+
+
+						<!-- Text input-->
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Payment
+								Id</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.paymentID}}</label>
+
+						</div>
+						<div class="form-group col-md-2 col-xs-6  ">
+							<label class="control-label p-label" for="textinput">Transaction
+								Id</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.transactionID}}</label>
+
+						</div>
+
+
+
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Order
+								reference no</label> <i
+								class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.orderRefNo}}</label>
+
+						</div>
+						</div>
+						
+						<div class="row">
+						
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Response
+								Status</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.responseStatus}}</label>
+
+						</div>
+
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Amount</label>
+							<i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.amount}}</label>
+
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Merchant
+								Id</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.merchantID}}</label>
+
+						</div>
+						
+						</div>
+
+
+<div class="row">
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Payment
+								method</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.paymentMethod}}</label>
+
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">Payment
+								brand</label> <i class="fa fa-angle-double-right pull-right p-aroow"
+								aria-hidden="true"></i>
+						</div>
+						<div class="form-group col-md-2 col-xs-6">
+							<label class="control-label p-label" for="textinput">{{paymentList.paymentBrand}}</label>
+
+						</div>
+						
+						</div>
+
+					</fieldset>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

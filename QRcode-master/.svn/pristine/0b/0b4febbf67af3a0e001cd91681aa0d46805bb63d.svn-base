@@ -1,0 +1,93 @@
+package com.zs.cws.ws.android.staffdetails.model;
+
+public class StaffDetails {
+
+	String staffName="";
+	String subject="";
+	int divisionID;
+	String modifiedDate="";
+	int studentID;
+	int staffID;
+	String email;
+	String phone;
+	
+	
+	
+	public StaffDetails() {
+		
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+	
+	
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+	public int getStaffID() {
+		return staffID;
+	}
+
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	@Override
+	public String toString() {
+		return "StaffDetails [staffName=" + staffName + ", subject=" + subject + ", divisionID=" + divisionID
+				+ ", modifiedDate=" + modifiedDate + ", studentID=" + studentID + ", staffID=" + staffID + ", email="
+				+ email + ", phone=" + phone + "]";
+	}
+
+}

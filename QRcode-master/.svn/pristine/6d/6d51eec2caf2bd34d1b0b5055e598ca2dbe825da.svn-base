@@ -1,0 +1,68 @@
+package com.zs.cws.ws.hybrid.divisionandsubject.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.master.subject.repository.SubjectRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.ws.hybrid.divisionandsubject.model.DivisionServiceModel;
+import com.zs.cws.ws.hybrid.divisionandsubject.model.DivisionServiceRequestModel;
+import com.zs.cws.ws.hybrid.divisionandsubject.model.DivisionServiceResponseModel;
+import com.zs.cws.ws.hybrid.divisionandsubject.model.SubjectServiceModel;
+
+@RestController
+@RequestMapping(value = "/hybrid")
+public class DivsionSubjectController {
+
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	SubjectRepository subjectRepository;
+
+	@RequestMapping(value = "/divisonandsubject", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllSubjects(HttpServletRequest request,
+			@RequestBody DivisionServiceRequestModel divisionServiceRequestModel) {
+		try{
+		List<SchoolDivModel> divisionList = schoolDivDAO.getDivisionLists(divisionServiceRequestModel.getSchoolID());
+		List<DivisionServiceModel> divisionServiceList = new ArrayList<>();
+		for (SchoolDivModel schoolDivModel : divisionList) {
+			DivisionServiceModel divisionServiceModel = new DivisionServiceModel();
+			divisionServiceModel.setDivisionID(schoolDivModel.getSchoolDivId());
+			divisionServiceModel.setDivision(schoolDivModel.getStandard() + "-" + schoolDivModel.getDivision());
+			divisionServiceList.add(divisionServiceModel);
+		}
+		
+		List<SubjectModel> subjectList=subjectRepository.findAll();
+		List<SubjectServiceModel> subjectServiceList=new ArrayList<>();
+		for(SubjectModel subjectModel:subjectList){
+			SubjectServiceModel subjectServiceModel=new SubjectServiceModel();
+			subjectServiceModel.setSubjectID(subjectModel.getSubjectId());
+			subjectServiceModel.setSubjectName(subjectModel.getSubject());
+			subjectServiceList.add(subjectServiceModel);
+		}
+
+		DivisionServiceResponseModel divisionServiceResponseModel=new DivisionServiceResponseModel();
+		divisionServiceResponseModel.setStatus("Success");
+		divisionServiceResponseModel.setDivisionServiceModelList(divisionServiceList);
+		divisionServiceResponseModel.setSubjectServiceModelList(subjectServiceList);
+		return divisionServiceResponseModel;
+	}catch(Exception e){
+		DivisionServiceResponseModel divisionServiceResponseModel=new DivisionServiceResponseModel();
+		divisionServiceResponseModel.setStatus("Failed");
+		divisionServiceResponseModel.setDivisionServiceModelList(new ArrayList<>());
+		divisionServiceResponseModel.setSubjectServiceModelList(new ArrayList<>());
+		return divisionServiceResponseModel;
+	}
+	}
+}

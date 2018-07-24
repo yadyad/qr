@@ -1,0 +1,158 @@
+package com.zs.cws.schooladmin.driverdetails.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.schooladmin.driverroutes.model.DriverRoutesModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_driver_details")
+public class DriverDetailsModel {
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int driverID;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	@Column(name="driver_name")
+	private String driverName;
+	
+	@Column(name="phone")
+	private String phone;
+	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="bus_number")
+	private String busNumber;
+	
+	@OneToOne
+	@JoinColumn(name="route_id")
+	private DriverRoutesModel driverRoutesModel;
+	
+	@Column(name="licence_number")
+	private String licenseNumber;
+	
+	@Column(name="address")
+	private String address;
+	
+	@Column(name="created_user")
+	private String createdUser;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+
+	public DriverDetailsModel() {
+	}
+
+	public int getDriverID() {
+		return driverID;
+	}
+
+	public void setDriverID(int driverID) {
+		this.driverID = driverID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getBusNumber() {
+		return busNumber;
+	}
+
+	public void setBusNumber(String busNumber) {
+		this.busNumber = busNumber;
+	}
+
+	public DriverRoutesModel getDriverRoutesModel() {
+		return driverRoutesModel;
+	}
+
+	public void setDriverRoutesModel(DriverRoutesModel driverRoutesModel) {
+		this.driverRoutesModel = driverRoutesModel;
+	}
+
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Override
+	public String toString() {
+		return "DriverDetailsModel [driverID=" + driverID + ", schoolModel=" + schoolModel + ", driverName="
+				+ driverName + ", phone=" + phone + ", email=" + email + ", busNumber=" + busNumber
+				+ ", driverRoutesModel=" + driverRoutesModel + ", licenseNumber=" + licenseNumber + ", address="
+				+ address + ", createdUser=" + createdUser + ", createdDate=" + createdDate + "]";
+	}
+	
+
+	
+}

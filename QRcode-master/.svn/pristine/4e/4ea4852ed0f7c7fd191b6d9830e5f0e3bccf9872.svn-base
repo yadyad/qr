@@ -1,0 +1,358 @@
+<%-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%> --%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+
+
+<!-- font libs -->
+<link href="http://fonts.googleapis.com/css?family=Lato"
+	rel="stylesheet" type="text/css" />
+<link
+	href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+	rel="stylesheet" />
+
+
+
+<link
+	href="${myUrl}resources/lib/paging-search/style.css"
+	rel="stylesheet" type="text/css" />
+
+  <!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> -->
+  
+  
+</head>
+<body>
+<div class="top-bar">
+
+<div class="row dashboard-stats" style="width:100%;">
+                        <div class="col-md-3 col-sm-6">
+                            <section class="panel panel-box">
+                                <div class="panel-left panel-icon bg-success">
+                                     <i class="fa fa-users text-large stat-icon info-text"></i>
+                                </div>
+                                <div class="panel-right panel-icon bg-reverse">
+                                    <p class="size-h1 no-margin countdown_first">6791</p>
+                                    <p class="text-muted no-margin text"><span>Number of staff</span></p>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <section class="panel panel-box">
+                                <div class="panel-left panel-icon bg-success">
+                                    <i class="fa fa-users text-large stat-icon info-text"></i>
+                                </div>
+                                <div class="panel-right panel-icon bg-reverse">
+                                    <p class="size-h1 no-margin countdown_second">594</p>
+                                    <p class="text-muted no-margin text"><span>Number of Bus</span></p>
+                                </div>
+                            </section>
+                            
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <section class="panel panel-box">
+                                <div class="panel-left panel-icon bg-success">
+                                     <i class="fa fa-users text-large stat-icon info-text"></i>
+                                </div>
+                                <div class="panel-right panel-icon bg-reverse">
+                                    <p class="size-h1 no-margin countdown_third">91<span class="size-h3">%</span></p>
+                                    <p class="text-muted no-margin text"><span>Growth</span></p>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <section class="panel panel-box">
+                                <div class="panel-left panel-icon bg-success">
+                                    <i class="fa fa-users text-large stat-icon info-text"></i>
+                                </div>
+                                <div class="panel-right panel-icon bg-reverse">
+                                    <p class="size-h1 no-margin countdown_fourth">999</p>
+                                    <p class="text-muted no-margin text"><span>Users</span></p>
+                                </div>
+                            </section>
+                        </div>    
+                    </div> 
+
+
+
+</div>
+<div class="container-fluid">
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+   
+
+     
+
+        <!-- Design Group 'pending request' -->
+        <div class="container-fluid">
+         <div class="contain">
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                            <div class="">
+                              <i class="fa fa-users text-large stat-icon info-text fe-icon faa-pulse animated-hover"></i>
+                              </div>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                            <i class="fa fa-user-circle-o fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                 <div class="members">1.235 Members</div>
+                               <!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                    <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                                <i class="fa fa-bell-o fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                  <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                 <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                               <i class="fa fa-cloud-upload fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                 <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                              <i class="fa fa-eyedropper fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                  <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                    <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                                <i class="fa fa-magnet fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                  <div class="members">1.235 Members</div>
+                                <!-- <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                                <i class="fa fa-bell-o fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                  <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                 <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                               <i class="fa fa-cloud-upload fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                 <div class="members">1.235 Members</div>
+                               <!--  <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="col-md-4 col-sm-6">
+                    <div class="card-style">
+                        <div class="media">
+
+                            <div class="media-left">
+                              <i class="fa fa-eyedropper fe-icon info-text faa-pulse animated-hover" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="media-body">
+                                <a href="#"></a>
+                                  <div class="members">1.235 Members</div>
+                              <!--   <div class="btn btn-sm btn-primary btn-part">btn-name-large</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+  </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+    
+</body>
+
+<script>
+$(function() {
+	   
+
+	   function countUp(count) {
+		var div_by = 100,
+			speed = Math.round(count / div_by),
+			$display = $('.countdown_first'),
+			run_count = 1,
+			int_speed = 24;
+		var int = setInterval(function () {
+			if (run_count < div_by) {
+				$display.text(speed * run_count);
+				run_count++;
+			} else if (parseInt($display.text()) < count) {
+				var curr_count = parseInt($display.text()) + 1;
+				$display.text(curr_count);
+			} else {
+				clearInterval(int);
+			}
+		}, int_speed);
+	}
+	countUp(6791);
+
+function countUp2(count) {
+ var div_by = 100,
+     speed = Math.round(count / div_by),
+     $display = $('.countdown_second'),
+     run_count = 1,
+     int_speed = 24;
+ var int = setInterval(function () {
+     if (run_count < div_by) {
+         $display.text(speed * run_count);
+         run_count++;
+     } else if (parseInt($display.text()) < count) {
+         var curr_count = parseInt($display.text()) + 1;
+         $display.text(curr_count);
+     } else {
+         clearInterval(int);
+     }
+ }, int_speed);
+}
+countUp2(555);
+
+function countUp3(count) {
+ var div_by = 100,
+     speed = Math.round(count / div_by),
+     $display = $('.countdown_fourth'),
+     run_count = 1,
+     int_speed = 24;
+ var int = setInterval(function () {
+     if (run_count < div_by) {
+         $display.text(speed * run_count);
+         run_count++;
+     } else if (parseInt($display.text()) < count) {
+         var curr_count = parseInt($display.text()) + 1;
+         $display.text(curr_count);
+     } else {
+         clearInterval(int);
+     }
+ }, int_speed);
+}
+countUp3(999);
+		   
+		   });
+
+
+</script>
+
+</html>

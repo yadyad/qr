@@ -1,0 +1,125 @@
+package com.zs.cws.superadmin.master.quota.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="cwas_quota_master")
+public class QuotaModel {
+
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int quotaId;
+	
+	
+	@Column(name="quota_name")
+	private String quotaName;
+	
+	@Column(name="quota_size")
+	private double quotaSize;
+	
+	@Column(name="quota_price")
+	private double quotaPrice;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+
+	public QuotaModel() {
+	
+	}
+
+	
+	public double getQuotaPrice() {
+		return quotaPrice;
+	}
+
+
+	public void setQuotaPrice(double quotaPrice) {
+		this.quotaPrice = quotaPrice;
+	}
+
+
+	public int getQuotaId() {
+		return quotaId;
+	}
+
+	public void setQuotaId(int quotaId) {
+		this.quotaId = quotaId;
+	}
+
+	public String getQuotaName() {
+		return quotaName;
+	}
+
+	public void setQuotaName(String quotaName) {
+		this.quotaName = quotaName;
+	}
+
+	public double getQuotaSize() {
+		return quotaSize;
+	}
+
+	public void setQuotaSize(double quotaSize) {
+		this.quotaSize = quotaSize;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	@Override
+	public String toString() {
+		return "QuotaModel [quotaId=" + quotaId + ", quotaName=" + quotaName + ", quotaSize=" + quotaSize
+				+ ", quotaPrice=" + quotaPrice + ", createdBy=" + createdBy + ", createdDate=" + createdDate
+				+ ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate + "]";
+	}
+
+	
+	
+	
+}

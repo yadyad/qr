@@ -1,0 +1,40 @@
+package com.zs.cws.superadmin.master.department.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+
+@Repository
+@Transactional
+public class DepartmentIMPL implements DepartmentDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	@Transactional
+	public boolean isAvailable(DepartmentModel departmentModel) {
+		String query = "";
+		if (departmentModel.getRowId() != 0) {
+			query = "select count(*) from DepartmentModel where department= ? and rowId <> " + departmentModel.getRowId() + "";
+		} else {
+			query = "select count(*) from DepartmentModel where department=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1,departmentModel.getDepartment().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+	@Override
+	public DepartmentModel getDepartmentByname(String departmentName) {
+		String query = "from DepartmentModel where department='" + departmentName + "'";
+		List<DepartmentModel> departmentModels = entityManager.createQuery(query).getResultList();
+		return departmentModels.get(0);
+	}
+
+}

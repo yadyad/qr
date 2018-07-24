@@ -1,0 +1,15 @@
+package com.zs.cws.utils;
+//@Repository
+public class GlobalClass {
+//	@Autowired
+//	private SessionFactory sessionFactory;
+//
+//	@Transactional
+//	public boolean isValidUser(String userID) {
+//		SQLQuery enableOrDisable = sessionFactory.getCurrentSession()
+//				.createSQLQuery("SELECT EXISTS(SELECT 1 FROM  "+ZSTable.LOGIN+"  WHERE USERNAME='" + userID + "')");
+//		BigInteger big = (BigInteger) enableOrDisable.uniqueResult();
+//		int status=big.intValue();
+//		return status > 0;
+//	}
+}

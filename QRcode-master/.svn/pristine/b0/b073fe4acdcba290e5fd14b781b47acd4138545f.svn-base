@@ -1,0 +1,187 @@
+package com.zs.cws.ws.hybrid.meeting.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import com.zs.cws.schooladmin.myclass.dao.MyClassDAO;
+import com.zs.cws.schooladmin.principalmeeting.dao.PrincipalMeetingDAO;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingStatusModel;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingRepository;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingStatusRepository;
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.master.subject.repository.SubjectRepository;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.utils.FCMSender;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingFcmModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersRequestModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingMembersResponseModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingServiceRequestModel;
+import com.zs.cws.ws.hybrid.meeting.model.MeetingServiceResponseModel;
+
+@RestController
+@RequestMapping("/hybrid")
+public class MeetingServiceController {
+	@Autowired
+	MyClassDAO myClassDAO;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	SchoolDivDAO schooldivDAO;
+
+	@Autowired
+	PrincipalMeetingRepository meetingRequestRepository;
+
+	@Autowired
+	PrincipalMeetingStatusRepository meetingStatusRepository;
+	@Autowired
+	PrincipalMeetingDAO principalMeetingDAO;
+
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	@Autowired
+	SubjectRepository subjectRepository;
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	static Integer[] SELECTED_DIVISIONS;
+	static Integer[] SELECTED_SUBJECTS;
+
+	@RequestMapping(value = { "/meeting" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request,
+			@RequestBody MeetingServiceRequestModel meetingModel) {
+System.out.println("INSIDEEEEE");
+		MeetingServiceResponseModel meetingServiceResponseModel = new MeetingServiceResponseModel();
+		List<SchoolStaffModel> staffList = new ArrayList<>();
+		System.err.println(meetingModel.toString());
+		try {
+			
+			if(schoolDAO.isValidSchool(meetingModel.getSchoolID())){
+			
+			if (schoolStaffDAO.isValidMemberStaffLike(meetingModel.getFromStaffID())) {
+
+				if (meetingModel.getMeetingType().equals("Teaching")) {
+					if (meetingModel.getDivisionIDs().size() > 0) {
+						if (meetingModel.getDivisionIDs().get(0) == 0) {
+							List<Integer> divisionList = new ArrayList<>();
+							List<SchoolDivModel> schoolDivModels = schooldivDAO
+									.getDivisionLists(meetingModel.getSchoolID());
+							for (SchoolDivModel schoolDivModel : schoolDivModels) {
+								divisionList.add(schoolDivModel.getSchoolDivId());
+								SELECTED_DIVISIONS = divisionList.toArray(new Integer[divisionList.size()]);
+							}
+						} else {
+							SELECTED_DIVISIONS = meetingModel.getDivisionIDs()
+									.toArray(new Integer[meetingModel.getDivisionIDs().size()]);
+						}
+					}
+					if (!meetingModel.getSubjectIDs().isEmpty()) {
+
+						if (meetingModel.getSubjectIDs().get(0) == 0) {
+							List<Integer> subjectList = new ArrayList<>();
+							List<SubjectModel> subjectLists = subjectRepository.findAll();
+							for (SubjectModel SubjectModel : subjectLists) {
+								subjectList.add(SubjectModel.getSubjectId());
+							}
+							SELECTED_SUBJECTS = subjectList.toArray(new Integer[subjectList.size()]);
+						} else {
+							SELECTED_SUBJECTS = meetingModel.getSubjectIDs()
+									.toArray(new Integer[meetingModel.getSubjectIDs().size()]);
+						}
+					}
+					staffList = myClassDAO.getMyClassDetails1(SELECTED_DIVISIONS, SELECTED_SUBJECTS,
+							meetingModel.getSchoolID());
+				} else {
+					staffList = schoolStaffDAO.getStaffsForMeeting(meetingModel.getSchoolID());
+				}
+
+				PrincipalMeetingModel principalMeetingModel = new PrincipalMeetingModel();
+				SchoolModel schoolModel = new SchoolModel();
+				schoolModel = schoolRepository.findOne(meetingModel.getSchoolID());
+				SchoolStaffModel schoolStaffModel = new SchoolStaffModel();
+
+				schoolStaffModel = schoolStaffRepository.findOne(meetingModel.getFromStaffID());
+				System.err.println("STAFFFFFFFFSSSSSSSSSSS:::::>>>>" + schoolStaffModel.toString());
+				System.out.println("STAFFFFFFFFF" + meetingModel.getFromStaffID());
+				principalMeetingModel.setSchoolModel(schoolModel);
+				principalMeetingModel.setSchoolStaffModel(schoolStaffModel);
+				principalMeetingModel.setMeetingDate(meetingModel.getMeetingDate());
+				principalMeetingModel.setMeetingTime(meetingModel.getMeetingTime());
+				principalMeetingModel.setPurpose(meetingModel.getPurpose());
+				principalMeetingModel.setVenue(meetingModel.getVenue());
+				principalMeetingModel.setMeetingType(meetingModel.getMeetingType());
+				principalMeetingModel.setAgenda(meetingModel.getAgenda());
+				meetingRequestRepository.save(principalMeetingModel);
+
+				MeetingFcmModel meetingFcmModel = new MeetingFcmModel();
+				// meetingFcmModel.set
+				meetingFcmModel.setSchoolID(schoolStaffModel.getSchoolModel().getSchoolId());
+				meetingFcmModel.setMeetingDate(meetingModel.getMeetingDate());
+				meetingFcmModel.setMeetingTime(meetingModel.getMeetingTime());
+				meetingFcmModel.setPurpose(meetingModel.getPurpose());
+				meetingFcmModel.setStaffID(schoolStaffModel.getSchoolStaffId());
+
+				if (principalMeetingModel.getMeetingRequestID() != 0) {
+					for (SchoolStaffModel staffModel : staffList) {
+						meetingFcmModel.setStaffID(staffModel.getSchoolStaffId());
+						FCMSender.fcmTest1(meetingFcmModel, staffModel.getFcmTocken(), "office");
+						PrincipalMeetingStatusModel meetingStatusModel = new PrincipalMeetingStatusModel();
+						meetingStatusModel.setPrincipalMeetingModel(principalMeetingModel);
+						meetingStatusModel.setStatus(0);
+						meetingStatusModel.setSchoolStaffModel(staffModel);
+						meetingStatusModel.setSchoolModel(staffModel.getSchoolModel());
+						meetingStatusRepository.save(meetingStatusModel);
+					}
+				}
+				meetingServiceResponseModel.setResponseStatus("Success");
+				return meetingServiceResponseModel;
+			} else {
+				meetingServiceResponseModel.setResponseStatus("Invalid User");
+				return meetingServiceResponseModel;
+			}
+			}else{
+				meetingServiceResponseModel.setResponseStatus("Invalid User");
+				return meetingServiceResponseModel;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			meetingServiceResponseModel.setResponseStatus("Failed");
+			return meetingServiceResponseModel;
+		}
+	}
+
+	@RequestMapping(value = { "/meeting/memberlist" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getMeetingMemberList(HttpServletRequest request,
+			@RequestBody MeetingMembersRequestModel meetingMembersRequestModel) {
+		MeetingMembersResponseModel meetingMembersResponseModel = new MeetingMembersResponseModel();
+		try {
+			List<MeetingMembersModel> meetingMemberList = principalMeetingDAO
+					.getMeetingMemberList(meetingMembersRequestModel);
+			meetingMembersResponseModel.setResponseStatus("Success");
+			meetingMembersResponseModel.setMeetingMemberList(meetingMemberList);
+			return meetingMembersResponseModel;
+		} catch (Exception e) {
+			meetingMembersResponseModel.setResponseStatus("Success");
+			meetingMembersResponseModel.setMeetingMemberList(new ArrayList<>());
+			return meetingMembersResponseModel;
+		}
+	}
+}

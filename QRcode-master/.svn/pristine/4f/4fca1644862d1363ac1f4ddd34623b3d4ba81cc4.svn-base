@@ -1,0 +1,74 @@
+package com.zs.cws.superadmin.subscription.model;
+
+import java.util.Date;
+
+public class CurrentPlanDetailsModel {
+
+	Date startDate;
+	Date endDate;
+	double totalSpace;
+	double freeSpace;
+	double usedSpace;
+	long studentCount;
+	
+	public CurrentPlanDetailsModel() {
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public double getTotalSpace() {
+		return totalSpace;
+	}
+
+	public void setTotalSpace(double totalSpace) {
+		this.totalSpace = totalSpace;
+	}
+
+	public double getFreeSpace() {
+		return freeSpace;
+	}
+
+	public void setFreeSpace(double freeSpace) {
+		this.freeSpace = freeSpace;
+	}
+
+	public double getUsedSpace() {
+		return usedSpace;
+	}
+
+	public void setUsedSpace(double usedSpace) {
+		this.usedSpace = usedSpace;
+	}
+
+	
+	public long getStudentCount() {
+		return studentCount;
+	}
+
+	public void setStudentCount(long studentCount) {
+		this.studentCount = studentCount;
+	}
+
+	@Override
+	public String toString() {
+		return "CurrentPlanDetailsModel [startDate=" + startDate + ", endDate=" + endDate + ", totalSpace=" + totalSpace
+				+ ", freeSpace=" + freeSpace + ", usedSpace=" + usedSpace + "]";
+	}
+
+	
+	
+}

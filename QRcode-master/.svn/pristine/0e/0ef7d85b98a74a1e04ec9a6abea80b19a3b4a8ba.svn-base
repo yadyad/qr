@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.specialdays.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.specialdays.model.SpecialDaysModel;
+
+public interface SpecialDaysRepository extends JpaRepository<SpecialDaysModel, Integer> {
+
+}

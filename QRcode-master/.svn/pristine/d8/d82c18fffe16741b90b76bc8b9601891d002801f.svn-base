@@ -1,0 +1,84 @@
+package com.zs.cws.ws.android.searchparent.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.searchparent.model.FinalParentSearchResponse;
+import com.zs.cws.ws.android.searchparent.model.ParentDetails;
+import com.zs.cws.ws.android.searchparent.model.SearchParentRequest;
+
+@RestController
+@RequestMapping("android/searchparent")
+public class SearchParentServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	StudentDAO studentDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object parentSearch(HttpServletRequest request,
+			@RequestBody SearchParentRequest searchParentRequest) {
+		try {
+			FinalParentSearchResponse finalParentSearchResponse = new FinalParentSearchResponse();
+
+			if (schoolDAO.isValidSchool(searchParentRequest.getSchoolID())) {
+
+				if (schoolDivDAO.validDivision(searchParentRequest.getDivisionID(),
+						searchParentRequest.getSchoolID())) {
+
+					List<StudentModel> studentModels = studentDAO.getParentSerachList(
+							searchParentRequest.getDivisionID(), searchParentRequest.getSchoolID(),
+							searchParentRequest.getSearchStudName());
+					List<ParentDetails> parentDetails = new ArrayList<>();
+					for (StudentModel studentModel : studentModels) {
+
+						ParentDetails details = new ParentDetails();
+						details.setParentName(studentModel.getFatherName());
+						details.setStudentName(studentModel.getFirstName() + "" + studentModel.getLastName());
+						details.setEmail(studentModel.getEmail());
+						details.setPhoneNo(studentModel.getFatherNumber());
+						parentDetails.add(details);
+
+					}
+					finalParentSearchResponse.setStatus("Success");
+					finalParentSearchResponse.setResponseList(parentDetails);
+					return finalParentSearchResponse;
+
+				} else {
+
+					finalParentSearchResponse.setStatus("Invalid division");
+					finalParentSearchResponse.setResponseList(new ArrayList<>());
+					return finalParentSearchResponse;
+				}
+
+			} else {
+				finalParentSearchResponse.setStatus("Invalid User");
+				finalParentSearchResponse.setResponseList(new ArrayList<>());
+				return finalParentSearchResponse;
+			}
+
+		} catch (Exception e) {
+			FinalParentSearchResponse finalParentSearchResponse = new FinalParentSearchResponse();
+			finalParentSearchResponse.setStatus("Failed");
+			finalParentSearchResponse.setResponseList(new ArrayList<>());
+			return finalParentSearchResponse;
+		}
+	}
+}

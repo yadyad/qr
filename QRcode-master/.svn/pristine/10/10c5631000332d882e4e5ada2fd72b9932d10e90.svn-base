@@ -1,0 +1,66 @@
+package com.zs.cws.ws.android.searchparent.model;
+
+public class ParentDetails {
+
+	  private String parentName="";
+	    private String studentName="";
+	    private String address="";
+	    private String phoneNo="";
+	    private String email="";
+	    
+		public ParentDetails() {
+			
+		}
+
+		public String getParentName() {
+			return parentName;
+		}
+
+		public void setParentName(String parentName) {
+			this.parentName = parentName;
+		}
+
+		public String getStudentName() {
+			return studentName;
+		}
+
+		public void setStudentName(String studentName) {
+			this.studentName = studentName;
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
+		public String getPhoneNo() {
+			return phoneNo;
+		}
+
+		public void setPhoneNo(String phoneNo) {
+			this.phoneNo = phoneNo;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		@Override
+		public String toString() {
+			return "ParentDetails [parentName=" + parentName + ", studentName=" + studentName + ", address=" + address
+					+ ", phoneNo=" + phoneNo + ", email=" + email + "]";
+		}
+	    
+	    
+	    
+	    
+	    
+	    
+}

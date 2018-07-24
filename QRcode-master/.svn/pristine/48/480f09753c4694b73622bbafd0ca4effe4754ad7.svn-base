@@ -1,0 +1,38 @@
+package com.zs.cws.superadmin.master.subject.dao;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.myclass.model.MyClassModel;
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+
+@Repository
+public class SubjectIMPL implements SubjectDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	@Transactional
+	public boolean isAvailable(SubjectModel subjectModel) {
+		String query = "";
+		if (subjectModel.getSubjectId() != 0) {
+			query = "select count(*) from SubjectModel where subject=? and subjectId <> "
+					+ subjectModel.getSubjectId() + "";
+		} else {
+			query = "select count(*) from SubjectModel where subject=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, subjectModel.getSubject().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+	@Override
+	public SubjectModel getSubjectID(int divisionID, int staffID) {
+	 String query = "from MyClassModel where schoolStaffModel.schoolStaffId = "+staffID+" and schoolDivModel.schoolDivId = "+divisionID+"";
+	 MyClassModel myClassModel = (MyClassModel) entityManager.createQuery(query).getSingleResult();
+	 return myClassModel.getSubjectModel();
+	}
+}

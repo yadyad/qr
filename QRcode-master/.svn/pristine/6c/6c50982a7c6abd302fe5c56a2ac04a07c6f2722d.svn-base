@@ -1,0 +1,91 @@
+package com.zs.cws.ws.hybrid.directory.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.ws.hybrid.directory.model.StaffDirectoryFinalModel;
+import com.zs.cws.ws.hybrid.directory.model.StaffDirectoryRequestModel;
+import com.zs.cws.ws.hybrid.directory.model.StaffDirectoryResponseModel;
+
+@RestController
+public class StaffDirectoryServiceController {
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@RequestMapping(value = "/staffdirectory", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAll(HttpServletRequest request,
+			@RequestBody StaffDirectoryRequestModel directoryRequestModel) {
+		try {
+			StaffDirectoryFinalModel staffDirectoryFinalModel = new StaffDirectoryFinalModel();
+			if (schoolDAO.isValidSchool(directoryRequestModel.getSchoolID())) {
+				List<LoginModel> staffList = schoolStaffDAO.getStaffBySchool(directoryRequestModel.getSchoolID());
+				if (staffList.size() == 0) {
+
+					staffDirectoryFinalModel.setResponseStatus("Empty");
+					staffDirectoryFinalModel.setDirectoryResponseModels(new ArrayList<>());
+					return staffDirectoryFinalModel;
+
+				}
+				if (schoolStaffDAO.isAnyUpdation(directoryRequestModel.getSchoolID(),
+						directoryRequestModel.getLastModifiedDate())) {
+					staffList = schoolStaffDAO.getStaffBySchool(directoryRequestModel.getSchoolID());
+
+					List<StaffDirectoryResponseModel> staffResponseList = new ArrayList<>();
+					for (LoginModel loginModel : staffList) {
+						StaffDirectoryResponseModel staffDirectoryResponseModel = new StaffDirectoryResponseModel();
+						staffDirectoryResponseModel.setStaffId(loginModel.getSchoolStaffModel().getSchoolStaffId());
+						staffDirectoryResponseModel.setStaffName(loginModel.getSchoolStaffModel().getFirstName() + " "
+								+ loginModel.getSchoolStaffModel().getLastName());
+						staffDirectoryResponseModel
+								.setDepartment(loginModel.getSchoolStaffModel().getDepartmentModel().getDepartment());
+						staffDirectoryResponseModel.setDesignation(
+								loginModel.getSchoolStaffModel().getDesignationModel().getDesignation());
+						staffDirectoryResponseModel.setEmail(loginModel.getSchoolStaffModel().getEmailId());
+						staffDirectoryResponseModel.setPhone(loginModel.getSchoolStaffModel().getPhone());
+						staffDirectoryResponseModel
+								.setCategory(loginModel.getSchoolStaffModel().getCategoryModel().getCategory());
+						staffDirectoryResponseModel
+								.setLastModifiedDate(String.valueOf(loginModel.getSchoolStaffModel().getUpdatedDate()));
+						staffDirectoryResponseModel.setSchoolID(directoryRequestModel.getSchoolID());
+						staffResponseList.add(staffDirectoryResponseModel);
+						staffDirectoryFinalModel.setResponseStatus("Success");
+						staffDirectoryFinalModel.setDirectoryResponseModels(staffResponseList);
+
+					}
+					return staffDirectoryFinalModel;
+				} else {
+					staffDirectoryFinalModel.setResponseStatus("Success");
+					staffDirectoryFinalModel.setDirectoryResponseModels(new ArrayList<>());
+					return staffDirectoryFinalModel;
+				}
+			} else {
+				staffDirectoryFinalModel.setResponseStatus("Invalid User");
+			}
+			return staffDirectoryFinalModel;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			StaffDirectoryFinalModel staffDirectoryFinalModel = new StaffDirectoryFinalModel();
+			staffDirectoryFinalModel.setResponseStatus("Failed");
+			return staffDirectoryFinalModel;
+		}
+
+	}
+
+}

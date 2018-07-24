@@ -1,0 +1,26 @@
+package com.zs.cws.ws.android.leave.model;
+
+public class FinalLeaveStatusResponse {
+	
+	String status;
+
+	public FinalLeaveStatusResponse() {
+	
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalLeaveStatusResponse [status=" + status + "]";
+	}
+	
+	
+
+}

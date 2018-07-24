@@ -1,0 +1,66 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+import java.util.List;
+
+public class ProgressReportRequest {
+
+	int schoolID;
+	int examID;
+	int staffID;
+	int divisionID;
+	List<StudentList>studentList;
+	
+	public ProgressReportRequest() {
+	
+	}
+
+	public int getExamID() {
+		return examID;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public void setExamID(int examID) {
+		this.examID = examID;
+	}
+
+	public int getStaffID() {
+		return staffID;
+	}
+
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public List<StudentList> getStudentList() {
+		return studentList;
+	}
+
+	public void setStudentList(List<StudentList> studentList) {
+		this.studentList = studentList;
+	}
+
+	@Override
+	public String toString() {
+		return "ProgressReportRequest [schoolID=" + schoolID + ", examID=" + examID + ", staffID=" + staffID
+				+ ", divisionID=" + divisionID + ", studentList=" + studentList + "]";
+	}
+
+	
+	
+	
+}

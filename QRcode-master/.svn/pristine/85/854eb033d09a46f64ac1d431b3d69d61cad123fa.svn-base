@@ -1,0 +1,65 @@
+package com.zs.cws.superadmin.management.dao;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+
+@Repository
+@Transactional
+public class ManagementIMPL implements ManagementDAO {
+
+	@Autowired
+	EntityManager entityManager;
+	@Autowired
+	ManagementRepository managementRepository;
+
+	public boolean isAvailable(ManagementModel managementModel) {
+		String query = "";
+		if (managementModel.getManagementID() != 0) {
+			query = "select count(*) from ManagementModel where (managementName=? or emailID=? or phone=?) and managementID <> "
+					+ managementModel.getManagementID() + "";
+		} else {
+			query = "select count(*) from ManagementModel where managementName=? or emailID=? or phone=? ";
+		}
+		
+		
+		
+		Query query2 = entityManager.createQuery(query);
+		query2.setParameter(1, managementModel.getManagementName());
+		query2.setParameter(2, managementModel.getPhone());
+		query2.setParameter(3, managementModel.getEmailID());
+		boolean exists = (Long) (query2).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public ManagementModel getLastInsertedEntry() {
+		String query = "FROM ManagementModel ORDER BY managementID DESC";
+		ManagementModel managementModel = (ManagementModel) entityManager.createQuery(query).setMaxResults(1)
+				.getSingleResult();
+		return managementModel;
+	}
+
+	@Override
+	public Object isRegisteredPhone(String phone) {
+		String query = "SELECT COUNT(phone) FROM ManagementModel WHERE phone='" + phone + "'";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public Object isRegisteredEmail(String emailIDs) {
+		System.out.println("EMAL::::::::::::" + emailIDs);
+		String query = "SELECT COUNT(emailID) FROM ManagementModel WHERE emailID='" + emailIDs + "'  ";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		System.out.println("AAAAAAAAAAAaaaaaaaa" + a);
+		return a > 0;
+	}
+
+}

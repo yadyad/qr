@@ -1,0 +1,114 @@
+package com.zs.cws.ws.hybrid.calendar.model;
+
+import java.util.List;
+import java.util.Map;
+
+public class CalenderResponseModel {
+	String status;
+	int schoolID;
+	String startYear;
+	String startMonth;
+	String endYear;
+	String endMonth;
+
+	Map<String, List<CalendarEvents>> calenderMap;
+
+	public CalenderResponseModel() {
+	}
+	
+	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	
+	public String getStartYear() {
+		return startYear;
+	}
+
+
+
+	public void setStartYear(String startYear) {
+		this.startYear = startYear;
+	}
+
+
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+
+
+	public String getStartMonth() {
+		return startMonth;
+	}
+
+
+
+	public void setStartMonth(String startMonth) {
+		this.startMonth = startMonth;
+	}
+
+
+
+	public String getEndYear() {
+		return endYear;
+	}
+
+
+
+	public void setEndYear(String endYear) {
+		this.endYear = endYear;
+	}
+
+
+
+	public String getEndMonth() {
+		return endMonth;
+	}
+
+
+
+	public void setEndMonth(String endMonth) {
+		this.endMonth = endMonth;
+	}
+
+
+
+	public Map<String, List<CalendarEvents>> getCalenderMap() {
+		return calenderMap;
+	}
+	
+	
+
+	
+
+	public void setCalenderMap(Map<String, List<CalendarEvents>> calenderMap) {
+		this.calenderMap = calenderMap;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "CalenderResponseModel [status=" + status + ", schoolID=" + schoolID + ", startYear=" + startYear
+				+ ", startMonth=" + startMonth + ", endYear=" + endYear + ", endMonth=" + endMonth + ", calenderMap="
+				+ calenderMap + "]";
+	}
+	
+	
+
+}

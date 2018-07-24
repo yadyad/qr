@@ -1,0 +1,28 @@
+package com.zs.cws.superadmin.master.paymentmode.dao;
+
+import javax.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.superadmin.master.paymentmode.model.PaymentModeModel;
+
+@Repository
+public class PaymentModeIMPL implements PaymentModeDAO{
+	
+	
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public boolean isAvailable(PaymentModeModel paymentModeModel) {
+		String query = "";
+		if (paymentModeModel.getPaymentModeId() != 0) {
+			query = "select count(*) from PaymentModeModel where paymentType= ? and paymentModeId <> " + paymentModeModel.getPaymentModeId() + "";
+		} else {
+			query = "select count(*) from  PaymentModeModel where paymentType=?";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, paymentModeModel.getPaymentType().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+}

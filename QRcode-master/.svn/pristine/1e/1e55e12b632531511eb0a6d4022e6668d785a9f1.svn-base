@@ -1,0 +1,74 @@
+package com.zs.cws.utils;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.swing.JOptionPane;
+
+public class DateParsor {
+
+	public static java.sql.Date parseDate(String stringDate) {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+		java.util.Date date = null;
+		try {
+			date = sdf1.parse(stringDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
+
+		return sqlStartDate;
+	}
+
+	// Method for convert string date to another string date
+	public static String parseDateString(String stringDate) {
+		DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd");
+		fromFormat.setLenient(false);
+		DateFormat toFormat = new SimpleDateFormat("MM/dd/yyyy");
+		toFormat.setLenient(false);
+		Date date = null;
+		try {
+			date = fromFormat.parse(stringDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return toFormat.format(date);
+	}
+
+	public static String parseDateFromStringToString(String stringDate) {
+		DateFormat fromFormat = new SimpleDateFormat("MM/dd/yyyy");
+		fromFormat.setLenient(false);
+		DateFormat toFormat = new SimpleDateFormat("yyyy-MM-dd");
+		toFormat.setLenient(false);
+		Date date = null;
+		try {
+			date = fromFormat.parse(stringDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return toFormat.format(date);
+	}
+
+	public static Date addDays(Date date, int days) {
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days);
+		return cal.getTime();
+	}
+
+	public static void main(String args[]) throws ParseException {
+		// System.out.println(parseDateString("2010-09-09"));
+		Date date = new Date();
+		System.out.println("after 4 days" + addDays(date, 4));
+	}
+
+}

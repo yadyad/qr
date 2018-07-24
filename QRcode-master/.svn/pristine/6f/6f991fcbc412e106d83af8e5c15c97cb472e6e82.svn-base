@@ -1,0 +1,61 @@
+package com.zs.cws.resetpassword.controller;
+
+import java.security.Principal;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.resetpassword.dao.ResetPasswordDAO;
+import com.zs.cws.resetpassword.model.ResetPasswordModel;
+import com.zs.cws.superadmin.schoolstaff.repository.LoginRepository;
+
+@Controller
+@RequestMapping("/resetpassword")
+public class ResetPasswordController {
+
+	@Autowired
+	ResetPasswordDAO resetPasswordDAO;
+	@Autowired
+	LoginRepository loginRepository;
+
+	@RequestMapping()
+
+	public ModelAndView resetPasswordView(@ModelAttribute("resetpassword") ResetPasswordModel resetPasswordModel,
+			@RequestParam(value = "message", required = false) String message) {
+		ModelAndView modelAndView = new ModelAndView("resetPassword-view");
+		modelAndView.addObject("resetpassworda", "active");
+		modelAndView.addObject("message", message);
+		return modelAndView;
+	}
+
+	@RequestMapping("/save")
+	public ModelAndView newPassword(@ModelAttribute("resetpassword") ResetPasswordModel resetPasswordModel,
+			HttpSession session, Principal principal, RedirectAttributes redirectAttributes) {
+		ModelAndView modelAndView = new ModelAndView("redirect:/login");
+		LoginModel loginModel = resetPasswordDAO.checkUserName(resetPasswordModel, principal.getName());
+		if (loginModel.getLoginId() != 0) {
+			if (resetPasswordModel.getNewPassword().equals(resetPasswordModel.getConfirmPassword())) {
+				loginModel.setPassword(resetPasswordModel.getNewPassword());
+				loginModel.setLoginCount(1);
+				loginRepository.save(loginModel);
+			} else {
+				redirectAttributes.addAttribute("message", "Mismatched new and confirm password!");
+				modelAndView.setViewName("redirect:/resetpassword");
+			}
+		} else {
+			redirectAttributes.addAttribute("message", "Wrong password!");
+			modelAndView.setViewName("redirect:/resetpassword");
+		}
+
+		return modelAndView;
+
+	}
+}

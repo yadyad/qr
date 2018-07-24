@@ -1,0 +1,21 @@
+package com.zs.cws.superadmin.schoolfeature.dao;
+
+import java.util.List;
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+
+public interface SchoolFeatureDAO {
+
+	public List<SchoolFeatureModel> getSchoolFeatureList(int schoolID);
+	public List<SchoolFeatureModel> getSchoolFeatureListForWeb(int schoolID);
+
+	public List<FeatureModel> getRemainingSchoolFeatureList(int schoolID);
+
+	public void deleteAllFeatures(int schoolID);
+	
+	public List<String> listAllFeatures(int schoolID,String type);
+
+	public List<SchoolFeatureModel> getSchoolFeatureListForPrincipal(int row_id, String principal);
+	public List<SchoolFeatureModel> getSchoolFeatureListMain(int schoolID);
+}

@@ -1,0 +1,102 @@
+package com.zs.cws.ws.android.license.model;
+
+import java.util.List;
+
+public class SchoolLicenceModel {
+
+	int schoolID;
+	String schoolName;
+	String schoolLogo;
+	int staffID;
+	String staffName;
+	
+	List<SchoolChildrenModel> schoolChildrenModels;
+	List<SchoolClassModel> schoolClassModels;
+	List<String> parentFeature;
+	List<String> teacherFeature;
+	
+	
+	public SchoolLicenceModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public String getSchoolLogo() {
+		return schoolLogo;
+	}
+
+	public void setSchoolLogo(String schoolLogo) {
+		this.schoolLogo = schoolLogo;
+	}
+
+	public List<SchoolChildrenModel> getSchoolChildrenModels() {
+		return schoolChildrenModels;
+	}
+
+	public void setSchoolChildrenModels(List<SchoolChildrenModel> schoolChildrenModels) {
+		this.schoolChildrenModels = schoolChildrenModels;
+	}
+
+	public List<String> getParentFeature() {
+		return parentFeature;
+	}
+
+	public void setParentFeature(List<String> parentFeature) {
+		this.parentFeature = parentFeature;
+	}
+
+	public List<String> getTeacherFeature() {
+		return teacherFeature;
+	}
+
+	public void setTeacherFeature(List<String> teacherFeature) {
+		this.teacherFeature = teacherFeature;
+	}
+
+	public List<SchoolClassModel> getSchoolClassModels() {
+		return schoolClassModels;
+	}
+
+	public void setSchoolClassModels(List<SchoolClassModel> schoolClassModels) {
+		this.schoolClassModels = schoolClassModels;
+	}
+
+
+	public int getStaffID() {
+		return staffID;
+	}
+
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	@Override
+	public String toString() {
+		return "SchoolLicenceModel [schoolID=" + schoolID + ", schoolName=" + schoolName + ", schoolLogo=" + schoolLogo
+				+ ", schoolChildrenModels=" + schoolChildrenModels + ", schoolClassModels=" + schoolClassModels
+				+ ", parentFeature=" + parentFeature + ", teacherFeature=" + teacherFeature + "]";
+	}
+
+}

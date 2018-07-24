@@ -1,0 +1,57 @@
+package com.zs.cws.schooladmin.settings.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.settings.model.AcademicModel;
+import com.zs.cws.schooladmin.settings.model.FeesStructureModel;
+
+@Repository
+@Transactional
+public class AcademicYearIMPL implements AcademicYearDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public AcademicModel getAcademicYear(int schoolID) {
+		String query = " FROM AcademicModel WHERE schoolModel.schoolId=" + schoolID;
+		
+		AcademicModel AcademicModel = (AcademicModel) entityManager.createQuery(query).setMaxResults(1)
+				.getSingleResult();
+		return AcademicModel;
+	}
+
+	@Override
+	public boolean isAvaliableFees(int schoolID) {
+		String query = "From FeesStructureModel where schoolModel.schoolId = '" + schoolID + "' ";
+		@SuppressWarnings("unchecked")
+		List<FeesStructureModel> feesStructureModels = entityManager.createQuery(query).getResultList();
+		System.out.println("EMPTTTTTTTTTTTT::>>>" + feesStructureModels.toString());
+		if (feesStructureModels.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<FeesStructureModel> getFees(int schoolID) {
+		String query = "From FeesStructureModel where schoolModel.schoolId = '" + schoolID + "' ";
+		List<FeesStructureModel> feesStructureModels = entityManager.createQuery(query).getResultList();
+		return feesStructureModels;
+	}
+
+	@Override
+	public List<AcademicModel> findAcademicDetails(int schoolID) {
+		String query = "From AcademicModel where schoolModel.schoolId =  '"+schoolID+"'";
+		List<AcademicModel>academicModels = entityManager.createQuery(query).getResultList();
+		return academicModels;
+	}
+
+}
+
+

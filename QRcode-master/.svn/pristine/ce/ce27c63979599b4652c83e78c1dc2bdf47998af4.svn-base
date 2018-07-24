@@ -1,0 +1,60 @@
+package com.zs.cws.ws.android.principalquotes.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.principalquotes.dao.PrincipalQuoteDAO;
+import com.zs.cws.schooladmin.principalquotes.model.PrincipalQuoteModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.ws.android.principalquotes.model.PrincipalQuoteRequest;
+import com.zs.cws.ws.android.principalquotes.model.PrincipalQuoteResponse;
+
+@RestController
+@RequestMapping("android/principalquotes")
+public class PrincipalQuoteServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	PrincipalQuoteDAO principalQuoteDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listPrincipalQuotes(HttpServletRequest request,
+			@RequestBody PrincipalQuoteRequest principalQuoteRequest) {
+		try {
+			if (schoolDAO.isValidSchool(principalQuoteRequest.getSchoolID())) {
+				PrincipalQuoteResponse quoteResponse = new PrincipalQuoteResponse();
+				List<PrincipalQuoteModel> principalQuoteModels = principalQuoteDAO
+						.getPrincipalQuotes(principalQuoteRequest.getSchoolID());
+				for (PrincipalQuoteModel principalQuoteModel : principalQuoteModels) {
+					quoteResponse.setStatus("Success");
+					quoteResponse.setTitle(principalQuoteModel.getTitle());
+					quoteResponse.setDescription(principalQuoteModel.getDesc());
+					quoteResponse.setPrincipalImage(principalQuoteModel.getPrincipalImage());
+					
+				}
+				return quoteResponse;
+			} else {
+				PrincipalQuoteResponse quoteResponse = new PrincipalQuoteResponse();
+				quoteResponse.setStatus("Invalid User");
+				return quoteResponse;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			PrincipalQuoteResponse quoteResponse = new PrincipalQuoteResponse();
+			quoteResponse.setStatus("Failed");
+			return quoteResponse;
+		}
+	}
+
+}

@@ -1,0 +1,34 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+import java.util.List;
+
+public class MeetingMembersResponseModel {
+	String responseStatus;
+	List<MeetingMembersModel> meetingMemberList;
+
+	public MeetingMembersResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public List<MeetingMembersModel> getMeetingMemberList() {
+		return meetingMemberList;
+	}
+
+	public void setMeetingMemberList(List<MeetingMembersModel> meetingMemberList) {
+		this.meetingMemberList = meetingMemberList;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingMembersResponseModel [responseStatus=" + responseStatus + ", meetingMemberList="
+				+ meetingMemberList + "]";
+	}
+
+}

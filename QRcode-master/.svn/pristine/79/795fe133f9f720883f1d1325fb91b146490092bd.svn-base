@@ -1,0 +1,52 @@
+package com.zs.cws.ws.android.dairy.model;
+
+
+public class DairyMessageFinalResponseModel {
+
+	String responseStatus;
+	String messageDate;
+	int position;
+	int messageID;
+	
+
+	public DairyMessageFinalResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public int getMessageID() {
+		return messageID;
+	}
+
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
+	public String getMessageDate() {
+		return messageDate;
+	}
+
+	public void setMessageDate(String messageDate) {
+		this.messageDate = messageDate;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	@Override
+	public String toString() {
+		return "DairyMessageFinalResponseModel [responseStatus=" + responseStatus + ", messageDate=" + messageDate
+				+ ", messageID=" + messageID + "]";
+	}
+}

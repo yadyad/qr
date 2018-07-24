@@ -1,0 +1,9 @@
+package com.zs.cws.ws.android.complaintbox.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxModel;
+
+public interface ComplaintBoxRepository extends JpaRepository<ComplaintBoxModel, Integer> {
+
+}

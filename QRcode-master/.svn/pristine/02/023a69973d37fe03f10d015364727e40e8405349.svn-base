@@ -1,0 +1,267 @@
+package com.zs.cws.payment.service;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class IntegrationProcessServices {
+     //For Test
+//	String domain = "http://mpos.sandbox.paynear.in:8080/epay/";
+	// For Live
+	String domain = "https://secure.paynear.in/epay/";
+	
+	String paymentService = "/payment/request";
+	String statusService = "/payment/status";
+	String verifyService = "/payment/verify";
+	String refundService = "/payment/refund";
+	//For Test
+ 	/*final static String merchantId = "1007866";
+	final static String secureKey = "38CED0C5D1BFC630EB6FE15CD91D9631";*/
+	//For live
+	final static String merchantId = "1028309";
+	final static String secureKey = "7B95D637D882905B96ED552143A9C5D1";
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> initiatePayment(Map<String,Object> dataMap) throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+		//adding merchant id to data map
+		dataMap.put("merchantId", merchantId);
+		//generating secure hash
+		String secureHash = generateSecureHash(dataMap, secureKey);
+		//adding secure hash to data map
+		dataMap.put("secureHash", secureHash);
+		
+		// posting request to paynear server
+		RestTemplate template = new RestTemplate();
+		ObjectMapper mapper = new ObjectMapper();
+		 Map<String,Object> responseDataMap = new HashMap<String, Object>();
+		String jsonResponse = template.postForObject(domain+paymentService, getJsonFromMap(dataMap), String.class);
+		
+		//reading total response data into map
+		responseDataMap = mapper.readValue(jsonResponse, Map.class);
+		System.out.println("Response Map::"+responseDataMap.toString());
+		
+		//removing secureHash from response map
+		String secureHashResponse = (String)responseDataMap.remove("secureHash");
+		//generating secureHash for response
+		String generatedSecureHash  = generateSecureHash(responseDataMap, secureKey);
+		responseDataMap.put("secureHash",secureHashResponse);
+		//checking generated secureHash and paynear end secureHash are equal or not.
+		if(generatedSecureHash != null && generatedSecureHash.equals(secureHashResponse)) 
+		{
+				//for successful request responseMessage will be 'Success' and responseCode will be '000'
+				if("Success".equalsIgnoreCase((String)responseDataMap.get("responseMessage")) && "000".equalsIgnoreCase((String)responseDataMap.get("responseCode"))) 
+				{
+					
+					if(dataMap.get("amount").equals((String)responseDataMap.get("amount"))) 
+					{
+						if(dataMap.get("referenceNo").equals(responseDataMap.get("referenceNo"))) {
+						
+							// success 
+		        			// redirection needs to be happen here, redirection url will dynamically assigned for every successfull order in redirectURL filed in response 
+		        			// now customer will redirected to paynear payment page.
+		        			// redirection url should be post method only
+		        			// redirect:requestResponseVO.getRedirectURL();
+							
+						}else {
+							//Failed
+							// throw ResponseError message with ReferenceNo is not matching
+						}
+						
+					}else {
+						//Failed
+						// Amount is not matching
+					}
+					
+				}else {
+					 //Failed
+		        	 //Appropriate response message and response code will be given
+				}
+			
+		}else {
+			
+			// Response details correpted 
+		}
+		
+		return responseDataMap;
+    }
+	
+	//Status Check Process Method
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> getTransactionStatusProcess(Map<String,Object> dataMap) throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+		
+		
+		dataMap.remove("secureHash");
+		dataMap.remove("responseMessage");
+		dataMap.remove("responseCode");
+		dataMap.remove("paymentMethod");
+		dataMap.remove("txnDateNTime");
+		dataMap.remove("currencyCode");
+		dataMap.remove("paymentBrand");
+		
+		//calculating secureHash
+		String generatedhash = generateSecureHash(dataMap , secureKey);
+		//adding secureHash to data map
+		dataMap.put("secureHash", generatedhash);
+		// posting request to paynear server
+		RestTemplate template = new RestTemplate();
+		ObjectMapper mapper = new ObjectMapper();
+		 Map<String,Object> statusResponseMap = new HashMap<String, Object>();
+		String jsonResponse = template.postForObject(domain+statusService, getJsonFromMap(dataMap), String.class);
+		
+		statusResponseMap = mapper.readValue(jsonResponse, Map.class);
+		System.out.println("Response Map::"+statusResponseMap.toString());
+		String secureHashResponse = (String)statusResponseMap.remove("secureHash");
+		String statusSecureHash = generateSecureHash(statusResponseMap, secureKey);
+	     statusResponseMap.put("secureHash", secureHashResponse);   
+	  // important to check both checksums values
+	        if(statusSecureHash!=null && statusSecureHash.equals(secureHashResponse))
+            {
+            	if( "Success".equals(statusResponseMap.get("responseMessage")) && "000".equals(statusResponseMap.get("responseCode"))) {
+		            	//validate amount
+		            	//validate order ref no
+		            	//once all validations are success then payment is success
+		            }else {
+		            	//failed
+		            }
+            }
+            else
+            {
+            	//response correpted
+            }
+	        
+		return statusResponseMap;
+	}
+	
+	//Verification  Process Method
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> getVerificationProcessForRequestDataMap(Map<String,Object> dataMap) throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+	
+		// calculating checksum by placing the code 
+		String generatedhash = generateSecureHash(dataMap , secureKey);
+		dataMap.put("secureHash", generatedhash);
+		// important to check both checksums values
+		RestTemplate template = new RestTemplate();
+		ObjectMapper mapper = new ObjectMapper();
+		 Map<String,Object> verifyResponseMap = new HashMap<String, Object>();
+		String jsonResponse = template.postForObject(domain+verifyService, getJsonFromMap(dataMap), String.class);
+		
+		verifyResponseMap = mapper.readValue(jsonResponse, Map.class);
+		System.out.println("Response Map::"+verifyResponseMap.toString());
+		
+		
+		String secureHash = (String)verifyResponseMap.remove("secureHash");
+	    String statusSecureHash = generateSecureHash(verifyResponseMap, secureKey);
+	    
+	    verifyResponseMap.put("secureHash", secureHash);
+	    //need to check both secureHashs are matched or not
+	    if(statusSecureHash!=null && statusSecureHash.equals(secureHash))
+	        {
+            	if( "Success".equals(verifyResponseMap.get("responseMessage")) && "000".equals(verifyResponseMap.get("responseCode"))) {
+		            	//validate amount
+		            	//validate order ref no
+		            }else {
+		            	//failed
+		            }
+            }
+            else
+            {
+            	//response correpted
+            }
+	        
+		return verifyResponseMap;
+	}
+	
+	
+	//Refund Process Flow
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> getRefundRequestProcess(Map<String,Object> dataMap) throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
+		// calculating checksum by placing the code 
+		String generatedhash = generateSecureHash(dataMap , secureKey);
+		dataMap.put("secureHash", generatedhash);
+		// important to check both checksums values
+		RestTemplate template = new RestTemplate();
+		ObjectMapper mapper = new ObjectMapper();
+		 Map<String,Object> refundResponseMap = new HashMap<String, Object>();
+		String jsonResponse = template.postForObject(domain+refundService, getJsonFromMap(dataMap), String.class);
+		
+		refundResponseMap = mapper.readValue(jsonResponse, Map.class);
+		System.out.println("Response Map::"+refundResponseMap.toString());
+	     
+		String secureHash = (String)refundResponseMap.remove("secureHash");
+		
+		String statusSecureHash = generateSecureHash(refundResponseMap, secureKey);
+	    refundResponseMap.put("secureHash", secureHash);    
+	    //validate secureHash
+		if(statusSecureHash!=null && statusSecureHash.equals(secureHash))
+            {
+            	if("303".equals(refundResponseMap.get("responseCode"))) {
+		            	//validate amount
+		            	//validate order ref no
+		            }else {
+		            	//failed
+		            }
+            }
+            else
+            {
+            	//response correpted
+            }
+	        
+		return refundResponseMap;
+		
+	}
+	
+	//calculating secureHash
+	public String generateSecureHash(Map<String,Object> dataMap,String securekey) throws NoSuchAlgorithmException, UnsupportedEncodingException 
+	{
+		TreeMap<String, Object> tree = new TreeMap<String, Object>(dataMap);
+		StringBuilder builder = new StringBuilder();
+		//adding secret key in starting position
+		builder.append(securekey);
+		//adding param values into single string separated by pipe(|)
+		for (Map.Entry<String,Object> element : tree.entrySet()) {
+			if(element.getValue()==null || element.getValue().equals("")) {
+				builder.append("|"+"");
+			}else {
+					builder.append("|"+element.getValue());
+			}
+		}
+			System.out.println("SecureHashData:"+ builder.toString());
+			//using sha-512 generating secure hash
+			MessageDigest digest = MessageDigest.getInstance("SHA-512");
+        	byte[] hash = digest.digest(builder.toString().getBytes("UTF-8"));
+        	StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        
+		return hexString.toString().toUpperCase();
+	}
+	
+	// this method is used for converting map to json string
+	 public static String getJsonFromMap(Map<String, Object> map)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.append("{");
+			for (Map.Entry<String,Object> element : map.entrySet()) {
+				if(element.getValue() instanceof Double || element.getValue() instanceof Long || element.getValue() instanceof Integer)
+					builder.append("\""+element.getKey()+"\""+":"+element.getValue()+",");
+				else
+					builder.append("\""+element.getKey()+"\""+":"+"\""+element.getValue()+"\""+",");
+			}
+			builder.replace(builder.length()-1, builder.length() , "}");
+			return builder.toString();
+	}
+	 
+}

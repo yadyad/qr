@@ -1,0 +1,39 @@
+package com.zs.cws.ws.hybrid.license.model;
+
+public class LicenseRequestPOJO {
+
+	String type;
+	String phoneNumber;
+	String fcmTocken;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getFcmTocken() {
+		return fcmTocken;
+	}
+
+	public void setFcmTocken(String fcmTocken) {
+		this.fcmTocken = fcmTocken;
+	}
+
+	@Override
+	public String toString() {
+		return "LicenseRequestPOJO [type=" + type + ", phoneNumber=" + phoneNumber + ", fcmTocken=" + fcmTocken + "]";
+	}
+
+
+}

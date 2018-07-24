@@ -1,0 +1,156 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.schooladmin.meetingtask.repository.PrincipalMeetingTaskRepository;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingRepository;
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.utils.FCMSender;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingFCM;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingServiceRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalMeetingStatusModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalResponseModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementRequestModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingRepository;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingStatusRepository;
+
+@RestController
+@RequestMapping("/hybrid/management")
+public class ManagementMeetingServiceController {
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	ManagementRepository managementRepository;
+	@Autowired
+	ManagementMeetingRepository managementMeetingRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	
+	@Autowired
+	SchoolRepository schoolRepository;
+	
+	@Autowired
+	SchoolDAO schoolDAO;
+	
+	@Autowired
+	PrincipalMeetingRepository principalMeetingRepo;
+	
+	@Autowired
+	ManagementMeetingStatusRepository managementMeetingStatusRepository;
+	
+	@Autowired
+	PrincipalMeetingTaskRepository principalMeetingTaskRepository;
+	
+
+	@RequestMapping(value = { "/getprincipals" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request,
+			@RequestBody ManagementRequestModel meetingModel) {
+		ManagementPrincipalResponseModel managementPrincipalResponseModel = new ManagementPrincipalResponseModel();
+		try {
+			List<ManagementPrincipalModel> principalList = schoolStaffDAO
+					.getPrincipalsFromManagement(meetingModel.getManagementID());
+			managementPrincipalResponseModel.setResponseStatus("Success");
+			managementPrincipalResponseModel.setPrincipalList(principalList);
+			return managementPrincipalResponseModel;
+		} catch (Exception e) {
+			managementPrincipalResponseModel.setResponseStatus("Failed");
+			managementPrincipalResponseModel.setPrincipalList(new ArrayList<>());
+			return managementPrincipalResponseModel;
+		}
+	}
+
+	@RequestMapping(value = { "/addmeeting" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object addmeeting(HttpServletRequest request,
+			@RequestBody ManagementMeetingServiceRequestModel meetingServiceRequestModel) {
+		ManagementPrincipalResponseModel managementPrincipalResponseModel = new ManagementPrincipalResponseModel();
+		try {
+			ManagementMeetingModel managementMeetingModel = new ManagementMeetingModel();
+			managementMeetingModel.setMeetingDate(meetingServiceRequestModel.getMeetingDate());
+			managementMeetingModel.setMeetingTime(meetingServiceRequestModel.getMeetingTime());
+			managementMeetingModel.setPurpose(meetingServiceRequestModel.getPurpose());
+			managementMeetingModel.setVenue(meetingServiceRequestModel.getVenue());
+			managementMeetingModel.setAgenda(meetingServiceRequestModel.getAgenda());
+			ManagementModel managementModel = managementRepository
+					.findOne(meetingServiceRequestModel.getManagementID());
+			managementMeetingModel.setManagementModel(managementModel);
+			managementMeetingRepository.save(managementMeetingModel);
+			
+			if(meetingServiceRequestModel.getPrincipalLists().get(0)==0){
+				List<ManagementPrincipalModel> principalsList=schoolStaffDAO.getPrincipalsFromManagement(meetingServiceRequestModel.getManagementID());
+				List<Integer> principalList=new ArrayList<>();
+				for(ManagementPrincipalModel managementPrincipalModel:principalsList){
+					principalList.add(managementPrincipalModel.getPrincipalID());
+				}
+				meetingServiceRequestModel.setPrincipalLists(principalList);
+			}
+			if (managementMeetingModel.getMeetingID() != 0) {
+				for (int principalID : meetingServiceRequestModel.getPrincipalLists()) {
+				/*	PrincipalMeetingModel principalMeetingModel = new PrincipalMeetingModel();
+					principalMeetingModel.setAgenda(meetingServiceRequestModel.getAgenda());
+					principalMeetingModel.setMeetingTime(meetingServiceRequestModel.getMeetingTime());
+					principalMeetingModel.setMeetingDate(meetingServiceRequestModel.getMeetingDate());
+					principalMeetingModel.setPurpose(meetingServiceRequestModel.getPurpose());
+					principalMeetingModel.setVenue(meetingServiceRequestModel.getVenue());
+					SchoolStaffModel schoolStaffModel = schoolStaffRepository.findOne(principalID);
+					principalMeetingModel.setSchoolStaffModel(schoolStaffModel);
+					List<SchoolModel> schoolModels = schoolDAO.getSchoolByPrincipal(meetingServiceRequestModel.getPrincipalLists());
+					for (SchoolModel schoolModel : schoolModels) {
+						principalMeetingModel.setSchoolModel(schoolModel);
+					}
+					
+					SchoolModel schoolModel  = schoolRepository.findOne(schoolStaffModel.getSchoolModel().getSchoolId());
+					principalMeetingModel.setSchoolModel(schoolModel);
+					principalMeetingRepo.save(principalMeetingModel);*/
+					
+					
+					
+					ManagementPrincipalMeetingStatusModel meetingStatusModel = new ManagementPrincipalMeetingStatusModel();
+					meetingStatusModel.setManagementMeetingModel(managementMeetingModel);
+					meetingStatusModel.setManagementModel(managementModel);
+					meetingStatusModel.setStatus(0);
+					meetingStatusModel.setSchoolStaffModel(schoolStaffRepository.findOne(principalID));
+					
+					managementMeetingStatusRepository.save(meetingStatusModel);
+
+					
+					ManagementMeetingFCM managementMeetingFCM = new ManagementMeetingFCM();
+					managementMeetingFCM.setMeetingPurpose(managementMeetingModel.getPurpose());
+					managementMeetingFCM.setMeetingTime(managementMeetingModel.getMeetingTime());
+					managementMeetingFCM.setVenue(managementMeetingModel.getVenue());
+					SchoolStaffModel schoolStaffModel1 = schoolStaffRepository.findOne(principalID);
+					managementMeetingFCM.setSchoolID(schoolStaffModel1.getSchoolModel().getSchoolId());
+					
+					FCMSender.fcmTest1(managementMeetingFCM, schoolStaffModel1.getFcmTocken(), "Office");
+		
+				}
+			}
+			managementPrincipalResponseModel.setResponseStatus("Success");
+			return managementPrincipalResponseModel;
+		} catch (Exception e) {
+			managementPrincipalResponseModel.setResponseStatus("Failed");
+			e.printStackTrace();
+			return managementPrincipalResponseModel;
+		}
+	}
+}

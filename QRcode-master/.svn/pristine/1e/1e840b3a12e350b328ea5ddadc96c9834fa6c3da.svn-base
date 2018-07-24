@@ -1,0 +1,27 @@
+package com.zs.cws.ws.android.dairy.model;
+
+public class MessageDeliverResponseModel {
+	String responseStatus;
+	DiaryMessageResponseModel diaryMessageResponseModel;
+	public MessageDeliverResponseModel() {
+	}
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+	public DiaryMessageResponseModel getDiaryMessageResponseModel() {
+		return diaryMessageResponseModel;
+	}
+	public void setDiaryMessageResponseModel(DiaryMessageResponseModel diaryMessageResponseModel) {
+		this.diaryMessageResponseModel = diaryMessageResponseModel;
+	}
+	@Override
+	public String toString() {
+		return "MessageDeliverResponseModel [responseStatus=" + responseStatus + ", diaryMessageResponseModel="
+				+ diaryMessageResponseModel + "]";
+	}
+	
+	
+}

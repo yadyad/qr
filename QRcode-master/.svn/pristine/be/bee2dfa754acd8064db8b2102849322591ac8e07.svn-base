@@ -1,0 +1,51 @@
+package com.zs.cws.ws.android.student.model;
+
+public class StudentServiceRequestModel {
+
+	int schoolID;
+	int divisionID;
+	String phoneNumber;
+	String lastModifieddate;
+
+	public StudentServiceRequestModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getLastModifieddate() {
+		return lastModifieddate;
+	}
+
+	public void setLastModifieddate(String lastModifieddate) {
+		this.lastModifieddate = lastModifieddate;
+	}
+
+	@Override
+	public String toString() {
+		return "StudentServiceRequestModel [schoolID=" + schoolID + ", divisionID=" + divisionID + ", phoneNumber="
+				+ phoneNumber + ", lastModifieddate=" + lastModifieddate + "]";
+	}
+
+}

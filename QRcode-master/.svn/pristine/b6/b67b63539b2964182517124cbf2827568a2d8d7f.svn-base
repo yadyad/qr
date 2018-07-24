@@ -1,0 +1,34 @@
+package com.zs.cws.ws.android.myclass.model;
+
+import java.util.List;
+
+public class MyClassFinalModel {
+
+	String responsStatus;
+	List<MyClassServiceResponseModel> myClassList;
+
+	public MyClassFinalModel() {
+	}
+
+	public String getResponsStatus() {
+		return responsStatus;
+	}
+
+	public void setResponsStatus(String responsStatus) {
+		this.responsStatus = responsStatus;
+	}
+
+	public List<MyClassServiceResponseModel> getMyClassList() {
+		return myClassList;
+	}
+
+	public void setMyClassList(List<MyClassServiceResponseModel> myClassList) {
+		this.myClassList = myClassList;
+	}
+
+	@Override
+	public String toString() {
+		return "MyClassFinalModel [responsStatus=" + responsStatus + ", myClassList=" + myClassList + "]";
+	}
+
+}

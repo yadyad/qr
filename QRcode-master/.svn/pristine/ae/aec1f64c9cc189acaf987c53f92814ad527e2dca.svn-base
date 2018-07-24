@@ -1,0 +1,63 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+public class MeetingFcmModel {
+
+	int schoolID;
+	int staffID;
+	String venue;
+	String meetingDate;
+	String meetingTime;
+	String time;
+	String purpose;
+	public MeetingFcmModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public String getVenue() {
+		return venue;
+	}
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+	public int getStaffID() {
+		return staffID;
+	}
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+	@Override
+	public String toString() {
+		return "MeetingFcmModel [schoolID=" + schoolID + ", staffID=" + staffID + ", venue=" + venue + ", meetingDate="
+				+ meetingDate + ", meetingTime=" + meetingTime + ", time=" + time + ", purpose=" + purpose + "]";
+	}
+}

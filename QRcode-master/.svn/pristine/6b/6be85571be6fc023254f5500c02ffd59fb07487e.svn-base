@@ -1,0 +1,25 @@
+package com.zs.cws.ws.hybrid.divisionandsubject.model;
+
+public class DivisionServiceModel {
+	int divisionID;
+	String division;
+	public DivisionServiceModel() {
+	}
+	public int getDivisionID() {
+		return divisionID;
+	}
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+	public String getDivision() {
+		return division;
+	}
+	public void setDivision(String division) {
+		this.division = division;
+	}
+	@Override
+	public String toString() {
+		return "DivisionServiceModel [divisionID=" + divisionID + ", division=" + division + "]";
+	}
+	
+}

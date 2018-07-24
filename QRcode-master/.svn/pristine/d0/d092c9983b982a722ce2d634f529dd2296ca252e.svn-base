@@ -1,0 +1,119 @@
+package com.zs.cws.schooladmin.driverroutes.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_driver_route_details")
+public class DriverRoutesModel {
+	
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int driverRouteID;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	@Column(name="route_from")
+	private String routeFrom;
+	
+	@Column(name="route_to")
+	private String routeTo;
+	
+	@Column(name="route_description")
+	private String routeDesc;
+	
+	@Column(name="created_date")
+	@DateTimeFormat
+	private Date createdDate;
+	
+	@Column(name="created_user")
+	private String createdUser;
+
+	public DriverRoutesModel() {
+		
+	}
+
+	public int getDriverRouteID() {
+		return driverRouteID;
+	}
+
+	public void setDriverRouteID(int driverRouteID) {
+		this.driverRouteID = driverRouteID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getRouteFrom() {
+		return routeFrom;
+	}
+
+	public void setRouteFrom(String routeFrom) {
+		this.routeFrom = routeFrom;
+	}
+
+	public String getRouteTo() {
+		return routeTo;
+	}
+
+	public void setRouteTo(String routeTo) {
+		this.routeTo = routeTo;
+	}
+
+	public String getRouteDesc() {
+		return routeDesc;
+	}
+
+	public void setRouteDesc(String routeDesc) {
+		this.routeDesc = routeDesc;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	@Override
+	public String toString() {
+		return "DriverRoutesModel [driverRouteID=" + driverRouteID + ", schoolModel=" + schoolModel + ", routeFrom="
+				+ routeFrom + ", routeTo=" + routeTo + ", routeDesc=" + routeDesc + ", createdDate=" + createdDate
+				+ ", createdUser=" + createdUser + "]";
+	}
+	
+	
+	
+	
+	
+	
+
+}

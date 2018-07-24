@@ -1,0 +1,37 @@
+package com.zs.cws.schooladmin.driverdetails.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.driverdetails.model.DriverDetailsModel;
+
+@Repository
+public class DriverDetailsIMPL implements DriverDetailsDAO {
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<DriverDetailsModel> getDriverDetails(int schoolID) {
+	String query = "From DriverDetailsModel where schoolModel.schoolId = '"+schoolID+"'";
+	List<DriverDetailsModel>driverDetailsModels = entityManager.createQuery(query).getResultList();
+		return driverDetailsModels;
+	}
+
+	@Override
+	public boolean isAvailable(DriverDetailsModel driverDetailsModel) {
+		String query = "";
+		if (driverDetailsModel.getDriverID() != 0) {
+			query = "select count(*) from DriverDetailsModel where phone=? and driverID <> " + driverDetailsModel.getDriverID() + "";
+		} else {
+			query = "select count(*) from DriverDetailsModel where phone=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, driverDetailsModel.getPhone().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+}

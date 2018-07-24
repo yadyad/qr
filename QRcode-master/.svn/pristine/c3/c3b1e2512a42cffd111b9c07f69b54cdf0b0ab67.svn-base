@@ -1,0 +1,23 @@
+package com.zs.cws.schooladmin.myclass.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.myclass.model.MyClassModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.ws.android.license.model.SchoolClassModel;
+
+public interface MyClassDAO {
+
+	List<MyClassModel> getMyClassDetails(int schoolID);
+	
+	List<MyClassModel> getMyClassByDivision(int divisionID);
+
+	Object isSubjectExist(String subjectId, int schoolID, String schoolDivId);
+
+	public List<SchoolClassModel> getAllClassesByStaff(int schoolID, String phone);
+
+	List<SchoolStaffModel> getMyClassDetails1( Integer[] selectedDivisions,  Integer[] selectedSubjects,int schoolID);
+
+	List<MyClassModel> getStaffDetails(int divisionID, int schoolID, String modifiedDate);
+
+}

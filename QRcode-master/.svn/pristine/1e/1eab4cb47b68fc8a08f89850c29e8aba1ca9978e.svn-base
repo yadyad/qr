@@ -1,0 +1,27 @@
+package com.zs.cws.ws.android.parentsearch.model;
+
+public class ParentSearchRequestModel {
+
+	int schoolID;
+	int studentID;
+	public ParentSearchRequestModel() {
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	@Override
+	public String toString() {
+		return "ParentSearchRequestModel [schoolID=" + schoolID + ", studentID=" + studentID + "]";
+	}
+	
+	
+}

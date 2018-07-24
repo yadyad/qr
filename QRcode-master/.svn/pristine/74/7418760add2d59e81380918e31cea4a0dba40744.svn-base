@@ -1,0 +1,10 @@
+package com.zs.cws.superadmin.master.managementposition.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.managementposition.model.ManagementPositionModel;
+
+
+public interface ManagementPositionRepository extends JpaRepository<ManagementPositionModel, Integer>{
+
+}

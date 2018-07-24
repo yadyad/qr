@@ -1,0 +1,75 @@
+package com.zs.cws.superadmin.paymenthistory.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.payment.dao.PaymentDAO;
+import com.zs.cws.payment.model.PaymentModel;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.utils.FileAction;
+
+@Controller
+@RequestMapping("superadmin/payment")
+public class PaymentHistoryController {
+
+	@Autowired
+	PaymentDAO paymentDAO;
+	@Autowired
+	SchoolRepository schoolRepository;
+	int schoolId;
+
+	@RequestMapping("paymentDetails")
+	public ModelAndView viewPayment(@RequestParam(value = "id", required = false) Integer schoolId) {
+		ModelAndView modelAndView = new ModelAndView("paymentDetails");
+		if (schoolId != null)
+			this.schoolId = schoolId;
+
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllPayments() {
+		List<PaymentModel> paymentModels = paymentDAO.getPaymentHistory(this.schoolId);
+		System.out.println("PAYMNET LIST>>>>>" + paymentModels);
+		return paymentModels;
+	}
+
+	@RequestMapping(value = "planDetailsGraph", method = RequestMethod.GET)
+	public @ResponseBody Object planView(@RequestParam(value = "id", required = false) Integer schoolId,
+			HttpServletRequest request) {
+
+		ModelAndView modelAndView = new ModelAndView("plandetails");
+		if (schoolId != null)
+			this.schoolId = schoolId;
+		SchoolModel schoolModel = schoolRepository.findOne(this.schoolId);
+		String path = "resources/img/" + schoolModel.getManagementModel().getManagementName() + "/"
+				+ schoolModel.getSchoolName();
+		System.out.println("SIZE:|||||||||||||||||||||||||||||||:>" + FileAction.getFileSize(request, path));
+		SubscriptionPlanActivationModel planModels = paymentDAO.getPlanDetails(this.schoolId);
+		Double dataSize;
+		if (planModels.getSubActivationID() != 0) {
+			dataSize = planModels.getSubsciptionPlanModel().getStorageSpace();
+		} else {
+			System.out.println("ELSE");
+			dataSize = 0.0;
+		}
+		System.out.println("DATA SIZE:::>>>"+dataSize);
+		modelAndView.addObject("dataSize", dataSize);
+		modelAndView.addObject("planModels", planModels);
+		System.out.println("PLAN LIST>>>>>>>>>" + planModels.toString());
+
+		return modelAndView;
+	}
+
+}

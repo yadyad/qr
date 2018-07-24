@@ -1,0 +1,115 @@
+package com.zs.cws.ws.hybrid.meetingtask.controller;
+
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.schooladmin.meetingtask.repository.PrincipalMeetingTaskRepository;
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingModel;
+import com.zs.cws.schooladmin.principalmeeting.repository.PrincipalMeetingRepository;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementMeetingModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementPrincipalResponseModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementTaskAssignmentModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingRepository;
+import com.zs.cws.ws.hybrid.mangementmeeting.repository.ManagementMeetingTaskRepository;
+import com.zs.cws.ws.hybrid.meetingtask.model.MeetingTaskServiceRequestModel;
+import com.zs.cws.ws.hybrid.meetingtask.model.MemberTaskListModel;
+
+@RestController
+@RequestMapping("/hybrid")
+public class MeetingTaskServiceController {
+
+	@Autowired
+	PrincipalMeetingRepository principalMeetingRepository;
+	@Autowired
+	PrincipalMeetingTaskRepository principalMeetingTaskRepository;
+	@Autowired
+	ManagementMeetingRepository managementMeetingRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	@Autowired
+	ManagementMeetingTaskRepository managementMeetingTaskRepository;
+
+	@RequestMapping(value = { "/meetingtask" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getAllmeetingTsk(HttpServletRequest request,
+			@RequestBody MeetingTaskServiceRequestModel meetingTaskServiceRequestModel) {
+System.out.println("meet request" +meetingTaskServiceRequestModel);
+		ManagementPrincipalResponseModel managementPrincipalResponseModel = new ManagementPrincipalResponseModel();
+		try {
+			if (meetingTaskServiceRequestModel.getMemberType().equalsIgnoreCase("principal")) {
+				PrincipalMeetingModel principalMeetingModel = principalMeetingRepository
+						.findOne(meetingTaskServiceRequestModel.getMeetingID());
+				principalMeetingModel.setKeyPoints(meetingTaskServiceRequestModel.getKeyPoints());
+				principalMeetingModel.setNextMeetingDate(meetingTaskServiceRequestModel.getNextMeetingDate());
+				
+				principalMeetingRepository.save(principalMeetingModel);
+
+				for (MemberTaskListModel memberTaskListModel : meetingTaskServiceRequestModel.getMemberTaskList()) {
+					PrincipalMeetingTaskModel principalMeetingTaskModel = new PrincipalMeetingTaskModel();
+					principalMeetingTaskModel.setStartDate(memberTaskListModel.getStartDate());
+					principalMeetingTaskModel.setPrincipalMeetingModel(principalMeetingModel);
+					principalMeetingTaskModel.setEndDate(memberTaskListModel.getEndDate());
+					principalMeetingTaskModel.setTaskName(memberTaskListModel.getTaskName());
+					principalMeetingTaskModel.setCompletionPercentage(memberTaskListModel.getPercentageCompletion());
+					principalMeetingTaskModel
+							.setSchoolStaffModel(schoolStaffRepository.findOne(memberTaskListModel.getMemberID()));
+					principalMeetingTaskRepository.save(principalMeetingTaskModel);
+				}
+			} else {
+				
+				System.out.println("MANAGEMNET MEEEEE");
+				ManagementMeetingModel managementMeetingModel = managementMeetingRepository
+						.findOne(meetingTaskServiceRequestModel.getMeetingID());
+				managementMeetingModel.setKeyPoints(meetingTaskServiceRequestModel.getKeyPoints());
+				managementMeetingModel.setNextMeetingDate(meetingTaskServiceRequestModel.getNextMeetingDate());
+				System.out.println("KEYPOINTSSSSSSS" +meetingTaskServiceRequestModel.getKeyPoints());
+				System.out.println("DATEEEEEE" +meetingTaskServiceRequestModel.getNextMeetingDate());
+				managementMeetingRepository.save(managementMeetingModel);
+
+				for (MemberTaskListModel memberTaskListModel : meetingTaskServiceRequestModel.getMemberTaskList()) {
+					ManagementTaskAssignmentModel managementTaskAssignmentModel = new ManagementTaskAssignmentModel();
+					
+					managementTaskAssignmentModel.setStartDate(memberTaskListModel.getStartDate());
+					managementTaskAssignmentModel.setManagementMeetingModel(managementMeetingModel);
+					managementTaskAssignmentModel.setEndDate(memberTaskListModel.getEndDate());
+					managementTaskAssignmentModel.setTaskName(memberTaskListModel.getTaskName());
+					managementTaskAssignmentModel
+							.setCompletionPercentage(memberTaskListModel.getPercentageCompletion());
+					managementTaskAssignmentModel
+							.setSchoolStaffModel(schoolStaffRepository.findOne(memberTaskListModel.getMemberID()));
+					System.out.println("SAVVVEEEEEEEEE"+meetingTaskServiceRequestModel.toString());
+					
+					managementMeetingTaskRepository.save(managementTaskAssignmentModel);
+				/*	PrincipalMeetingTaskModel principalMeetingTaskModel = new PrincipalMeetingTaskModel();
+					principalMeetingTaskModel.setStartDate(memberTaskListModel.getStartDate());
+					PrincipalMeetingModel principalMeetingModel = principalMeetingRepository
+							.findOne(meetingTaskServiceRequestModel.getMeetingID());
+					principalMeetingTaskModel.setPrincipalMeetingModel(principalMeetingModel);
+					principalMeetingTaskModel.setEndDate(memberTaskListModel.getEndDate());
+					principalMeetingTaskModel.setTaskName(memberTaskListModel.getTaskName());
+					principalMeetingTaskModel.setCompletionPercentage(memberTaskListModel.getPercentageCompletion());
+					principalMeetingTaskModel
+							.setSchoolStaffModel(schoolStaffRepository.findOne(memberTaskListModel.getMemberID()));
+					principalMeetingTaskRepository.save(principalMeetingTaskModel);*/
+				}
+			}
+			managementPrincipalResponseModel.setResponseStatus("Success");
+			managementPrincipalResponseModel.setPrincipalList(new ArrayList<>());
+			return managementPrincipalResponseModel;
+		} catch (Exception e) {
+			e.printStackTrace();
+			managementPrincipalResponseModel.setResponseStatus("Failed");
+			managementPrincipalResponseModel.setPrincipalList(new ArrayList<>());
+			return managementPrincipalResponseModel;
+		}
+	}
+}

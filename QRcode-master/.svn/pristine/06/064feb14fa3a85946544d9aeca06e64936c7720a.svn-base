@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- Main Defenition -->
+	<definition name="schooladmin.home.definition"
+		template="/WEB-INF/views/schoolAdmin/school_admin_home.jsp">
+		<put-attribute name="schooladmin.script"
+			value="/WEB-INF/views/schoolAdmin/common/scripts.jsp" />
+		<put-attribute name="schooladmin.header"
+			value="/WEB-INF/views/schoolAdmin/common/header.jsp" />
+		<put-attribute name="schooladmin_subheader.body"
+			value="/WEB-INF/views/schoolAdmin/common/subheader/subheader.jsp" />
+		<put-attribute name="schooladminnew.body" value="" />
+	</definition>
+
+	<definition name="form"
+		template="/WEB-INF/views/schoolAdmin/payment/form.jsp">
+	</definition>
+	<definition name="error"
+		template="/WEB-INF/views/schoolAdmin/payment/error.jsp">
+	</definition>
+
+	<definition name="status_response"
+		template="/WEB-INF/views/schoolAdmin/payment/status_response.jsp">
+	</definition>
+
+	<definition name="schooladmin_home" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/body/body.jsp" />
+	</definition>
+
+
+	<definition name="schooladminnews_home" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/news/schoolnews.jsp" />
+	</definition>
+
+
+	<definition name="kudos-home" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/kudos/kudos.jsp" />
+	</definition>
+
+
+	<definition name="attendance-home" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/attendance/attendance.jsp" />
+	</definition>
+
+
+	<definition name="school_admin_school_staff" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/schoolstaff/schoolstaff.jsp" />
+	</definition>
+
+	<definition name="school_admin_school_division" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/schooldivison/schooldivision.jsp" />
+	</definition>
+
+	<definition name="school_admin_school_timetable" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/timetable/timeTable.jsp" />
+	</definition>
+	<definition name="school_admin_subscription_activation"
+		extends="schooladmin.home.definition">
+		<put-attribute name="schooladmin_subheader.body" value="" />
+		<put-attribute name="schooladmin.header"
+			value="/WEB-INF/views/superAdmin/subscriptionPlan/subscription_header.jsp" />
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/superAdmin/subscriptionPlan/subscriptionPlan.jsp" />
+	</definition>
+
+	<definition name="paymentform" extends="schooladmin.home.definition">
+		<put-attribute name="schooladmin_subheader.body" value="" />
+		<put-attribute name="schooladmin.header"
+			value="/WEB-INF/views/superAdmin/subscriptionPlan/subscription_header.jsp" />
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/payment/payment_request.jsp" />
+	</definition>
+	<definition name="quatarenewalform" extends="schooladmin.home.definition">
+		<put-attribute name="schooladmin_subheader.body" value="" />
+		<put-attribute name="schooladmin.header"
+			value="/WEB-INF/views/superAdmin/subscriptionPlan/subscription_header.jsp" />
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/payment/quata_renewal.jsp" />
+	</definition>
+	<definition name="paymentform_for_add_students" extends="schooladmin.home.definition">
+		<put-attribute name="schooladmin_subheader.body" value="" />
+		<put-attribute name="schooladmin.header"
+			value="/WEB-INF/views/superAdmin/subscriptionPlan/subscription_header.jsp" />
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/payment/payment_request_for_add_member.jsp" />
+	</definition>
+
+	<definition name="schooladmin_directory" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/directory/directory.jsp" />
+	</definition>
+
+	<definition name="school_admin_paymentDetails" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/payment/paymentdetails.jsp" />
+	</definition>
+	<definition name="school_admin_plandetails" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/plandetails/plandetails.jsp" />
+	</definition>
+
+	<definition name="school_admin_student" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/students/students.jsp" />
+	</definition>
+
+	<definition name="school_admin_specialdays" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/specialdays/specialdays.jsp" />
+	</definition>
+
+
+	<definition name="school_admin_myclass" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/myclass/myclass.jsp" />
+	</definition>
+
+	<definition name="school_admin_meeting" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/parentMeeting/parentMeeting.jsp" />
+	</definition>
+
+	<definition name="excel_failure_student" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/superAdmin/students/excelFailurePage.jsp" />
+	</definition>
+	<definition name="excel_failure_staff" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/superAdmin/schoolstaff/excelFailurePage.jsp" />
+	</definition>
+	<definition name="school_admin_principal_meeting" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/principalMeeting/principalMeeting.jsp" />
+	</definition>
+	<definition name="schooladmin_principal_mom" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/principalMom/PrincipalMom.jsp" />
+	</definition>
+	<definition name="school_admin_settings" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/settings/settings.jsp" />
+	</definition>
+	<definition name="announcements-home" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/announcements/announcements.jsp" />
+	</definition>
+	
+	<definition name="schooladmin-principalquotes" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/principalquotes/principalquotes.jsp" />
+	</definition>
+
+<definition name="driver-routes" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/driverroutes/driverroutes.jsp" />
+	</definition>
+
+<definition name="driver-details" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/driverprofile/driverprofile.jsp" />
+	</definition>
+	<definition name="schooladmin_complaintbox" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/complaintBox/complaintbox.jsp" />
+	</definition>
+	
+	<definition name="school_admin_reports" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/reports/reports.jsp" />
+	</definition>
+	
+	<definition name="school-admin-exam" extends="schooladmin.home.definition">
+		<put-attribute name="schooladminnew.body"
+			value="/WEB-INF/views/schoolAdmin/examdetails/examdetails.jsp" />
+	</definition>
+
+</tiles-definitions>

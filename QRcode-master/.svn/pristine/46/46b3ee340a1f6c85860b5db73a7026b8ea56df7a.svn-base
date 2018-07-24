@@ -1,0 +1,120 @@
+package com.zs.cws.login;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name = "cwas_login_tbl")
+public class LoginModel {
+
+	@Id
+	@Column(name = "row_id")
+	@GeneratedValue
+	int loginId;
+
+	@Column(name = "username")
+	String userName;
+
+	@Column(name = "password")
+	String password;
+
+	@Column(name = "role")
+	String role;
+
+	@Column(name = "enabled")
+	int enabled;
+
+	@Column(name = "login_count")
+	int loginCount;
+
+	@OneToOne
+	@JoinColumn(name = "staff_id")
+	SchoolStaffModel schoolStaffModel;
+
+	public LoginModel() {
+	}
+
+	public int getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(int loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+	}
+
+	public int getLoginCount() {
+		return loginCount;
+	}
+
+	public void setLoginCount(int loginCount) {
+		this.loginCount = loginCount;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginModel [loginId=" + loginId + ", userName=" + userName + ", password=" + password + ", role=" + role
+				+ ", enabled=" + enabled + ", loginCount=" + loginCount + ", schoolStaffModel=" + schoolStaffModel
+				+ "]";
+	}
+
+	/*
+	 * public int getStaffID() { return staffID; }
+	 * 
+	 * public void setStaffID(int staffID) { this.staffID = staffID; }
+	 */
+
+	/*
+	 * @Override public String toString() { return "LoginModel [loginId=" +
+	 * loginId + ", userName=" + userName + ", password=" + password + ", role="
+	 * + role + ", enabled=" + enabled + ", loginCount=" + loginCount +
+	 * ", staffID=" + staffID + "]"; }
+	 */
+
+}

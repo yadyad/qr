@@ -1,0 +1,40 @@
+package com.zs.cws.ws.android.attendence.model;
+
+public class StudentAttendanceResponseModel {
+
+	String date;
+	String status;
+	String minutes;
+
+	public StudentAttendanceResponseModel() {
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(String minutes) {
+		this.minutes = minutes;
+	}
+
+	@Override
+	public String toString() {
+		return "StudentAttendanceResponseModel [date=" + date + ", status=" + status + ", minutes=" + minutes + "]";
+	}
+}

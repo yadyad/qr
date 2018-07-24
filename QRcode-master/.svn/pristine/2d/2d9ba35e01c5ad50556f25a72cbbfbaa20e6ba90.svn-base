@@ -1,0 +1,36 @@
+package com.zs.cws.ws.hybrid.divisionandsubject.model;
+
+import java.util.List;
+
+public class DivisionServiceResponseModel {
+	String status;
+
+	List<SubjectServiceModel> SubjectServiceModelList;
+	List<DivisionServiceModel> DivisionServiceModelList;
+	
+	public DivisionServiceResponseModel() {
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public List<SubjectServiceModel> getSubjectServiceModelList() {
+		return SubjectServiceModelList;
+	}
+	public void setSubjectServiceModelList(List<SubjectServiceModel> subjectServiceModelList) {
+		SubjectServiceModelList = subjectServiceModelList;
+	}
+	public List<DivisionServiceModel> getDivisionServiceModelList() {
+		return DivisionServiceModelList;
+	}
+	public void setDivisionServiceModelList(List<DivisionServiceModel> divisionServiceModelList) {
+		DivisionServiceModelList = divisionServiceModelList;
+	}
+	@Override
+	public String toString() {
+		return "DivisionServiceResponseModel [status=" + status + ", SubjectServiceModelList=" + SubjectServiceModelList
+				+ ", DivisionServiceModelList=" + DivisionServiceModelList + "]";
+	}
+}

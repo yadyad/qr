@@ -1,0 +1,137 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import com.zs.cws.superadmin.management.model.ManagementModel;
+
+@Entity
+@Table(name = "cwas_management_meeting_request_details")
+public class ManagementMeetingModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int meetingID;
+
+	@Column(name = "purpose")
+	private String purpose;
+
+	@Column(name = "venue")
+	private String venue;
+
+	@Column(name = "meeting_time")
+	private String meetingTime;
+
+	@Column(name = "meeting_date")
+	private String meetingDate;
+
+	@OneToOne
+	@JoinColumn(name = "management_id")
+	ManagementModel managementModel;
+
+	@Column(name = "meeting_type")
+	private String meetingType;
+
+	@Column(name = "agenda")
+	private String agenda;
+	@Column(name = "key_points")
+	private String keyPoints;
+
+	@Column(name = "next_meeting_date")
+	private String nextMeetingDate;
+
+	public ManagementMeetingModel() {
+	}
+
+	public int getMeetingID() {
+		return meetingID;
+	}
+
+	public void setMeetingID(int meetingID) {
+		this.meetingID = meetingID;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public ManagementModel getManagementModel() {
+		return managementModel;
+	}
+
+	public void setManagementModel(ManagementModel managementModel) {
+		this.managementModel = managementModel;
+	}
+
+	public String getMeetingType() {
+		return meetingType;
+	}
+
+	public void setMeetingType(String meetingType) {
+		this.meetingType = meetingType;
+	}
+
+	public String getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
+
+	public String getKeyPoints() {
+		return keyPoints;
+	}
+
+	public void setKeyPoints(String keyPoints) {
+		this.keyPoints = keyPoints;
+	}
+
+	public String getNextMeetingDate() {
+		return nextMeetingDate;
+	}
+
+	public void setNextMeetingDate(String nextMeetingDate) {
+		this.nextMeetingDate = nextMeetingDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementMeetingModel [meetingID=" + meetingID + ", purpose=" + purpose + ", venue=" + venue
+				+ ", meetingTime=" + meetingTime + ", meetingDate=" + meetingDate + ", managementModel="
+				+ managementModel + ", meetingType=" + meetingType + ", agenda=" + agenda + ", keyPoints=" + keyPoints
+				+ ", nextMeetingDate=" + nextMeetingDate + "]";
+	}
+}

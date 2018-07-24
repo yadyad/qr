@@ -1,0 +1,23 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+
+public class ManagementRequestModel {
+	int managementID;
+
+	public ManagementRequestModel() {
+	}
+
+	public int getManagementID() {
+		return managementID;
+	}
+
+	public void setManagementID(int managementID) {
+		this.managementID = managementID;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementRequestModel [managementID=" + managementID + "]";
+	}
+	
+	
+}

@@ -1,0 +1,45 @@
+package com.zs.cws.forgetpassword.dao;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Repository
+public class ForgetPasswordIMPL implements ForgetPasswordDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	public SchoolStaffModel isValidEmail(String email) {
+		
+		String query = "From SchoolStaffModel where emailId = '" + email + "'";
+		SchoolStaffModel schoolStaffModel = null;
+		try {
+			schoolStaffModel = (SchoolStaffModel) entityManager.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return new SchoolStaffModel();
+		}
+		return schoolStaffModel;
+		
+		
+		
+	}
+
+	public LoginModel getLoginId(int schoolStaffId) {
+	String query="From LoginModel where schoolStaffModel.schoolStaffId = '"+schoolStaffId+"'";
+	
+	LoginModel loginModel = null;
+	
+	try {
+		loginModel = (LoginModel) entityManager.createQuery(query).getSingleResult();
+	} catch (NoResultException e) {
+		return new LoginModel();
+	}
+	return loginModel;
+	}
+}

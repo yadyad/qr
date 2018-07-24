@@ -1,0 +1,66 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+import java.util.List;
+
+public class ProgressReportViewResponse {
+	
+	String status="";
+	String classTeacherName="";
+	
+	List<String>examNames;
+	List<Subjects>subjectList;
+	
+	
+	public ProgressReportViewResponse() {
+	
+	}
+	public List<String> getExamNames() {
+		return examNames;
+	}
+
+	public void setExamNames(List<String> examNames) {
+		this.examNames = examNames;
+	}
+
+	public List<Subjects> getSubjectList() {
+		return subjectList;
+	}
+	public void setSubjectList(List<Subjects> subjectList) {
+		this.subjectList = subjectList;
+	}
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getClassTeacherName() {
+		return classTeacherName;
+	}
+
+	public void setClassTeacherName(String classTeacherName) {
+		this.classTeacherName = classTeacherName;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ProgressReportViewResponse [status=" + status + ", classTeacherName=" + classTeacherName
+				+ ", examNames=" + examNames + "]";
+	}
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+
+}

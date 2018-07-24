@@ -1,0 +1,36 @@
+package com.zs.cws.schooladmin.complaintbox.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.utils.GlobalVariables;
+import com.zs.cws.ws.android.complaintbox.dao.ComplaintDAO;
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxModel;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/complaintview")
+public class ComplaintBoxController {
+	@Autowired
+	ComplaintDAO complaintDAO;
+
+	@RequestMapping()
+	public ModelAndView complaintsHome() {
+		ModelAndView model = new ModelAndView("schooladmin_complaintbox");
+		return model;
+	}
+
+	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
+	public @ResponseBody Object listAllComplaints() {
+		List<ComplaintBoxModel> complaintList = complaintDAO.getSchoolComplaints(GlobalVariables.SCHOOL_ID);
+		return complaintList;
+	}
+
+}

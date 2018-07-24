@@ -1,0 +1,123 @@
+package com.zs.cws.superadmin.managementmembers.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.managementmembers.dao.ManagementMemberDAO;
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+import com.zs.cws.superadmin.managementmembers.repository.ManagementMemberRepository;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/managementmember")
+public class ManagementMemberController {
+	@Autowired
+	ManagementMemberRepository managementMemberRepository;
+	@Autowired
+	ManagementRepository managementRepository;
+
+	@Autowired
+	ManagementMemberDAO managementMemberDAO;
+	int managementID;
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementMemberPage(
+			@RequestParam(value = "id", required = false) Integer managementID) {
+		ModelAndView model = new ModelAndView("super_admin_management_member");
+		if (managementID != null)
+			this.managementID = managementID;
+		return model;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllMembers() {
+		List<ManagementMemberModel> managementMemberList = managementMemberDAO
+				.getMembersByManagement(this.managementID);
+		return managementMemberList;
+	}
+
+	@RequestMapping(value = "/currentManagement", method = RequestMethod.GET)
+	public @ResponseBody Object listCurrentManagement() {
+		System.out.println("CURRENT  MANAGEMENT::::::::::::::::>>>>>>>>>>>>>>>>>>>>");
+		ManagementModel managementModel = managementRepository.findOne(this.managementID);
+		return managementModel;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request,
+			@RequestBody ManagementMemberModel managementMemberModel, HttpSession session) {
+		ManagementModel managementModel = new ManagementModel();
+		managementModel.setManagementID(this.managementID);
+		managementMemberModel.setManagementModel(managementModel);
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		/*if (managementMemberModel.getManagementMemberID() == 0) {
+			managementMemberModel.setCreatedUser(loggedUser);
+			managementMemberModel.setUpdatedUser(loggedUser);
+			managementMemberModel.setCreatedDate(new Date());
+			managementMemberModel.setUpdatedDate(new Date());
+			managementMemberRepository.save(managementMemberModel);
+			return managementMemberModel;
+		} else {
+			managementMemberModel.setUpdatedUser(loggedUser);
+			managementMemberModel.setUpdatedDate(new Date());
+			managementMemberRepository.save(managementMemberModel);
+			return managementMemberModel;
+		}*/
+		if (!managementMemberDAO.isAvailable(managementMemberModel)) {
+			managementMemberModel.setCreatedUser(loggedUser);
+			managementMemberModel.setUpdatedUser(loggedUser);
+			managementMemberModel.setCreatedDate(new Date());
+			managementMemberModel.setUpdatedDate(new Date());
+			managementMemberRepository.save(managementMemberModel);
+			return managementMemberModel;
+		}else{
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int managementMemberID) {
+		if (managementMemberID != 0) {
+			managementMemberRepository.delete(managementMemberID);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/deleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] managementMemberIDS) {
+		for (int managementMemberID : managementMemberIDS) {
+			if (managementMemberID != 0) {
+				managementMemberRepository.delete(managementMemberID);
+			}
+		}
+		return true;
+	}
+	
+	@RequestMapping(value="/alreadyMemberPhone/{phone}", method = RequestMethod.GET)
+	public @ResponseBody Object isRegisteredPhone(@PathVariable("phone") String phone) {
+		return managementMemberDAO.isRegisteredMemberPhone(phone,managementID);
+	}
+
+	@RequestMapping(value = "/isEmailRegistered/{emailID}", method = RequestMethod.GET)
+	public @ResponseBody Object isRegisteredEmail(@PathVariable("emailID") String emailID) {
+		return managementMemberDAO.isRegisteredEmail(emailID,managementID);
+	}
+}

@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.settings.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.settings.model.AcademicModel;
+
+public interface AcademicYearRepository extends JpaRepository<AcademicModel, Integer> {
+
+}

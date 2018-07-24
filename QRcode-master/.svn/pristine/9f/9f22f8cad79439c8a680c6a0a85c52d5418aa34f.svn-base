@@ -1,0 +1,66 @@
+package com.zs.cws.ws.android.license.model;
+
+
+public class SchoolChildrenModel {
+	int studentID;
+	String enrollmentNumber;
+	String gender;
+	String dob;
+	String firstName;
+	String lastName;
+	String division;
+	
+	public SchoolChildrenModel() {
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	public String getEnrollmentNumber() {
+		return enrollmentNumber;
+	}
+	public void setEnrollmentNumber(String enrollmentNumber) {
+		this.enrollmentNumber = enrollmentNumber;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getDob() {
+		return dob;
+	}
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+	
+	
+	public String getDivision() {
+		return division;
+	}
+	public void setDivision(String division) {
+		this.division = division;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	@Override
+	public String toString() {
+		return "SchoolChildrenModel [studentID=" + studentID + ", enrollmentNumber=" + enrollmentNumber + ", gender="
+				+ gender + ", dob=" + dob + ", firstName=" + firstName + ", lastName=" + lastName + ", division="
+				+ division + "]";
+	}
+    
+}

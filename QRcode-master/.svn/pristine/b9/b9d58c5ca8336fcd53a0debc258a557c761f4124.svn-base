@@ -1,0 +1,54 @@
+package com.zs.cws.resetpassword.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.sun.org.apache.xpath.internal.operations.And;
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.resetpassword.model.ResetPasswordModel;
+
+@Repository
+public class ResetPasswordIMPL implements ResetPasswordDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	/*
+	 * @Autowired SessionFactory sessionFactory;
+	 */
+
+	@Transactional
+	public LoginModel checkUserName(ResetPasswordModel resetPasswordModel, String name) {
+		String query = "From LoginModel where userName = '" + name + "' and password = '"
+				+ resetPasswordModel.getCurrentPassword() + "'";
+		LoginModel loginModel = null;
+		try {
+			loginModel = (LoginModel) entityManager.createQuery(query).getSingleResult();
+		} catch (Exception e) {
+			return new LoginModel();
+		}
+		return loginModel;
+	}
+
+	@Override
+	@Transactional
+	public int updatePassword(ResetPasswordModel resetPasswordModel, String name) {
+
+		int updatePassword = 0;
+		String query = "UPDATE cwas_login_tbl set password = password,login_count=loginCount where username = " + name
+				+ "";
+		int status = entityManager.createQuery(query).executeUpdate();
+
+		if (resetPasswordModel.getConfirmPassword().equals(resetPasswordModel.getNewPassword())) {
+			updatePassword = 1;
+		}
+		return updatePassword;
+	}
+
+}

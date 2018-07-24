@@ -1,0 +1,88 @@
+package com.zs.cws.schooladmin.examdetails.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.schooladmin.examdetails.dao.ExamDetailsDAO;
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+import com.zs.cws.schooladmin.examdetails.repository.ExamRepository;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.utils.GlobalVariables;
+
+@Controller
+@RequestMapping("schooladmin/examdetails")
+public class ExamDetailsController {
+	
+	@Autowired
+	SchoolStaffDAO SchoolStaffDAO;
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	StudentDAO studentDAO;
+	@Autowired
+	ExamDetailsDAO examDetailsDAO;
+	@Autowired
+	ExamRepository examRepository;
+	@Autowired
+	SchoolRepository schoolRepository;
+	
+	
+	@RequestMapping()
+	public ModelAndView exam(){
+		ModelAndView modelAndView  = new ModelAndView("school-admin-exam");
+		modelAndView.addObject("featureList", GlobalVariables.SCHOOL_FEATURE_LIST);
+		modelAndView.addObject("staffCount", SchoolStaffDAO.getStaffCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("divisionCount", schoolDivDAO.getDivisionCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("studentCount", studentDAO.getStudentsCount(GlobalVariables.SCHOOL_ID));
+		return modelAndView;
+	}
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		
+		List<ExamDetailsModel> examDetailsModels = examDetailsDAO.findEaxmBySchool(GlobalVariables.SCHOOL_ID);
+		return examDetailsModels;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody ExamDetailsModel examDetailsModel,
+			HttpSession session) {
+
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		examDetailsModel.setCreatedBy(loggedUser);
+		examDetailsModel.setUpdatedBy(loggedUser);
+		examDetailsModel.setCreatedDate(new Date());
+		examDetailsModel.setUpdatedDate(new Date());
+		SchoolModel schoolModel = schoolRepository.findOne(GlobalVariables.SCHOOL_ID);
+		examDetailsModel.setSchoolModel(schoolModel);
+		examRepository.save(examDetailsModel);
+		return examDetailsModel;
+	}
+
+	@RequestMapping(value = "/examdeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] examIDS) {
+		for (int exID : examIDS) {
+			if (exID != 0) {
+				examRepository.delete(exID);
+			}
+		}
+		return true;
+
+	}
+
+}

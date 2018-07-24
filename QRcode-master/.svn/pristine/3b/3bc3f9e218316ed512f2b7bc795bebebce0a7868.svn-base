@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- Main Defenition -->
+	<definition name="superadmin.home.definition" template="/WEB-INF/views/superAdmin/admin_home.jsp">
+		<!-- <put-attribute name="title" value="ZoftSolution" /> -->
+		<put-attribute name="superadmin.script"
+			value="/WEB-INF/views/superAdmin/common/scripts.jsp" />
+		<put-attribute name="superadmin.header"
+			value="/WEB-INF/views/superAdmin/common/header.jsp" />
+		<put-attribute name="superadmin.body" value="" />
+	</definition>
+	<!-- Super admin home page definition -->
+	<definition name="superadmin_home" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/home/home.jsp" />
+	</definition>
+	<!-- Management Page definition -->
+
+	<definition name="super_admin_management" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/management/management.jsp" />
+	</definition>
+	<!-- Management member Page definition -->
+
+	<definition name="super_admin_management_member" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/managementMembers/managementMembers.jsp" />
+	</definition>
+
+	<definition name="super_admin_school" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/school/school.jsp" />
+	</definition>
+	<definition name="super_admin_school_staff" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/schoolstaff/schoolstaff.jsp" />
+	</definition>
+	<definition name="super_admin_school_division" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/schooldivison/schooldivision.jsp" />
+	</definition>
+	<definition name="managementHome" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/management/managementHome.jsp" />
+	</definition>
+	<definition name="superadmin_master_home" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/masterForms/master_form_home.jsp" />
+	</definition>
+	<definition name="school_by_management" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/school/schoolHome.jsp" />
+	</definition>
+
+	<definition name="div_search" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/dual/ConfidentialGroup.jsp" />
+	</definition>
+	<definition name="super_admin_student" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/students/students.jsp" />
+	</definition>
+	
+	
+	<definition name="super_admin_specialdays" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/specialdays/specialdays.jsp" />
+	</definition>
+	
+	
+	<definition name="paymentDetails" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/paymentHistory/paymentdetails.jsp" />
+	</definition>
+	<definition name="plandetails" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/schoolAdmin/plandetails/plandetails.jsp" />
+	</definition>
+	
+	<definition name="super_admin_subscription_activation" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/payment_cash_check/paymentCashCheck.jsp" />
+	</definition>
+	<definition name="excel_failure" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/students/excelFailurePage.jsp" />
+	</definition>
+	<definition name="staff_excel_failure" extends="superadmin.home.definition">
+		<put-attribute name="superadmin.body"
+			value="/WEB-INF/views/superAdmin/schoolstaff/excelFailurePage.jsp" />
+	</definition>
+</tiles-definitions>   

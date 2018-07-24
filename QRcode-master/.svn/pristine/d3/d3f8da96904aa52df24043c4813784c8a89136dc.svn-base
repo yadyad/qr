@@ -1,0 +1,66 @@
+package com.zs.cws.ws.android.driverdetails.model;
+
+public class DriverDetailsResponse {
+	
+	String driverName="";
+	String phone="";
+	String email="";
+	String busNumber="";
+	String route="";
+	String licenseNumber="";
+	String address="";
+	public DriverDetailsResponse() {
+		
+	}
+	
+	public String getDriverName() {
+		return driverName;
+	}
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getBusNumber() {
+		return busNumber;
+	}
+	public void setBusNumber(String busNumber) {
+		this.busNumber = busNumber;
+	}
+	public String getRoute() {
+		return route;
+	}
+	public void setRoute(String route) {
+		this.route = route;
+	}
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	@Override
+	public String toString() {
+		return "DriverDetailsResponse [driverName=" + driverName + ", phone=" + phone + ", email=" + email
+				+ ", busNumber=" + busNumber + ", route=" + route + ", licenseNumber=" + licenseNumber + ", address="
+				+ address + "]";
+	}
+
+}

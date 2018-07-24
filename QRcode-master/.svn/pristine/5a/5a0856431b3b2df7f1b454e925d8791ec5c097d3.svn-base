@@ -1,0 +1,28 @@
+package com.zs.cws.superadmin.master.quota.dao;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.master.quota.model.QuotaModel;
+
+@Repository
+public class QuotaIMPL implements QuotaDAO {
+
+	@Autowired
+	EntityManager entityManager;
+	
+	@Override
+	public boolean isAvailable(QuotaModel quotaModel) {
+		String query = "";
+		if (quotaModel.getQuotaId() != 0) {
+			query = "select count(*) from QuotaModel where quotaName= ? and quotaId <> " + quotaModel.getQuotaId() + "";
+		} else {
+			query = "select count(*) from QuotaModel where quotaName=? ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).setParameter(1, quotaModel.getQuotaName().trim()).getSingleResult()>0;
+		return exists;
+	}
+
+}

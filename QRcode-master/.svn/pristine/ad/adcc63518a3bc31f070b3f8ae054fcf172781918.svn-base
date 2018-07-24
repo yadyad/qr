@@ -1,0 +1,41 @@
+package com.zs.cws.ws.hybrid.directory.model;
+
+import java.util.List;
+
+public class StaffDirectoryFinalModel {
+	
+	private String responseStatus;
+	private List<StaffDirectoryResponseModel>directoryResponseModels;
+	
+	public StaffDirectoryFinalModel() {
+	
+		
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public List<StaffDirectoryResponseModel> getDirectoryResponseModels() {
+		return directoryResponseModels;
+	}
+
+	public void setDirectoryResponseModels(List<StaffDirectoryResponseModel> directoryResponseModels) {
+		this.directoryResponseModels = directoryResponseModels;
+	}
+
+	@Override
+	public String toString() {
+		return "StaffDirectoryFinalModel [responseStatus=" + responseStatus + ", directoryResponseModels="
+				+ directoryResponseModels + "]";
+	}
+	
+	
+	
+	
+
+}

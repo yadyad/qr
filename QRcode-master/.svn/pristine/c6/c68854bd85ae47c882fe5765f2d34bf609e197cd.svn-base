@@ -1,0 +1,23 @@
+package com.zs.cws.ws.android.complaintbox.model;
+
+public class ComplaintBoxResponseModel {
+	String responseStatus;
+
+	public ComplaintBoxResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "ComplaintBoxResponseModel [responseStatus=" + responseStatus + "]";
+	}
+	
+	
+}

@@ -1,0 +1,38 @@
+package com.zs.cws.ws.android.license.model;
+
+import java.util.List;
+
+public class AndroidLicenceResponseModel {
+
+	String userType;
+	String status;
+	List<SchoolLicenceModel> schoolLicenceModel;
+	
+	public AndroidLicenceResponseModel() {
+		super();
+	}
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<SchoolLicenceModel> getSchoolLicenceModel() {
+		return schoolLicenceModel;
+	}
+
+	public void setSchoolLicenceModel(List<SchoolLicenceModel> schoolLicenceModel) {
+		this.schoolLicenceModel = schoolLicenceModel;
+	}
+
+}

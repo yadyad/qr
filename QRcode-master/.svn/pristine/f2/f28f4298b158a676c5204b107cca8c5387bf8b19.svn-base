@@ -1,0 +1,12 @@
+package com.zs.cws.schooladmin.subscriptionactivation.dao;
+
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+
+public interface SubscriptionActivationDAO {
+
+	public boolean isSubscribed(int schoolID);
+
+	public SubscriptionPlanActivationModel getCurrentPlanDetails(int schoolID);
+	
+	public SubscriptionPlanActivationModel getLastSubscribedPlan(int schoolID);
+}

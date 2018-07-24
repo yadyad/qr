@@ -1,0 +1,85 @@
+package com.zs.cws.forgetpassword.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.zs.cws.forgetpassword.dao.ForgetPasswordDAO;
+import com.zs.cws.forgetpassword.model.ForgetPasswordModel;
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.LoginRepository;
+import com.zs.cws.utils.MailSender;
+import com.zs.cws.utils.MailSentPOJO;
+import com.zs.cws.utils.PasswordGenerator;
+
+@Controller
+@RequestMapping("/forgetpassword")
+public class ForgetPasswordController {
+
+	@Autowired
+	ForgetPasswordDAO forgetPasswordDAO;
+	@Autowired
+	LoginRepository loginRepository;
+
+	@RequestMapping()
+	public ModelAndView view(@ModelAttribute("forgetModel") ForgetPasswordModel forgetPasswordModel,
+			@RequestParam(value = "message", required = false) String message, RedirectAttributes redirectAttributes) {
+		ModelAndView modelAndView = new ModelAndView("forgetpassword");
+		modelAndView.addObject("message", message);
+		return modelAndView;
+	}
+
+	@RequestMapping("/changePassword")
+	public ModelAndView changePassword(@ModelAttribute("forgetModel") ForgetPasswordModel forgetPasswordModel,
+			@RequestParam(value = "message", required = false) String message, RedirectAttributes redirectAttributes) {
+		ModelAndView modelAndView = new ModelAndView("redirect:/login");
+		
+		SchoolStaffModel schoolStaffModel = forgetPasswordDAO.isValidEmail(forgetPasswordModel.getEmail());
+		LoginModel loginModel = new LoginModel();
+		loginModel = forgetPasswordDAO.getLoginId(schoolStaffModel.getSchoolStaffId());
+
+		if (schoolStaffModel.getSchoolStaffId() != 0) {
+
+			String generatedPassword = PasswordGenerator.generateRandomString();
+			loginModel.setLoginCount(0);
+			loginModel.setPassword(generatedPassword);
+			loginRepository.save(loginModel);
+
+			MailSentPOJO mailSentPOJO = new MailSentPOJO();
+			mailSentPOJO.setFrom("clubwizardschool@gmail.com");
+			mailSentPOJO.setTo(forgetPasswordModel.getEmail());
+			mailSentPOJO.setSubject("Login details");
+			String content = "Your Password : " + generatedPassword + " ";
+			mailSentPOJO.setContent(content);
+			
+			redirectAttributes.addAttribute("message", "Please check your mail to find your password");
+			//modelAndView.addObject("message", message);
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					try {
+						MailSender.sendMail(mailSentPOJO);
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			t.start();
+			modelAndView.addObject("message", message);
+		}
+
+		else {
+			redirectAttributes.addAttribute("message", "Invalid mailId");
+		
+			modelAndView.setViewName("redirect:/forgetpassword");
+			
+		}
+
+		return modelAndView;
+	}
+
+}

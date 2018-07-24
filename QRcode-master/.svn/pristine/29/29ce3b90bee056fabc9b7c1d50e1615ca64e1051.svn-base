@@ -1,0 +1,108 @@
+package com.zs.cws.superadmin.master.department.controller;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.master.department.dao.DepartmentDAO;
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+import com.zs.cws.superadmin.master.department.repository.DepartmentRepository;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/department")
+public class DepartmentController {
+
+	@Autowired
+	DepartmentRepository departmentRepository;
+
+	@Autowired
+	DepartmentDAO departmentDAO;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("super_admin_department");
+		modelAndView.addObject("department", "active");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		List<DepartmentModel> managementList = departmentRepository.findAll();
+		System.out.println("DEPT LIST>>>>>" +managementList);
+		return managementList;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody DepartmentModel departmentModel,
+			HttpSession session) {
+
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!departmentDAO.isAvailable(departmentModel)) {
+			departmentModel.setCreatedUser(loggedUser);
+			departmentModel.setUpdatedUser(loggedUser);
+			departmentModel.setCreatedDate(new Date());
+			departmentModel.setUpdatedDate(new Date());
+			departmentRepository.save(departmentModel);
+			return departmentModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	
+	
+	@RequestMapping(value = { "/getDropDownValue/{id}" }, method = RequestMethod.GET, produces = { "application/json" })
+	public @ResponseBody Object dept(HttpServletRequest request, @PathVariable int id, HttpSession session) {
+		DepartmentModel departmentModel = departmentRepository.findOne(id);
+		return departmentModel;
+
+	}
+	
+	
+	
+	@RequestMapping(value = "/deleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] deptIDs) {
+		for (int departmentId : deptIDs) {
+			if (departmentId != 0) {
+				departmentRepository.delete(departmentId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int deptId) {
+		if (deptId != 0) {
+			departmentRepository.delete(deptId);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/dropDown", method = RequestMethod.GET)
+	public @ResponseBody Object deptMap() {
+		List<DepartmentModel> depList = departmentRepository.findAll();
+		Map<Integer, String> managMap = new HashMap<>();
+		for (DepartmentModel departmentModel : depList) {
+			managMap.put(departmentModel.getRowId(), departmentModel.getDepartment());
+		}
+		return managMap;
+	}
+
+}

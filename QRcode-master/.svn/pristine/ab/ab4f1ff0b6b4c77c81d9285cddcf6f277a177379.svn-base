@@ -1,0 +1,375 @@
+package com.zs.cws.ws.android.progressreport.controller;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.examdetails.dao.ExamDetailsDAO;
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+import com.zs.cws.schooladmin.examdetails.repository.ExamRepository;
+import com.zs.cws.schooladmin.myclass.repository.MyClassRepository;
+import com.zs.cws.superadmin.master.department.repository.DepartmentRepository;
+import com.zs.cws.superadmin.master.subject.dao.SubjectDAO;
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+import com.zs.cws.superadmin.master.subject.repository.SubjectRepository;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schooldivision.repository.SchoolDivRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.progressreport.dao.ProgressReportDAO;
+import com.zs.cws.ws.android.progressreport.model.ProgressReportModel;
+import com.zs.cws.ws.android.progressreport.model.ProgressReportRequest;
+import com.zs.cws.ws.android.progressreport.model.ProgressReportResponse;
+import com.zs.cws.ws.android.progressreport.model.ProgressReportViewRequest;
+import com.zs.cws.ws.android.progressreport.model.ProgressReportViewResponse;
+import com.zs.cws.ws.android.progressreport.model.StudentList;
+import com.zs.cws.ws.android.progressreport.model.Subjects;
+import com.zs.cws.ws.android.progressreport.repository.ProgressReportRepository;
+
+@RestController
+@RequestMapping("android/progressreport")
+public class ProgressReportServiceController {
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+
+	@Autowired
+	ExamDetailsDAO examDetailsDao;
+
+	@Autowired
+	ExamRepository examRepository;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+	SchoolDivRepository schoolDivRepository;
+
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+
+	@Autowired
+	StudentRepository studentRepository;
+
+	@Autowired
+	ProgressReportRepository progressReportRepository;
+
+	@Autowired
+	SubjectRepository subjectRepository;
+
+	@Autowired
+	DepartmentRepository departmentRepository;
+
+	@Autowired
+	MyClassRepository myClassRepository;
+
+	@Autowired
+	SubjectDAO subjectDAO;
+
+	@Autowired
+	ProgressReportDAO progressReportDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object progressReport(HttpServletRequest request,
+			@RequestBody ProgressReportRequest progressReportRequest) {
+
+		try {
+			ProgressReportResponse progressReportResponse = new ProgressReportResponse();
+
+			if (schoolDAO.isValidSchool(progressReportRequest.getSchoolID())) {
+
+				if (schoolStaffDAO.isValidMemberStaffLike(progressReportRequest.getStaffID())) {
+
+					if (schoolDivDAO.validDivision(progressReportRequest.getDivisionID(),
+							progressReportRequest.getSchoolID())) {
+
+						for (StudentList studentList : progressReportRequest.getStudentList()) {
+
+							SubjectModel subjectModel = subjectDAO.getSubjectID(progressReportRequest.getDivisionID(),
+									progressReportRequest.getStaffID());
+
+						ProgressReportModel  progressReportModel1 =	progressReportDAO.isProgressExist(progressReportRequest.getExamID(),
+									subjectModel.getSubjectId(), studentList.getStudentId());
+
+					
+						
+						if (progressReportModel1.getProgressReportID()!=0) {
+							
+							ExamDetailsModel detailsModel = examRepository.findOne(progressReportRequest.getExamID());
+							progressReportModel1.setExamDetailsModel(detailsModel);
+							SchoolDivModel schoolDivModel = schoolDivRepository
+									.findOne(progressReportRequest.getDivisionID());
+							progressReportModel1.setSchoolDivModel(schoolDivModel);
+							SchoolModel schoolModel = schoolRepository.findOne(progressReportRequest.getSchoolID());
+							progressReportModel1.setSchoolModel(schoolModel);
+							SchoolStaffModel schoolStaffModel = schoolStaffRepository
+									.findOne(progressReportRequest.getStaffID());
+							progressReportModel1.setSchoolStaffModel(schoolStaffModel);
+							progressReportModel1.setMarksSecured(studentList.getStudentMarks());
+							StudentModel studentModel = studentRepository.findOne(studentList.getStudentId());
+							progressReportModel1.setStudentModel(studentModel);
+							progressReportModel1.setSubjectModel(subjectDAO.getSubjectID(
+									progressReportRequest.getDivisionID(), progressReportRequest.getStaffID()));
+							progressReportModel1.setCreatedDate(new Date());
+							progressReportModel1.setUpdatedDate(new Date());
+							progressReportRepository.save(progressReportModel1);
+							
+							
+						}else{
+						
+						
+						
+							ProgressReportModel progressReportModel = new ProgressReportModel();
+							ExamDetailsModel detailsModel = examRepository.findOne(progressReportRequest.getExamID());
+							progressReportModel.setExamDetailsModel(detailsModel);
+							SchoolDivModel schoolDivModel = schoolDivRepository
+									.findOne(progressReportRequest.getDivisionID());
+							progressReportModel.setSchoolDivModel(schoolDivModel);
+							SchoolModel schoolModel = schoolRepository.findOne(progressReportRequest.getSchoolID());
+							progressReportModel.setSchoolModel(schoolModel);
+							SchoolStaffModel schoolStaffModel = schoolStaffRepository
+									.findOne(progressReportRequest.getStaffID());
+							progressReportModel.setSchoolStaffModel(schoolStaffModel);
+							progressReportModel.setMarksSecured(studentList.getStudentMarks());
+							StudentModel studentModel = studentRepository.findOne(studentList.getStudentId());
+							progressReportModel.setStudentModel(studentModel);
+							progressReportModel.setSubjectModel(subjectDAO.getSubjectID(
+									progressReportRequest.getDivisionID(), progressReportRequest.getStaffID()));
+							progressReportModel.setCreatedDate(new Date());
+							progressReportModel.setUpdatedDate(new Date());
+							progressReportRepository.save(progressReportModel);
+						}
+						}
+
+						progressReportResponse.setStatus("Success");
+						return progressReportResponse;
+
+					} else {
+						progressReportResponse.setStatus("Invalid division");
+						return progressReportResponse;
+					}
+
+				}
+
+				else {
+					progressReportResponse.setStatus("Invalid staff");
+					return progressReportResponse;
+				}
+
+			} else {
+				progressReportResponse.setStatus("Invalid User");
+				return progressReportResponse;
+			}
+
+		} catch (Exception e) {
+			ProgressReportResponse progressReportResponse = new ProgressReportResponse();
+			progressReportResponse.setStatus("Failed");
+			e.printStackTrace();
+			return progressReportResponse;
+		}
+	}
+
+	@RequestMapping(value = "progressreportView", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object progressReportView(HttpServletRequest request,
+			@RequestBody ProgressReportViewRequest progressReportViewRequest) {
+		try {
+			ProgressReportViewResponse progressReportViewResponse = new ProgressReportViewResponse();
+
+			if (schoolDAO.isValidSchool(progressReportViewRequest.getSchoolID())) {
+
+				if (schoolDivDAO.validDivision(progressReportViewRequest.getDivisionID(),
+						progressReportViewRequest.getSchoolID())) {
+
+					if (studentDAO.isValidStudent(progressReportViewRequest.getStudentID())) {
+
+						progressReportViewResponse.setStatus("Success");
+						SchoolDivModel divModel = schoolDivRepository
+								.findOne(progressReportViewRequest.getDivisionID());
+						progressReportViewResponse.setClassTeacherName(divModel.getSchoolStaffModel().getFirstName()
+								+ " " + divModel.getSchoolStaffModel().getLastName());
+
+						List<ExamDetailsModel> examDetailsModels = examDetailsDao
+								.findEaxmBySchool(progressReportViewRequest.getSchoolID());
+						List<String> examNames = new ArrayList<>();
+						List<Subjects> subjects = new ArrayList<>();
+						List<String> marks = new ArrayList<>();
+						for (ExamDetailsModel examDetailsModels1 : examDetailsModels) {
+
+							examNames.add(examDetailsModels1.getExamName());
+
+							List<ProgressReportModel> progressReportModels = progressReportDAO.getReportDetails(
+									progressReportViewRequest.getDivisionID(), progressReportViewRequest.getSchoolID(),
+									progressReportViewRequest.getStudentID(), examDetailsModels1.getExamDetailsID());
+
+							for (ProgressReportModel progressReportModel : progressReportModels) {
+
+								Subjects subjects2 = new Subjects();
+								subjects2.setSubjectName(progressReportModel.getSubjectModel().getSubject());
+								subjects2.setSubjectID(progressReportModel.getSubjectModel().getSubjectId());
+								subjects.add(subjects2);
+
+								for (ExamDetailsModel examDetailsModel : examDetailsModels) {
+									marks.add(progressReportDAO.getExamMarksBySubjects(subjects2.getSubjectID(),
+											examDetailsModel.getExamDetailsID(),
+											progressReportViewRequest.getStudentID()));
+								}
+								subjects2.setMarks(marks);
+								marks = new ArrayList<>();
+							}
+
+						}
+
+						progressReportViewResponse.setExamNames(examNames);
+						progressReportViewResponse.setSubjectList(subjects);
+
+						return progressReportViewResponse;
+					} else {
+						progressReportViewResponse.setStatus("Invalid student");
+						progressReportViewResponse.setExamNames(new ArrayList<>());
+						progressReportViewResponse.setSubjectList(new ArrayList<>());
+						return progressReportViewResponse;
+					}
+				} else {
+
+					progressReportViewResponse.setStatus("Invalid division");
+					progressReportViewResponse.setExamNames(new ArrayList<>());
+					progressReportViewResponse.setSubjectList(new ArrayList<>());
+					return progressReportViewResponse;
+				}
+
+			} else {
+				progressReportViewResponse.setStatus("Invalid User");
+				progressReportViewResponse.setExamNames(new ArrayList<>());
+				progressReportViewResponse.setSubjectList(new ArrayList<>());
+				return progressReportViewResponse;
+			}
+		} catch (Exception e) {
+			ProgressReportViewResponse progressReportViewResponse = new ProgressReportViewResponse();
+			e.printStackTrace();
+			progressReportViewResponse.setStatus("Failed");
+			progressReportViewResponse.setExamNames(new ArrayList<>());
+			progressReportViewResponse.setSubjectList(new ArrayList<>());
+			return progressReportViewResponse;
+		}
+	}
+
+	@RequestMapping(value = "progressreportViewParents", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object progressReportViewForParents(HttpServletRequest request,
+			@RequestBody ProgressReportViewRequest progressReportViewRequest) {
+		try {
+			ProgressReportViewResponse progressReportViewResponse = new ProgressReportViewResponse();
+
+			if (schoolDAO.isValidSchool(progressReportViewRequest.getSchoolID())) {
+
+				/*
+				 * if (schoolDivDAO.validDivision(progressReportViewRequest.
+				 * getDivisionID(), progressReportViewRequest.getSchoolID())) {
+				 */
+
+				if (studentDAO.isValidStudent(progressReportViewRequest.getStudentID())) {
+
+					progressReportViewResponse.setStatus("Success");
+
+					StudentModel studentModel = studentRepository.findOne(progressReportViewRequest.getStudentID());
+
+					/*
+					 * SchoolDivModel divModel = schoolDivRepository
+					 * .findOne(progressReportViewRequest.getDivisionID());
+					 */
+					progressReportViewResponse
+							.setClassTeacherName(studentModel.getSchoolDivModel().getSchoolStaffModel().getFirstName()
+									+ " " + studentModel.getSchoolDivModel().getSchoolStaffModel().getLastName());
+
+					List<ExamDetailsModel> examDetailsModels = examDetailsDao
+							.findEaxmBySchool(progressReportViewRequest.getSchoolID());
+					List<String> examNames = new ArrayList<>();
+					List<Subjects> subjects = new ArrayList<>();
+					List<String> marks = new ArrayList<>();
+					for (ExamDetailsModel examDetailsModels1 : examDetailsModels) {
+
+						examNames.add(examDetailsModels1.getExamName());
+
+						List<ProgressReportModel> progressReportModels = progressReportDAO.getReportDetails(
+								studentModel.getSchoolDivModel().getSchoolDivId(),
+								progressReportViewRequest.getSchoolID(), progressReportViewRequest.getStudentID(),
+								examDetailsModels1.getExamDetailsID());
+
+						for (ProgressReportModel progressReportModel : progressReportModels) {
+
+							Subjects subjects2 = new Subjects();
+							subjects2.setSubjectName(progressReportModel.getSubjectModel().getSubject());
+							subjects2.setSubjectID(progressReportModel.getSubjectModel().getSubjectId());
+							subjects.add(subjects2);
+
+							for (ExamDetailsModel examDetailsModel : examDetailsModels) {
+								marks.add(progressReportDAO.getExamMarksBySubjects(subjects2.getSubjectID(),
+										examDetailsModel.getExamDetailsID(), progressReportViewRequest.getStudentID()));
+							}
+							subjects2.setMarks(marks);
+							marks = new ArrayList<>();
+						}
+
+					}
+
+					progressReportViewResponse.setExamNames(examNames);
+					progressReportViewResponse.setSubjectList(subjects);
+
+					return progressReportViewResponse;
+				} else {
+					progressReportViewResponse.setStatus("Invalid student");
+					progressReportViewResponse.setExamNames(new ArrayList<>());
+					progressReportViewResponse.setSubjectList(new ArrayList<>());
+					return progressReportViewResponse;
+				}
+				/*
+				 * } else {
+				 * 
+				 * progressReportViewResponse.setStatus("Invalid division");
+				 * progressReportViewResponse.setExamNames(new ArrayList<>());
+				 * progressReportViewResponse.setSubjectList(new ArrayList<>());
+				 * return progressReportViewResponse; }
+				 */
+
+			} else {
+				progressReportViewResponse.setStatus("Invalid User");
+				progressReportViewResponse.setExamNames(new ArrayList<>());
+				progressReportViewResponse.setSubjectList(new ArrayList<>());
+				return progressReportViewResponse;
+			}
+		} catch (Exception e) {
+			ProgressReportViewResponse progressReportViewResponse = new ProgressReportViewResponse();
+			e.printStackTrace();
+			progressReportViewResponse.setStatus("Failed");
+			progressReportViewResponse.setExamNames(new ArrayList<>());
+			progressReportViewResponse.setSubjectList(new ArrayList<>());
+			return progressReportViewResponse;
+		}
+	}
+
+}

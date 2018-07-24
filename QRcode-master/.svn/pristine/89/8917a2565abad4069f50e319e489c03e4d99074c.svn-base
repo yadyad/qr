@@ -1,0 +1,192 @@
+package com.zs.cws.ws.android.license.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.myclass.dao.MyClassDAO;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.managementmembers.dao.ManagementMemberDAO;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolfeature.dao.SchoolFeatureDAO;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.license.model.AndroidLicenceResponseModel;
+import com.zs.cws.ws.android.license.model.SchoolChildrenModel;
+import com.zs.cws.ws.android.license.model.SchoolClassModel;
+import com.zs.cws.ws.android.license.model.SchoolLicenceModel;
+import com.zs.cws.ws.hybrid.license.model.LicenseRequestPOJO;
+
+@RestController
+@RequestMapping("/android")
+public class AndroidLicenseController {
+	@Autowired
+	ManagementMemberDAO managementMemberDAO;
+	@Autowired
+	ManagementRepository managementRepository;
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	SchoolFeatureDAO schoolFeatureDAO;
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	StudentDAO studentDAO;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	@Autowired
+	MyClassDAO myClassDAO;
+
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	StudentRepository studentRepository;
+
+	@RequestMapping(value = "/license", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAll(HttpServletRequest request,
+			@RequestBody LicenseRequestPOJO licenseRequestPOJO) {
+		try {
+			String userType = "";
+			boolean checkPhoneNumberParent = studentDAO.isParentPhoneNumberExists(licenseRequestPOJO.getPhoneNumber());
+			boolean checkPhoneNumberStaff = managementMemberDAO
+					.phoneNumbrExistStaff(licenseRequestPOJO.getPhoneNumber());
+			// CHECK THE USER TYPE
+			if (checkPhoneNumberParent && checkPhoneNumberStaff) {
+				userType = "PT";
+			} else if (checkPhoneNumberParent) {
+				userType = "P";
+			} else if (checkPhoneNumberStaff) {
+				userType = "T";
+			} else {
+				userType = "Invalid User";
+			}
+			///////////////////////////////////////////////////////
+			AndroidLicenceResponseModel androidLicenceResponseModel = new AndroidLicenceResponseModel();
+			/*
+			 * ======CHECK WHETHER THE USER IS VALID OR NOT
+			 * =====================
+			 **/
+			if (!userType.equals("Invalid User")) {
+				// GET THE SCHOOL LIST IF PARENT
+				List<SchoolLicenceModel> parentSchoolModels = studentDAO
+						.getSchoolsByPhone(licenseRequestPOJO.getPhoneNumber());
+				// GET THE SCHOOL LIST IF TEACHER
+				List<SchoolLicenceModel> teacherSchoolModels = schoolStaffDAO
+						.getSchoolsByPhone(licenseRequestPOJO.getPhoneNumber());
+
+				List<SchoolLicenceModel> finalSchoolList = new ArrayList<>();
+				// AVOID DUPLICATE SCHOOLS FROM TEACHER SCHOOL LIST AND ADD TO
+				// FINAL
+				// SCHOOL LISTS
+				for (int i = 0; i < teacherSchoolModels.size(); i++) {
+					boolean status = false;
+					for (int j = 0; j < finalSchoolList.size(); j++) {
+						if (teacherSchoolModels.get(i).getSchoolID() == finalSchoolList.get(j).getSchoolID()) {
+							System.out.println("TEACHER SCHOOLS::>" + teacherSchoolModels.get(i).getSchoolID());
+							status = true;
+							break;
+						}
+					}
+					if (!status) {
+						finalSchoolList.add(teacherSchoolModels.get(i));
+					}
+				}
+				// AVOID DUPLICATE SCHOOLS FROM PARENT SCHOOL LIST AND ADD TO
+				// FINAL
+				// SCHOOL LISTS
+				for (int i = 0; i < parentSchoolModels.size(); i++) {
+					boolean status = false;
+					for (int j = 0; j < finalSchoolList.size(); j++) {
+						if (parentSchoolModels.get(i).getSchoolID() == finalSchoolList.get(j).getSchoolID()) {
+							System.out.println("PARENT SCHOOLS::>" + parentSchoolModels.get(i).getSchoolID());
+							status = true;
+							break;
+						}
+					}
+					if (!status) {
+						finalSchoolList.add(parentSchoolModels.get(i));
+					}
+				}
+
+				// ADD PARENT AND TEACHER FEATURES AND CLASS DETAILS TO EACH
+				// MODEL
+				for (int i = 0; i < finalSchoolList.size(); i++) {
+
+					if (studentDAO.isParent(licenseRequestPOJO.getPhoneNumber(),
+							finalSchoolList.get(i).getSchoolID())) {
+						finalSchoolList.get(i).setParentFeature(
+								schoolFeatureDAO.listAllFeatures(finalSchoolList.get(i).getSchoolID(), "Parent"));
+						finalSchoolList.get(i).setSchoolChildrenModels(studentDAO.listStudents(
+								finalSchoolList.get(i).getSchoolID(), licenseRequestPOJO.getPhoneNumber()));
+					} else {
+						finalSchoolList.get(i).setParentFeature(new ArrayList<String>());
+						finalSchoolList.get(i).setSchoolChildrenModels(new ArrayList<SchoolChildrenModel>());
+
+					}
+					if (schoolStaffDAO.isTeacher(licenseRequestPOJO.getPhoneNumber(),
+							finalSchoolList.get(i).getSchoolID())) {
+						finalSchoolList.get(i).setTeacherFeature(
+								schoolFeatureDAO.listAllFeatures(finalSchoolList.get(i).getSchoolID(), "Teacher"));
+
+						finalSchoolList.get(i).setSchoolClassModels(myClassDAO.getAllClassesByStaff(
+								finalSchoolList.get(i).getSchoolID(), licenseRequestPOJO.getPhoneNumber()));
+					} else {
+						finalSchoolList.get(i).setTeacherFeature(new ArrayList<String>());
+						finalSchoolList.get(i).setSchoolClassModels(new ArrayList<SchoolClassModel>());
+					}
+				}
+				androidLicenceResponseModel.setSchoolLicenceModel(finalSchoolList);
+				androidLicenceResponseModel.setStatus("Success");
+				androidLicenceResponseModel.setUserType(userType);
+			}
+
+			else {
+				androidLicenceResponseModel.setStatus("Failed");
+				androidLicenceResponseModel.setUserType(userType);
+				List<SchoolLicenceModel> schoolList = new ArrayList<>();
+				androidLicenceResponseModel.setSchoolLicenceModel(schoolList);
+			}
+			// UPDATE FCM TOCKEN IN STUDENT AND STAFF TABLE
+			if (androidLicenceResponseModel.getStatus().equals("Success")) {
+				List<StudentModel> studentModelList = studentDAO
+						.listStudentsByPhone(licenseRequestPOJO.getPhoneNumber());
+				for (StudentModel studentModel : studentModelList) {
+					System.out.println("YEEEEEEEEEEESSSSSSSSSSSSSSSSSSS");
+					studentModel.setFcmTocken(licenseRequestPOJO.getFcmTocken());
+					studentRepository.save(studentModel);
+				}
+
+				List<SchoolStaffModel> schoolStaffList = schoolStaffDAO
+						.getStaffsByPhone(licenseRequestPOJO.getPhoneNumber());
+				for (SchoolStaffModel schoolStaffModel : schoolStaffList) {
+					System.out.println("YEEEEEEEEEEESSSSSSSSSSSSSSSSSSS");
+					schoolStaffModel.setFcmTocken(licenseRequestPOJO.getFcmTocken());
+					schoolStaffRepository.save(schoolStaffModel);
+				}
+			}
+			return androidLicenceResponseModel;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			AndroidLicenceResponseModel androidLicenceResponseModel = new AndroidLicenceResponseModel();
+			androidLicenceResponseModel.setStatus("Failed");
+			androidLicenceResponseModel.setUserType("");
+			List<SchoolLicenceModel> schoolList = new ArrayList<>();
+			androidLicenceResponseModel.setSchoolLicenceModel(schoolList);
+			return androidLicenceResponseModel;
+		}
+	}
+}

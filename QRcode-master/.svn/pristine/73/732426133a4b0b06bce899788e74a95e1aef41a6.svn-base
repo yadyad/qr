@@ -1,0 +1,8 @@
+package com.zs.cws.superadmin.master.feature.dao;
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+
+public interface FeatureDAO {
+	boolean isAvailable(FeatureModel featureModel);
+
+}

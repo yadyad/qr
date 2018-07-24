@@ -1,0 +1,116 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+
+
+@Entity
+@Table(name = "cwas_dairy_message_deliver_details")
+public class DairyMessageDeliverModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int deliverID;
+	
+	@OneToOne
+	@JoinColumn(name = "message_id")
+	DairyMessageModel dairyMessageModel;
+	
+	@OneToOne
+	@JoinColumn(name = "parent_id")
+	StudentModel studentModel;
+	
+	@OneToOne
+	@JoinColumn(name = "staff_id")
+	SchoolStaffModel schoolStaffModel;
+	
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+	
+	@Column(name = "message_flow")
+	private String messageFlow;
+	
+	@Column(name = "message_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date messageDate;
+
+	public DairyMessageDeliverModel() {
+	}
+
+	public int getDeliverID() {
+		return deliverID;
+	}
+
+	public void setDeliverID(int deliverID) {
+		this.deliverID = deliverID;
+	}
+
+	public DairyMessageModel getDairyMessageModel() {
+		return dairyMessageModel;
+	}
+
+	public void setDairyMessageModel(DairyMessageModel dairyMessageModel) {
+		this.dairyMessageModel = dairyMessageModel;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+	public Date getMessageDate() {
+		return messageDate;
+	}
+
+	public void setMessageDate(Date messageDate) {
+		this.messageDate = messageDate;
+	}
+
+	@Override
+	public String toString() {
+		return "DairyMessageDeliverModel [deliverID=" + deliverID + ", dairyMessageModel=" + dairyMessageModel
+				+ ", studentModel=" + studentModel + ", schoolStaffModel=" + schoolStaffModel + ", schoolModel="
+				+ schoolModel + ", messageFlow=" + messageFlow + ", messageDate=" + messageDate + "]";
+	}
+
+}

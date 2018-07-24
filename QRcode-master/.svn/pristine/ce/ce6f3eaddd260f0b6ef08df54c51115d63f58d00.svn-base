@@ -1,0 +1,108 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+import java.util.List;
+
+public class MeetingServiceRequestModel {
+
+	int fromStaffID;
+	int schoolID;
+	String purpose;
+	String venue;
+	String meetingTime;
+	String meetingDate;
+	String meetingType;
+	String agenda;
+	List<Integer> divisionIDs;
+	List<Integer> subjectIDs;
+
+	public MeetingServiceRequestModel() {
+	}
+
+	public int getFromStaffID() {
+		return fromStaffID;
+	}
+
+	public void setFromStaffID(int fromStaffID) {
+		this.fromStaffID = fromStaffID;
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public String getMeetingType() {
+		return meetingType;
+	}
+
+	public void setMeetingType(String meetingType) {
+		this.meetingType = meetingType;
+	}
+
+	public List<Integer> getDivisionIDs() {
+		return divisionIDs;
+	}
+
+	public void setDivisionIDs(List<Integer> divisionIDs) {
+		this.divisionIDs = divisionIDs;
+	}
+
+	public List<Integer> getSubjectIDs() {
+		return subjectIDs;
+	}
+
+	public void setSubjectIDs(List<Integer> subjectIDs) {
+		this.subjectIDs = subjectIDs;
+	}
+
+	public String getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingServiceRequestModel [fromStaffID=" + fromStaffID + ", schoolID=" + schoolID + ", purpose="
+				+ purpose + ", venue=" + venue + ", meetingTime=" + meetingTime + ", meetingDate=" + meetingDate
+				+ ", meetingType=" + meetingType + ", divisionIDs=" + divisionIDs + ", subjectIDs=" + subjectIDs + "]";
+	}
+
+}

@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.quota.dao;
+
+import com.zs.cws.superadmin.master.quota.model.QuotaModel;
+
+public interface QuotaDAO {
+
+	boolean isAvailable(QuotaModel quotaModel);
+
+}

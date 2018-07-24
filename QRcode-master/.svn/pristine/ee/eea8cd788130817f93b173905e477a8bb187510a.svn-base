@@ -1,0 +1,107 @@
+package com.zs.cws.ws.android.staffdetails.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.myclass.dao.MyClassDAO;
+import com.zs.cws.schooladmin.myclass.model.MyClassModel;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.ws.android.staffdetails.model.StaffDetails;
+import com.zs.cws.ws.android.staffdetails.model.StaffDetailsRequestModel;
+import com.zs.cws.ws.android.staffdetails.model.StaffDetailsResponseModel;
+
+@RestController
+@RequestMapping("android/stafflist")
+public class StaffDetailsServiceController {
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+
+	@Autowired
+	MyClassDAO myClassDAO;
+
+	@RequestMapping(value = "/staffs", produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listAllStudents(HttpServletRequest request,
+			@RequestBody StaffDetailsRequestModel staffDetailsRequestModel) {
+		try {
+			StaffDetailsResponseModel detailsResponseModel = new StaffDetailsResponseModel();
+			if (studentDAO.isValidStudent(staffDetailsRequestModel.getStudentID())) {
+
+				if (schoolDivDAO.validDivision(staffDetailsRequestModel.getDivisionID(),
+						staffDetailsRequestModel.getSchoolID())) {
+
+					List<MyClassModel> classModels = myClassDAO.getStaffDetails(
+							staffDetailsRequestModel.getDivisionID(), staffDetailsRequestModel.getSchoolID(),
+							staffDetailsRequestModel.getModifiedDate());
+					if (classModels.size() > 0) {
+						detailsResponseModel.setStatus("Success");
+						List<StaffDetails> details = new ArrayList<>();
+						for (MyClassModel myClassModel : classModels) {
+							StaffDetails staffDetails = new StaffDetails();
+							Date date = new Date();
+							date = myClassModel.getUpdatedDate();
+							SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							String s = sdf1.format(date);
+							try {
+								date = sdf1.parse(s);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							staffDetails.setStaffName(myClassModel.getSchoolStaffModel().getFirstName() + " "
+									+ myClassModel.getSchoolStaffModel().getLastName());
+							staffDetails.setStaffID(myClassModel.getSchoolStaffModel().getSchoolStaffId());
+							staffDetails.setSubject(myClassModel.getSubjectModel().getSubject());
+							staffDetails.setDivisionID(staffDetailsRequestModel.getDivisionID());
+							staffDetails.setModifiedDate(s);
+							staffDetails.setStudentID(staffDetailsRequestModel.getStudentID());
+							staffDetails.setEmail(myClassModel.getSchoolStaffModel().getEmailId());
+							staffDetails.setPhone(myClassModel.getSchoolStaffModel().getPhone());
+							details.add(staffDetails);
+
+						}
+						detailsResponseModel.setStaffs(details);
+						return detailsResponseModel;
+					} else {
+						detailsResponseModel.setStatus("Success");
+						detailsResponseModel.setStaffs(new ArrayList<>());
+						return detailsResponseModel;
+					}
+
+				} else {
+					detailsResponseModel.setStatus("Invalid Division");
+					detailsResponseModel.setStaffs(new ArrayList<>());
+					return detailsResponseModel;
+				}
+
+			} else {
+
+				detailsResponseModel.setStatus("Invalid User");
+				detailsResponseModel.setStaffs(new ArrayList<>());
+				return detailsResponseModel;
+			}
+
+		} catch (Exception e) {
+			StaffDetailsResponseModel detailsResponseModel = new StaffDetailsResponseModel();
+			detailsResponseModel.setStatus("Failed");
+			detailsResponseModel.setStaffs(new ArrayList<>());
+			return detailsResponseModel;
+		}
+	}
+
+}

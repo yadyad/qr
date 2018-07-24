@@ -1,0 +1,15 @@
+package com.zs.cws.schooladmin.meetingtask.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.TaskResponseModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementTaskAssignmentModel;
+
+public interface PrincipalMeetingTaskDAO {
+
+	public List<PrincipalMeetingTaskModel> getCurrentTasks(int meetingID);
+	public List<TaskResponseModel> getMyTasks(PrincipalMeetingRequestModel principalMeetingRequestModel);
+	public List<ManagementTaskAssignmentModel> getCurrentTasksForMgmt(int meetingID, String memberType);
+}

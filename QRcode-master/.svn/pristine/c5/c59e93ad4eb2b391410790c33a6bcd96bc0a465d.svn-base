@@ -1,0 +1,182 @@
+package com.zs.cws.schooladmin.division;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.schooladmin.subscriptionactivation.dao.SubscriptionActivationDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schooldivision.repository.SchoolDivRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.utils.GlobalVariables;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/schoolDivison")
+public class DivisionController {
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	SchoolDivRepository SchoolDivRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	int schoolId;
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	SubscriptionActivationDAO subscriptionActivationDAO;
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	StudentDAO studentDAO;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("school_admin_school_division");
+		modelAndView.addObject("studentCount", studentDAO.getStudentsCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("divisionCount", schoolDivDAO.getDivisionCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("staffCount", schoolStaffDAO.getStaffCount(GlobalVariables.SCHOOL_ID));
+		if (!subscriptionActivationDAO.isSubscribed(GlobalVariables.SCHOOL_ID)) {
+			modelAndView = new ModelAndView("redirect:/redirect");
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/divisionlistAll", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		List<SchoolDivModel> schoolDivModels = schoolDivDAO.getDivisionLists(GlobalVariables.SCHOOL_ID);
+		return schoolDivModels;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody SchoolDivModel schoolDivModel,
+			HttpSession session) {
+
+		SchoolModel schoolModel = new SchoolModel();
+		schoolModel.setSchoolId(GlobalVariables.SCHOOL_ID);
+		schoolDivModel.setSchoolModel(schoolModel);
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!schoolDivDAO.isAvailable(schoolDivModel)) {
+			schoolDivModel.setCreatedUser(loggedUser);
+			schoolDivModel.setUpdatedUser(loggedUser);
+			schoolDivModel.setCreatedDate(new Date());
+			schoolDivModel.setUpdatedDate(new Date());
+
+			SchoolStaffModel schoolStaffModel = schoolStaffRepository
+					.findOne(schoolDivModel.getSchoolStaffModel().getSchoolStaffId());
+			schoolDivModel.setSchoolStaffModel(schoolStaffModel);
+
+			SchoolStaffModel coschoolStaffModel = schoolStaffRepository
+					.findOne(schoolDivModel.getCoschoolStaffModel().getSchoolStaffId());
+			schoolDivModel.setCoschoolStaffModel(coschoolStaffModel);
+			SchoolDivRepository.save(schoolDivModel);
+			return schoolDivModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/divisiondeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] divisonIdeIDs) {
+		System.out.println("divisiondeleteItems" + divisonIdeIDs);
+		for (int divisionId : divisonIdeIDs) {
+			if (divisionId != 0) {
+				SchoolDivRepository.delete(divisionId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/divisiondeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int divisonId) {
+		if (divisonId != 0) {
+			SchoolDivRepository.delete(divisonId);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/dropDown", method = RequestMethod.GET)
+	public @ResponseBody Object divisionMap() {
+		List<SchoolModel> schoolModelslist = schoolRepository.findAll();
+
+		Map<Integer, String> managMap = new HashMap<>();
+		for (SchoolModel schoolmodel : schoolModelslist) {
+			managMap.put(schoolmodel.getSchoolId(), schoolmodel.getSchoolName());
+
+		}
+		return managMap;
+	}
+
+	@RequestMapping(value = "/dropDowntecher", method = RequestMethod.GET)
+	public @ResponseBody Object divMap() {
+
+		List<SchoolStaffModel> schoolModelsliststaff = schoolStaffRepository.findAll();
+
+		Map<Integer, String> managMap = new HashMap<>();
+		for (SchoolStaffModel schoolstaffmodel : schoolModelsliststaff) {
+			managMap.put(schoolstaffmodel.getSchoolStaffId(),
+					schoolstaffmodel.getFirstName() + " " + schoolstaffmodel.getLastName());
+
+		}
+		return managMap;
+	}
+
+	@RequestMapping(value = "/dropDowntecherco", method = RequestMethod.GET)
+	public @ResponseBody Object divMapcoteach() {
+
+		List<SchoolStaffModel> schoolModelsliststaff = schoolStaffRepository.findAll();
+
+		Map<Integer, String> managMap = new HashMap<>();
+		for (SchoolStaffModel schoolstaffmodel : schoolModelsliststaff) {
+			managMap.put(schoolstaffmodel.getSchoolStaffId(),
+					schoolstaffmodel.getFirstName() + " " + schoolstaffmodel.getLastName());
+
+		}
+		return managMap;
+	}
+
+	@RequestMapping(value = "/divdropDown", method = RequestMethod.GET)
+	public @ResponseBody Object deptMap() {
+		// List<SchoolDivModel> schoolDivModels = SchoolDivRepository.findAll();
+		List<SchoolDivModel> schoolDivModels = schoolDivDAO.getDivisionLists(GlobalVariables.SCHOOL_ID);
+		Map<Integer, String> divisionMap = new HashMap<>();
+		for (SchoolDivModel divModel : schoolDivModels) {
+			divisionMap.put(divModel.getSchoolDivId(), divModel.getStandard() + "-" + divModel.getDivision());
+		}
+		return divisionMap;
+	}
+
+	
+	@RequestMapping(value = "/divOnlydropDown", method = RequestMethod.GET)
+	public @ResponseBody Object deptMa1p() {
+		// List<SchoolDivModel> schoolDivModels = SchoolDivRepository.findAll();
+		List<SchoolDivModel> schoolDivModels = schoolDivDAO.getDivisionLists(GlobalVariables.SCHOOL_ID);
+		Map<Integer, String> divisionMap = new HashMap<>();
+		for (SchoolDivModel divModel : schoolDivModels) {
+			divisionMap.put(divModel.getSchoolDivId(),divModel.getDivision());
+		}
+		return divisionMap;
+	}
+}

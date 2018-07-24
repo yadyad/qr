@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.designation.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+
+public interface DesignationRepository extends JpaRepository<DesignationModel, Integer> {
+
+}

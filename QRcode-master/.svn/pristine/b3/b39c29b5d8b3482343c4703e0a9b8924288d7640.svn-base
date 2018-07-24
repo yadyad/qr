@@ -1,0 +1,49 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+
+public class ProgressReport {
+	
+	
+	String subjectName;
+	String marks;
+	
+	
+	
+	public ProgressReport() {
+		
+	}
+
+	
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	public String getMarks() {
+		return marks;
+	}
+
+	public void setMarks(String marks) {
+		this.marks = marks;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ProgressReport [subjectName=" + subjectName + ", marks=" + marks + "]";
+	}
+
+
+
+	
+
+	
+	
+	
+	
+	
+
+}

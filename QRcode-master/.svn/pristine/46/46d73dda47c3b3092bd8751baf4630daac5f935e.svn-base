@@ -1,0 +1,167 @@
+package com.zs.cws.superadmin.management.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.management.dao.ManagementDAO;
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.utils.FileAction;
+import com.zs.cws.utils.UploadFiles;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/management")
+public class ManagementController {
+
+	@Autowired
+	ManagementRepository managementRepository;
+	int managementID;
+	@Autowired
+	ManagementDAO managementDAO;
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementPage() {
+		ModelAndView model = new ModelAndView("super_admin_management");
+		return model;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers(HttpServletRequest request) {
+
+		List<ManagementModel> finalManagementList = new ArrayList<>();
+		List<ManagementModel> managementList = managementRepository.findAll();
+
+		for (ManagementModel managementModel : managementList) {
+
+			if (managementModel.getImageURL() != null) {
+				String[] fileName = managementModel.getImageURL().split(FileAction.getURLBase(request));
+				if (fileName.length > 1) {
+					double fileSize = FileAction.getFileSize(request, fileName[1]);
+					if (fileSize == 0) {
+						managementModel.setImageURL(FileAction.getURLBase(request) + "resources/img/no-management.jpg");
+					} else {
+						managementModel.setImageURL(managementModel.getImageURL());
+					}
+				} else {
+					managementModel.setImageURL(FileAction.getURLBase(request) + "resources/img/no-management.jpg");
+				}
+			} else {
+				managementModel.setImageURL(FileAction.getURLBase(request) + "resources/img/no-management.jpg");
+			}
+			finalManagementList.add(managementModel);
+		}
+		return managementList;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody ManagementModel managementModel,
+			HttpSession session) {
+
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!managementDAO.isAvailable(managementModel)) {
+			
+			managementModel.setCreatedBy(loggedUser);
+			managementModel.setUpdatedBy(loggedUser);
+			managementModel.setCreatedDate(new Date());
+			managementModel.setUpdatedDate(new Date());
+			if (managementModel.getImageURL() != null) {
+				String[] fileName = managementModel.getImageURL().split(FileAction.getURLBase(request));
+				if (fileName[1].equals("resources/img/no-management.jpg")) {
+					managementModel.setImageURL(null);
+				}
+			}
+			managementRepository.save(managementModel);
+			managementID = managementModel.getManagementID();
+			return managementModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/deleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] managementIDS) {
+		for (int managementID : managementIDS) {
+			if (managementID != 0) {
+				managementRepository.delete(managementID);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int managementID, HttpServletRequest request) {
+		if (managementID != 0) {
+			ManagementModel managementModel = new ManagementModel();
+			managementModel = managementRepository.findOne(managementID);
+			/*
+			 * String[] fileName =
+			 * managementModel.getImageURL().split(FileAction.getURLBase(request
+			 * )); FileAction.deleteFile(request, fileName[1]);
+			 */
+			managementRepository.delete(managementID);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/dropDown", method = RequestMethod.GET)
+	public @ResponseBody Object managementMap() {
+		List<ManagementModel> managementList = managementRepository.findAll();
+		Map<Integer, String> managMap = new HashMap<>();
+		for (ManagementModel managementModel : managementList) {
+			managMap.put(managementModel.getManagementID(), managementModel.getManagementName());
+		}
+		return managMap;
+	}
+
+	@RequestMapping(value = "/insertImage", method = RequestMethod.POST)
+	public @ResponseBody Object uploadTimeTable(@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpSession session, HttpServletRequest request) throws IOException {
+		System.out.println("INSERRRRRRRRRRRR");
+		ManagementModel managementModel = new ManagementModel();
+		if (file != null) {
+			managementModel = managementRepository.findOne(managementID);
+			if (managementModel.getImageURL() != null) {
+				String[] fileName = managementModel.getImageURL().split(FileAction.getURLBase(request));
+				FileAction.deleteFile(request, fileName[1]);
+			}
+			String directory = "/resources/img/" + managementModel.getManagementName();
+			managementModel.setImageURL(UploadFiles.uploadDocument(file, request, directory, ".jpg"));
+			
+			managementRepository.save(managementModel);
+		}
+		return managementModel;
+	}
+
+	@RequestMapping(value = "/isPhoneRegistered/{phone}", method = RequestMethod.GET)
+	public @ResponseBody Object isRegisteredPhone(@PathVariable("phone") String phone) {
+		return managementDAO.isRegisteredPhone(phone);
+	}
+
+	@RequestMapping(value = "/isEmailRegistered", method = RequestMethod.POST)
+	public @ResponseBody Object isRegisteredEmail(@RequestBody ManagementModel emailModel) {
+		System.out.println("connnnnnnnnnn" + emailModel.getEmailID());
+		return managementDAO.isRegisteredEmail(emailModel.getEmailID());
+	}
+}

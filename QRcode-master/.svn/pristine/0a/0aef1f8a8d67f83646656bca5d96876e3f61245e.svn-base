@@ -1,0 +1,84 @@
+package com.zs.cws.schooladmin.attendance.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.schooladmin.subscriptionactivation.dao.SubscriptionActivationDAO;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schooldivision.repository.SchoolDivRepository;
+import com.zs.cws.superadmin.schoolstaff.dao.SchoolStaffDAO;
+import com.zs.cws.superadmin.schoolstaff.repository.SchoolStaffRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.utils.GlobalVariables;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/attendance")
+public class AttendanceController {
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	SchoolDivRepository SchoolDivRepository;
+	@Autowired
+	SchoolStaffRepository schoolStaffRepository;
+	int schoolId;
+	@Autowired
+	SchoolRepository schoolRepository;
+	@Autowired
+	SubscriptionActivationDAO subscriptionActivationDAO;
+	@Autowired
+	SchoolStaffDAO schoolStaffDAO;
+	@Autowired
+	StudentDAO studentDAO;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("attendance-home");
+		modelAndView.addObject("studentCount", studentDAO.getStudentsCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("divisionCount", schoolDivDAO.getDivisionCount(GlobalVariables.SCHOOL_ID));
+		modelAndView.addObject("staffCount", schoolStaffDAO.getStaffCount(GlobalVariables.SCHOOL_ID));
+		if (!subscriptionActivationDAO.isSubscribed(GlobalVariables.SCHOOL_ID)) {
+			modelAndView = new ModelAndView("redirect:/redirect");
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/divisionlist", method = RequestMethod.GET)
+	public @ResponseBody Object listAllDivisions() {
+		List<SchoolDivModel> schoolDivModels = schoolDivDAO.getDivisionLists(GlobalVariables.SCHOOL_ID);
+
+		Map<Integer, String> divMap = new HashMap<>();
+
+		for (SchoolDivModel schoolDivModel : schoolDivModels) {
+			divMap.put(schoolDivModel.getSchoolDivId(),
+					schoolDivModel.getStandard() + "-" + schoolDivModel.getDivision());
+		}
+		return divMap;
+	}
+	
+	@RequestMapping(value = "/studentsList/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object listAllStudents(@PathVariable("id") int divisionID) {
+		List<StudentModel> studentModels = studentDAO.listAllStudentsByDivision(GlobalVariables.SCHOOL_ID, divisionID);
+
+		Map<Integer, String> studentMap = new HashMap<>();
+
+		for (StudentModel StudentModel : studentModels) {
+			studentMap.put(StudentModel.getStudentId(),
+					StudentModel.getFirstName() + " " + StudentModel.getLastName());
+		}
+		return studentMap;
+	}
+}

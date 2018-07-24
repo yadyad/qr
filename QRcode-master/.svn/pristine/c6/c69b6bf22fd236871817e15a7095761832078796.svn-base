@@ -1,0 +1,44 @@
+package com.zs.cws.ws.hybrid.attendance.model;
+
+import java.util.List;
+
+public class HybridAttendanceResponseModel {
+	
+	String status;
+	List<FinalClassList>finalClassLists;
+	List<Division>divisionList;
+	
+	public HybridAttendanceResponseModel() {
+		
+	}
+	
+	public List<FinalClassList> getFinalClassLists() {
+		return finalClassLists;
+	}
+
+	public void setFinalClassLists(List<FinalClassList> finalClassLists) {
+		this.finalClassLists = finalClassLists;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public List<Division> getDivisionList() {
+		return divisionList;
+	}
+	public void setDivisionList(List<Division> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	@Override
+	public String toString() {
+		return "HybridAttendanceResponseModel [status=" + status + ", finalClassLists=" + finalClassLists
+				+ ", divisionList=" + divisionList + "]";
+	}
+	
+	
+
+}

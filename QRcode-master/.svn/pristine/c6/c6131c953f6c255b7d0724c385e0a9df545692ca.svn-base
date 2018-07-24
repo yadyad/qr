@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2017-05-11T13:54:28 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3ffa8b2-bd83-488a-86df-d9148dd6562e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Dataset1" uuid="83255ec9-23c4-40eb-ac88-3fa42376e8ff">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="studentName" class="java.lang.String"/>
+	<field name="enrollmentNumbers" class="java.lang.String"/>
+	<field name="standard" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="payedDate" class="java.lang.String"/>
+	<variable name="Total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="200" y="2" width="150" height="30" backcolor="#42B36B" uuid="53b27c67-dd8f-4e08-9add-065b45f39a2b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="16"/>
+				</textElement>
+				<text><![CDATA[Payment report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="43">
+			<rectangle>
+				<reportElement key="" x="24" y="1" width="100" height="38" backcolor="#42B36B" uuid="3b80ffac-ad51-4b64-9e79-6a0c90973479"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="124" y="1" width="100" height="38" backcolor="#42B36B" uuid="40f92ff9-504e-4c5c-8a5a-7e1fb67dfa72"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="224" y="1" width="100" height="38" backcolor="#42B36B" uuid="f23560a3-a6fd-42f3-abaa-afad715ccd17"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="324" y="1" width="100" height="38" backcolor="#42B36B" uuid="52e9fcfe-cf26-464d-be64-b5dfaeb121eb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="424" y="1" width="100" height="38" backcolor="#42B36B" uuid="1d23565a-596d-491d-81d8-e16b8e266cbe"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="25" y="11" width="100" height="30" backcolor="#EB918F" uuid="04b78965-e9cc-475d-92a8-a1cd964a7b80"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="11" width="100" height="30" uuid="cab12d5c-2537-4038-9488-99cde3e162fc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Enrollment number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="11" width="100" height="30" uuid="0e990893-91cf-4cca-a2a3-9459be7d866a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Class]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="11" width="100" height="30" uuid="46be54e4-29cf-423c-b3db-38d845bf4e94"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payed date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="424" y="11" width="100" height="30" uuid="82fb77f2-1f24-442b-8547-1c352073f9b8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<rectangle>
+				<reportElement x="24" y="-4" width="100" height="38" uuid="d6ae66f5-630d-467d-88db-348cdcbad6b1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="125" y="-4" width="100" height="38" uuid="e74ea405-818d-4771-8c6a-e285585d8b52"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="224" y="-4" width="100" height="38" uuid="217304cb-1482-4789-8023-fe40572a3d48"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="324" y="-4" width="100" height="38" uuid="df18d375-d3b3-404f-bb5f-fa9a969c33c5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="424" y="-4" width="100" height="38" uuid="ff22dac2-a18a-4b14-b14b-45e6cd60d9da"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="25" y="6" width="100" height="30" uuid="a3761121-2630-42ac-a4f4-ea72c8eb43ac"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="126" y="6" width="100" height="30" uuid="15a25d7e-87da-47a4-b368-faff0a53069f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{enrollmentNumbers}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="234" y="6" width="86" height="30" uuid="ba969916-2d95-4793-98f3-6434d426b34b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{standard}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="331" y="2" width="86" height="30" uuid="6811ac6a-7e54-46e5-b7cc-3eaef60d41d8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payedDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="6" width="86" height="30" uuid="317f450c-edfe-40a0-873e-43bc2c3adb11"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="40">
+			<staticText>
+				<reportElement x="330" y="10" width="100" height="30" uuid="0102ccd8-b741-4c14-89c3-7c5d87cdbabc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="10" width="93" height="30" uuid="145df19d-8c08-4d58-9bb1-513c64e8790f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,21 @@
+package com.zs.cws.ws.android.attendence.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.attendence.model.AttendanceModel;
+import com.zs.cws.ws.android.attendence.model.StudentAttendanceResponseModel;
+import com.zs.cws.ws.hybrid.attendance.model.Division;
+import com.zs.cws.ws.hybrid.attendance.model.HybridAttendanceRequestModel;
+
+public interface AttendanceDAO {
+
+	List<AttendanceModel> getAttendanceForDate(int schoolID, int divisionID, String attendanceDate);
+
+	void deleteGivenDateAttendance(String attendanceDate, int schoolID, int divisionID);
+
+	Division getPresentCount(HybridAttendanceRequestModel hybridAttendanceRequestModel, Division division);
+
+	boolean isAttendanceAvailable(String Date, int schoolID);
+
+	public List<StudentAttendanceResponseModel> getStudentsAttendanceList(int startYear, int startmonth, int endYear, int endMonth, int studentID);
+}

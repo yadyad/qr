@@ -1,0 +1,36 @@
+package com.zs.cws.schooladmin.directory.model;
+
+import java.util.List;
+
+import com.zs.cws.utils.FilePropertyModel;
+
+public class DirectoryModel {
+
+	List<FilePropertyModel> fileList;
+	List<FilePropertyModel> folderList;
+
+	public DirectoryModel() {
+	}
+
+	public List<FilePropertyModel> getFileList() {
+		return fileList;
+	}
+
+	public void setFileList(List<FilePropertyModel> fileList) {
+		this.fileList = fileList;
+	}
+
+	public List<FilePropertyModel> getFolderList() {
+		return folderList;
+	}
+
+	public void setFolderList(List<FilePropertyModel> folderList) {
+		this.folderList = folderList;
+	}
+
+	@Override
+	public String toString() {
+		return "DirectoryModel [fileList=" + fileList + ", folderList=" + folderList + "]";
+	}
+
+}

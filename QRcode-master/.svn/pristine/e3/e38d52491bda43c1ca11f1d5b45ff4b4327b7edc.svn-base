@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.plancreation.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.plancreation.model.PlanCreationModel;
+
+public interface PlanCreationRepository extends JpaRepository<PlanCreationModel, Integer> {
+
+}

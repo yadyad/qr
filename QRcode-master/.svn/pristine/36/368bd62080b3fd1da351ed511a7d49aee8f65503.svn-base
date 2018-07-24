@@ -1,0 +1,101 @@
+package com.zs.cws.ws.android.complaintbox.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+
+@Entity
+@Table(name = "cwas_complaint_box_details")
+public class ComplaintBoxModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int complaintID;
+	
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+	
+	@OneToOne
+	@JoinColumn(name = "student_id")
+	StudentModel studentModel;
+	
+	@Column(name = "complaint")
+	private String complaint;
+	
+	@Column(name = "description")
+	private String description;
+	
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+
+	public ComplaintBoxModel() {
+	}
+
+	public int getComplaintID() {
+		return complaintID;
+	}
+
+	public void setComplaintID(int complaintID) {
+		this.complaintID = complaintID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	public String getComplaint() {
+		return complaint;
+	}
+
+	public void setComplaint(String complaint) {
+		this.complaint = complaint;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ComplaintBoxModel [complaintID=" + complaintID + ", schoolModel=" + schoolModel + ", studentModel="
+				+ studentModel + ", complaint=" + complaint + ", description=" + description + "]";
+	}
+	
+}

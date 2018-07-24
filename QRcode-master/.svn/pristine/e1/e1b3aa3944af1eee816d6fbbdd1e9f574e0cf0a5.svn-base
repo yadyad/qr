@@ -1,0 +1,50 @@
+package com.zs.cws.superadmin.student.dao;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+import com.zs.cws.ws.android.license.model.SchoolChildrenModel;
+import com.zs.cws.ws.android.license.model.SchoolLicenceModel;
+
+public interface StudentDAO {
+
+	public boolean isAvailable(StudentModel studentModel);
+
+	public StudentModel getLastInsertedEntry();
+
+	public List<StudentModel> getStudentBySchool(int schoolId);
+
+	public Object isEnrollment(String enrollmentNumber);
+
+	public long getStudentsCount(int schoolID);
+
+	public boolean isParentPhoneNumberExists(String phone);
+
+	public boolean isParent(String phone, int schoolID);
+
+	public List<SchoolLicenceModel> getSchoolsByPhone(String phone);
+
+	public List<SchoolChildrenModel> listStudents(int schooolId, String phone);
+
+	public List<StudentModel> listStudentsByDivison(int schooolId, int divisionID,String date);
+	public List<StudentModel> listAllStudentsByDivision(int schooolId, int divisionID);
+
+	public StudentModel getStudentDetails(int studentID);
+	public boolean isValidStudent(int studentID);
+	
+	public List<StudentModel> listStudentsByPhone(String phoneNumber);
+
+	public List<FeesPaymentModel> getFeesDetails(int sCHOOL_ID);
+
+	
+
+	public List<StudentModel> getParentSerachList(int divisionID, int schoolID, String searchStudName);
+
+	public List<FeesPaymentModel> getFeesDetailsFilter(int sCHOOL_ID, String std, String divisions, String days);
+
+
+}

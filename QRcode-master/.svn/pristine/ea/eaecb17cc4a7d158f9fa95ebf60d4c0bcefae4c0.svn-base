@@ -1,0 +1,135 @@
+package com.zs.cws.schooladmin.settings.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_academic_year_master")
+public class AcademicModel {
+
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int academicID;
+
+	@Column(name = "academic_start_year")
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	Date academicStartYear;
+
+	@Column(name = "academic_end_year")
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	Date academicEndYear;
+
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	@Column(name = "created_by")
+	String createdBy;
+
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	Date createdDate;
+
+	@Column(name = "updated_by")
+	String updatedBy;
+
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	Date updatedDate;
+
+	public AcademicModel() {
+
+	}
+
+	
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+
+	public int getAcademicID() {
+		return academicID;
+	}
+
+	public void setAcademicID(int academicID) {
+		this.academicID = academicID;
+	}
+
+	public Date getAcademicStartYear() {
+		return academicStartYear;
+	}
+
+	public void setAcademicStartYear(Date academicStartYear) {
+		this.academicStartYear = academicStartYear;
+	}
+
+	public Date getAcademicEndYear() {
+		return academicEndYear;
+	}
+
+	public void setAcademicEndYear(Date academicEndYear) {
+		this.academicEndYear = academicEndYear;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	@Override
+	public String toString() {
+		return "AcademicModel [academicID=" + academicID + ", academicStartYear=" + academicStartYear
+				+ ", academicEndYear=" + academicEndYear + ", schoolModel=" + schoolModel + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate + "]";
+	}
+
+	
+
+}

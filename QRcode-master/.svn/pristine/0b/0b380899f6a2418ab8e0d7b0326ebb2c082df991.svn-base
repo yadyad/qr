@@ -1,0 +1,61 @@
+package com.zs.cws.ws.hybrid.meetingtask.model;
+
+public class MemberTaskListModel {
+
+	String taskName;
+	String startDate;
+	String endDate;
+	double percentageCompletion;
+	int memberID;
+	
+	public MemberTaskListModel() {
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public double getPercentageCompletion() {
+		return percentageCompletion;
+	}
+
+	public void setPercentageCompletion(double percentageCompletion) {
+		this.percentageCompletion = percentageCompletion;
+	}
+
+	public int getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberTaskListModel [taskName=" + taskName + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", percentageCompletion=" + percentageCompletion + ", memberID=" + memberID + "]";
+	}
+	
+	
+}

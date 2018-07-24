@@ -1,0 +1,348 @@
+package com.zs.cws.superadmin.managementmembers.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.management.repository.ManagementRepository;
+import com.zs.cws.superadmin.managementmembers.model.ManagementMemberModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.schoolfeature.dao.SchoolFeatureDAO;
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.ws.hybrid.license.model.FeatureResponsePOJO;
+import com.zs.cws.ws.hybrid.license.model.FinalResultPOJO;
+import com.zs.cws.ws.hybrid.license.model.ManagementLicenseResponsePOJO;
+import com.zs.cws.ws.hybrid.license.model.SchoolResponsePOJO;
+
+@Repository
+@Transactional
+public class ManagementMemberIMPL implements ManagementMemberDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Autowired
+	SchoolDAO schoolDAO;
+
+	@Autowired
+
+	SchoolFeatureDAO schoolFeatureDAO;
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Autowired
+	ManagementRepository managementRepository;
+
+	public boolean isAvailable(ManagementMemberModel managementMemberModel) {
+		String query = "";
+		if (managementMemberModel.getManagementMemberID() != 0) {
+			query = "select count(*) from ManagementMemberModel where email='" + managementMemberModel.getEmail().trim()
+					+ "' and managementMemberID <> " + managementMemberModel.getManagementMemberID() + "";
+		} else {
+			query = "select count(*) from ManagementMemberModel where email='" + managementMemberModel.getEmail().trim()
+					+ "' ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+	}
+
+	public List<ManagementMemberModel> getMembersByManagement(int managementID) {
+		String query = "from ManagementMemberModel where managementModel.managementID=" + managementID;
+		@SuppressWarnings("unchecked")
+		List<ManagementMemberModel> managementMemberList = entityManager.createQuery(query).getResultList();
+		return managementMemberList;
+	}
+
+	@Override
+	public boolean phoneNumberExist(String phoneNumber) {
+		Query q = entityManager.createNativeQuery(
+				"SELECT * FROM cwas_management_member_details a where a.phone = '" + phoneNumber + "'");
+		List<Object[]> authors = q.getResultList();
+		System.out.println("LISTTTTTTT>>>>>>" + authors);
+		if (authors.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	@Transactional
+	public int getManagementId(int phoneNumber) {
+		Query query = entityManager.createNativeQuery(
+				"SELECT management_id FROM cwas_management_member_details a where a.phone = " + phoneNumber + "");
+		int result = (int) query.getSingleResult();
+		System.out.println("MGMT id>>>>>>" + result);
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public FinalResultPOJO getMgmtDetails(String phone) {
+		List<SchoolResponsePOJO> schoolList;
+		// List<String> stringFeatureList;
+		List<SchoolModel> schoolModels;
+		List<ManagementMemberModel> managementMemberModelList = schoolDAO.getManagements(phone);
+
+		FinalResultPOJO finalResultPOJO = new FinalResultPOJO();
+		try {
+			ManagementLicenseResponsePOJO licenseResponsePOJO = new ManagementLicenseResponsePOJO();
+			List<ManagementLicenseResponsePOJO> licenseResponsePOJOs = new ArrayList<>();
+			for (ManagementMemberModel managementMemberModel : managementMemberModelList) {
+				licenseResponsePOJO = new ManagementLicenseResponsePOJO();
+
+				schoolModels = new ArrayList<>();
+				schoolModels = schoolDAO
+						.getSchoolsByManagement(managementMemberModel.getManagementModel().getManagementID());
+				licenseResponsePOJO.setManagementId(managementMemberModel.getManagementModel().getManagementID());
+				licenseResponsePOJO.setManagementHead(managementMemberModel.getManagementModel().getManagementHead());
+				licenseResponsePOJO.setManagementName(managementMemberModel.getManagementModel().getManagementName());
+				licenseResponsePOJO.setPhone(managementMemberModel.getManagementModel().getPhone());
+				licenseResponsePOJO.setEmail(managementMemberModel.getManagementModel().getEmailID());
+				licenseResponsePOJO.setMemberID(managementMemberModel.getManagementMemberID());
+
+				schoolList = new ArrayList<>();
+				for (SchoolModel schoolModel : schoolModels) {
+					// stringFeatureList = new ArrayList<>();
+					SchoolResponsePOJO responsePOJO = new SchoolResponsePOJO();
+					responsePOJO.setRow_id(schoolModel.getSchoolId());
+					responsePOJO.setSchoolName(schoolModel.getSchoolName());
+					responsePOJO.setDescription(schoolModel.getDescription());
+
+					if (schoolModel.getSchoolLogo() != null) {
+						responsePOJO.setLogo(schoolModel.getSchoolLogo());
+					} else {
+						responsePOJO.setLogo("");
+					}
+					responsePOJO.setPrincipal(schoolDAO.getPrincipal(schoolModel.getSchoolId(), "Principal"));
+					/*
+					 * List<SchoolFeatureModel> featureList = schoolFeatureDAO
+					 * .getSchoolFeatureList(responsePOJO.getRow_id());
+					 * 
+					 * for (SchoolFeatureModel schoolFeatureModel : featureList)
+					 * {
+					 * stringFeatureList.add(schoolFeatureModel.getFeatureModel(
+					 * ).getFeatureName()); }
+					 * 
+					 * responsePOJO.setFeatureResponse(stringFeatureList.toArray
+					 * (new String[stringFeatureList.size()]));
+					 * schoolList.add(responsePOJO);
+					 */
+					responsePOJO.setFeatureResponse(new String[0]);
+					schoolList.add(responsePOJO);
+				}
+				licenseResponsePOJO.setSchools(schoolList);
+				licenseResponsePOJOs.add(licenseResponsePOJO);
+			}
+			finalResultPOJO.setManagements(licenseResponsePOJOs);
+			finalResultPOJO.setStatus("success");
+		} catch (EmptyResultDataAccessException exception) {
+			exception.printStackTrace();
+			finalResultPOJO.setStatus("Failed");
+			return finalResultPOJO;
+		}
+
+		return finalResultPOJO;
+	}
+
+	@Override
+	@Transactional
+	public List<FeatureResponsePOJO> getFeature(int schoolId) {
+		String query = "from SchoolFeatureModel where schoolModel.schoolId=" + schoolId;
+		@SuppressWarnings("unchecked")
+		List<FeatureResponsePOJO> schoolList = entityManager.createQuery(query).getResultList();
+		System.out.println("FEATURE LIST>>>>>>" + schoolList.toString());
+		return schoolList;
+	}
+
+	@Override
+	@Transactional
+	public boolean checkPhoneNumber(String phoneNumber) {
+
+		String query;
+
+		query = "From ManagementMemberModel where phone = '" + phoneNumber + "'";
+
+		List<ManagementMemberModel> result = entityManager.createQuery(query).getResultList();
+		List<StudentModel> resultStudent = null;
+		List<SchoolStaffModel> resultStaff;
+		if (result.isEmpty()) {
+
+			query = "From SchoolStaffModel where phone ='" + phoneNumber + "'";
+
+			resultStaff = entityManager.createQuery(query).getResultList();
+
+			if (resultStaff.isEmpty()) {
+
+				query = "From StudentModel where fatherNumber = '" + phoneNumber + "'";
+				resultStudent = entityManager.createQuery(query).getResultList();
+
+			}
+			if (!result.isEmpty() || !resultStaff.isEmpty() || !resultStudent.isEmpty()) {
+				return true;
+			} else {
+
+				return false;
+			}
+
+
+		}
+
+		return true;
+
+	}
+
+	@Override
+	public boolean phoneNumbrExistStaff(String phoneNumber) {
+
+		String query = "From SchoolStaffModel where phone ='" + phoneNumber + "'";
+		List<SchoolStaffModel> resultStaff = entityManager.createQuery(query).getResultList();
+		if (resultStaff.isEmpty()) {
+			return false;
+
+		}
+		return true;
+	}
+
+	@Override
+	public int getSchoolID(String phoneNumber) {
+		Query query = entityManager
+				.createNativeQuery("SELECT school_id FROM cwas_staff_details a where a.phone = " + phoneNumber + "");
+		int result = (int) query.getSingleResult();
+		System.out.println("MGMT id>>>>>>" + result);
+		return result;
+	}
+
+	@Override
+	public FinalResultPOJO getSchoolDetails(int schoolID, String phNO) {
+
+		List<SchoolResponsePOJO> schoolList;
+		List<String> stringFeatureList;
+		List<SchoolModel> schoolModels;
+		// List<ManagementMemberModel> managementMemberModelList =
+		// schoolDAO.getManagementsForSchool(schoolID);
+		SchoolModel schoolModel = schoolRepository.findOne(schoolID);
+		System.out.println("MANAGEMNENT IDDDDDD>>>>>>>>>>" + schoolModel.getManagementModel().getManagementID());
+
+		List<ManagementMemberModel> managementMemberModelList = schoolDAO
+				.getManagementsForSchool(schoolModel.getManagementModel().getManagementID());
+		System.out.println("MEMBER LIST SIZE>>>>>>>" + managementMemberModelList.size());
+		System.out.println("MEMBER LIST SIZE>>>>>>>" + schoolModel.getManagementModel().getManagementID());
+		FinalResultPOJO finalResultPOJO = new FinalResultPOJO();
+
+		try {
+			ManagementLicenseResponsePOJO licenseResponsePOJO = new ManagementLicenseResponsePOJO();
+			List<ManagementLicenseResponsePOJO> licenseResponsePOJOs = new ArrayList<>();
+			for (ManagementMemberModel managementMemberModel : managementMemberModelList) {
+				licenseResponsePOJO = new ManagementLicenseResponsePOJO();
+
+				schoolModels = new ArrayList<>();
+				schoolModels = schoolDAO
+						.getSchoolsByManagement(managementMemberModel.getManagementModel().getManagementID());
+				licenseResponsePOJO.setManagementId(managementMemberModel.getManagementModel().getManagementID());
+				licenseResponsePOJO.setManagementHead(managementMemberModel.getManagementModel().getManagementHead());
+				licenseResponsePOJO.setManagementName(managementMemberModel.getManagementModel().getManagementName());
+				licenseResponsePOJO.setPhone(managementMemberModel.getManagementModel().getPhone());
+				licenseResponsePOJO.setEmail(managementMemberModel.getManagementModel().getEmailID());
+
+				schoolList = new ArrayList<>();
+				for (SchoolModel schoolModelss : schoolModels) {
+					stringFeatureList = new ArrayList<>();
+					SchoolResponsePOJO responsePOJO = new SchoolResponsePOJO();
+					responsePOJO.setRow_id(schoolModelss.getSchoolId());
+					responsePOJO.setSchoolName(schoolModelss.getSchoolName());
+					responsePOJO.setDescription(schoolModelss.getDescription());
+					responsePOJO.setLogo(schoolModelss.getSchoolLogo());
+					responsePOJO.setPrincipal(schoolDAO.getPrincipal(schoolModelss.getSchoolId(), "Principal"));
+					List<SchoolFeatureModel> featureList = schoolFeatureDAO
+							.getSchoolFeatureList(responsePOJO.getRow_id());
+
+					for (SchoolFeatureModel schoolFeatureModel : featureList) {
+						stringFeatureList.add(schoolFeatureModel.getFeatureModel().getFeatureName());
+					}
+
+					responsePOJO.setFeatureResponse(stringFeatureList.toArray(new String[stringFeatureList.size()]));
+					schoolList.add(responsePOJO);
+
+				}
+				licenseResponsePOJO.setSchools(schoolList);
+				licenseResponsePOJOs.add(licenseResponsePOJO);
+			}
+			finalResultPOJO.setManagements(licenseResponsePOJOs);
+			finalResultPOJO.setStatus("success");
+		} catch (EmptyResultDataAccessException exception) {
+			exception.printStackTrace();
+			finalResultPOJO.setStatus("Failed");
+			return finalResultPOJO;
+		}
+
+		return finalResultPOJO;
+
+	}
+
+	@Override
+	public boolean isValidMember(int memberId) {
+		String query = "from ManagementMemberModel where managementMemberID=" + memberId;
+		List<ManagementMemberModel> managementMemberModel = entityManager.createQuery(query).getResultList();
+		
+		if (managementMemberModel.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isValidMemberParent(int memberId) {
+		String query = "From StudentModel where studentId = '" + memberId + "'";
+		List<StudentModel> studentModels = entityManager.createQuery(query).getResultList();
+		if (studentModels.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Object isRegisteredMemberPhone(String phone, int managementID) {
+		String query = "SELECT COUNT(phone) FROM ManagementMemberModel WHERE phone='" + phone
+				+ "' and managementModel.managementID='" + managementID + "' ";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public Object isRegisteredEmail(String emailID, int managementID) {
+		String query = "SELECT COUNT(phone) FROM ManagementMemberModel WHERE email='" + emailID
+				+ "' and managementModel.managementID='" + managementID + "' ";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}
+
+	@Override
+	public boolean isValidMgmt(int managementID) {
+	String query="From ManagementModel where managementID = '"+managementID+"'";
+	List<ManagementModel>managementModels = entityManager.createQuery(query).getResultList();
+	if (managementModels.size() != 0) {
+		return true;
+	}
+		return false;
+	}
+
+	/*
+	 * @Override
+	 * 
+	 * @Transactional public String getPrincipal(SchoolStaffModel
+	 * schoolStaffModel) { String query =
+	 * "From SchoolStaffModel where schoolStaffModel.schoolModel.="++""; }
+	 */
+
+}

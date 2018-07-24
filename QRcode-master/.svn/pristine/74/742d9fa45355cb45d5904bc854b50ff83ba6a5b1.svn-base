@@ -1,0 +1,226 @@
+package com.zs.cws.superadmin.school.model;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.schoolfeature.model.SchoolFeatureModel;
+
+@Entity
+@Table(name = "cwas_school_details")
+public class SchoolModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int schoolId;
+	@Column(name = "school_name")
+	String schoolName;
+	@Column(name = "description")
+	String description;
+	@Column(name = "country")
+	String country;
+	@Column(name = "state")
+	String state;
+	@Column(name = "district")
+	String district;
+	@Column(name = "location")
+	String location;
+	@Column(name = "email_id")
+	String email;
+	@Column(name = "phone")
+	String phone;
+	@OneToOne
+	@JoinColumn(name="management_id")
+	ManagementModel managementModel;
+	@Column(name = "address")
+	String address;
+	@Column(name = "school_syllabus")
+	String syllabus;
+	@Column(name="school_logo")
+	String schoolLogo;
+	@Column(name = "created_by")
+	String createdUser;
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	@Column(name = "updated_by")
+	String updatedUser;
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+	
+	@OneToOne
+	@JoinColumn(name="row_id")
+	SchoolFeatureModel  featureModel;
+	
+	
+	@Transient
+	List<SchoolFeatureModel>featureModels;
+	
+	
+	public SchoolModel() {
+		super();
+	}
+	public SchoolModel(int schoolId, String schoolName, String description, String country, String state,
+			String district, String location, String email, String phone, ManagementModel managementModel,
+			String address, String syllabus, String createdUser, Date createdDate, String updatedUser,
+			Date updatedDate) {
+		super();
+		this.schoolId = schoolId;
+		this.schoolName = schoolName;
+		this.description = description;
+		this.country = country;
+		this.state = state;
+		this.district = district;
+		this.location = location;
+		this.email = email;
+		this.phone = phone;
+		this.managementModel = managementModel;
+		this.address = address;
+		this.syllabus = syllabus;
+		this.createdUser = createdUser;
+		this.createdDate = createdDate;
+		this.updatedUser = updatedUser;
+		this.updatedDate = updatedDate;
+	}
+	
+	
+	
+	public List<SchoolFeatureModel> getFeatureModels() {
+		return featureModels;
+	}
+	public void setFeatureModels(List<SchoolFeatureModel> featureModels) {
+		this.featureModels = featureModels;
+	}
+	public SchoolFeatureModel getFeatureModel() {
+		return featureModel;
+	}
+	public void setFeatureModel(SchoolFeatureModel featureModel) {
+		this.featureModel = featureModel;
+	}
+	public int getSchoolId() {
+		return schoolId;
+	}
+	
+	
+	public String getSchoolLogo() {
+		return schoolLogo;
+	}
+	public void setSchoolLogo(String schoolLogo) {
+		this.schoolLogo = schoolLogo;
+	}
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
+	}
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public ManagementModel getManagementModel() {
+		return managementModel;
+	}
+	public void setManagementModel(ManagementModel managementModel) {
+		this.managementModel = managementModel;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getSyllabus() {
+		return syllabus;
+	}
+	public void setSyllabus(String syllabus) {
+		this.syllabus = syllabus;
+	}
+	public String getCreatedUser() {
+		return createdUser;
+	}
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	@Override
+	public String toString() {
+		return "SchoolModel [schoolId=" + schoolId + ", schoolName=" + schoolName + ", description=" + description
+				+ ", country=" + country + ", state=" + state + ", district=" + district + ", location=" + location
+				+ ", email=" + email + ", phone=" + phone + ", managementModel=" + managementModel + ", address="
+				+ address + ", syllabus=" + syllabus + ", schoolLogo=" + schoolLogo + ", createdUser=" + createdUser
+				+ ", createdDate=" + createdDate + ", updatedUser=" + updatedUser + ", updatedDate=" + updatedDate
+				+ "]";
+	}
+
+}

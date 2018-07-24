@@ -1,0 +1,58 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+import java.util.List;
+
+public class Subjects {
+
+	String subjectName;
+	List<String> marks;
+	int subjectID;
+	
+	public Subjects() {
+		
+	}
+
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+
+
+
+	public List<String> getMarks() {
+		return marks;
+	}
+
+
+	public void setMarks(List<String> marks) {
+		this.marks = marks;
+	}
+
+
+	public int getSubjectID() {
+		return subjectID;
+	}
+
+
+	public void setSubjectID(int subjectID) {
+		this.subjectID = subjectID;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Subjects [subjectName=" + subjectName + ", marks=" + marks + "]";
+	}
+	
+	
+	
+	
+	
+	
+}

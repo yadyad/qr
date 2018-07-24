@@ -1,0 +1,161 @@
+package com.zs.cws.superadmin.managementmembers.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.master.managementposition.model.ManagementPositionModel;
+
+@Entity
+@Table(name = "cwas_management_member_details")
+public class ManagementMemberModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int managementMemberID;
+
+	@Column(name = "first_name")
+	private String firstName;
+
+	@Column(name = "last_name")
+	private String lastName;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "phone")
+	private String phone;
+	
+	@OneToOne
+	@JoinColumn(name="management_id")
+	ManagementModel managementModel;
+	
+	@OneToOne
+	@JoinColumn(name="position_id")
+	ManagementPositionModel managementPositionModel;
+	
+	@Column(name = "created_by")
+	String createdUser;
+	
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	
+	@Column(name = "updated_by")
+	String updatedUser;
+	
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public ManagementMemberModel() {
+		
+	}
+
+	public int getManagementMemberID() {
+		return managementMemberID;
+	}
+
+	public void setManagementMemberID(int managementMemberID) {
+		this.managementMemberID = managementMemberID;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public ManagementModel getManagementModel() {
+		return managementModel;
+	}
+
+	public void setManagementModel(ManagementModel managementModel) {
+		this.managementModel = managementModel;
+	}
+
+	public ManagementPositionModel getManagementPositionModel() {
+		return managementPositionModel;
+	}
+
+	public void setManagementPositionModel(ManagementPositionModel managementPositionModel) {
+		this.managementPositionModel = managementPositionModel;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementMemberModel [managementMemberID=" + managementMemberID + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", managementModel="
+				+ managementModel + ", managementPositionModel=" + managementPositionModel + ", createdUser="
+				+ createdUser + ", createdDate=" + createdDate + ", updatedUser=" + updatedUser + ", updatedDate="
+				+ updatedDate + "]";
+	}
+	
+}

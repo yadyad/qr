@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.schoolstaff.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.login.LoginModel;
+
+public interface LoginRepository extends JpaRepository<LoginModel, Integer> {
+
+}

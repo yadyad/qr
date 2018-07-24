@@ -1,0 +1,84 @@
+package com.zs.cws.superadmin.master.plancreation.controller;
+
+import java.util.Date;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.zs.cws.superadmin.master.plancreation.dao.PlanCreationDAO;
+import com.zs.cws.superadmin.master.plancreation.model.PlanCreationModel;
+import com.zs.cws.superadmin.master.plancreation.repository.PlanCreationRepository;
+
+@Controller
+@RequestMapping("superadmin/newPlan")
+public class PlanCreationController {
+
+	
+	@Autowired
+	PlanCreationRepository planCreationRepository;
+	
+	@Autowired
+	PlanCreationDAO planCreationDAO;
+
+	@RequestMapping()
+	public ModelAndView viewPlanCreation() {
+		
+		ModelAndView modelAndView = new ModelAndView("super_admin_new_plan");
+		modelAndView.addObject("createplan", "active");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllPlans() {
+		List<PlanCreationModel> planCreationModels= planCreationRepository.findAll();
+		return planCreationModels;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody PlanCreationModel planCreationModel,
+			HttpSession session) {
+		
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!planCreationDAO.isAvailable(planCreationModel)) {
+			planCreationModel.setCreatedBy(loggedUser);
+			planCreationModel.setUpdatedBy(loggedUser);
+			planCreationModel.setCreatedDate(new Date());
+			planCreationModel.setUpdatedDate(new Date());
+		
+			planCreationRepository.save(planCreationModel);
+			
+			return planCreationModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	
+	@RequestMapping(value = "/newPlandeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] planIDs) {
+		for (int newPlanId : planIDs) {
+			if (newPlanId != 0) {
+				planCreationRepository.delete(newPlanId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/plandeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int planId) {
+		if (planId != 0) {
+			planCreationRepository.delete(planId);
+			return true;
+		}
+		return false;
+	}
+	
+}

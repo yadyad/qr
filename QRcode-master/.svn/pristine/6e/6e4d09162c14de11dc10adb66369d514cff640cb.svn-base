@@ -1,0 +1,18 @@
+package com.zs.cws.schooladmin.news.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.news.model.NewsModel;
+import com.zs.cws.ws.hybrid.news.model.NewsRequestModel;
+import com.zs.cws.ws.hybrid.news.model.NewsResponseModel;
+
+public interface NewstDAO {
+	public boolean isAvailable(NewsModel newsModel);
+
+	public NewsModel getLastInsertedEntry();
+
+	public List<NewsResponseModel> getNewsList(NewsRequestModel newsRequestModel);
+	
+	public List<NewsModel> getNewsList(int schoolID);
+
+}

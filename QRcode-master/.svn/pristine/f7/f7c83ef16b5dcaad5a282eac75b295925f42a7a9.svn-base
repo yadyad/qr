@@ -1,0 +1,100 @@
+package com.zs.cws.ws.hybrid.kudos.model;
+
+public class KudosRequestModel {
+	
+	
+   private int memberId;
+   private String memberType;
+   private int schoolId;
+   private int kudosId;
+   private String requestStatus;
+	
+	public KudosRequestModel() {
+	
+	}
+
+
+	public int getSchoolId() {
+		return schoolId;
+	}
+
+
+
+
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
+	}
+
+
+
+
+	public int getKudosId() {
+		return kudosId;
+	}
+
+
+
+
+	public void setKudosId(int kudosId) {
+		this.kudosId = kudosId;
+	}
+
+
+
+
+
+
+
+
+	public String getRequestStatus() {
+		return requestStatus;
+	}
+
+
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+
+
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+
+
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+
+
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "KudosRequestModel [memberId=" + memberId + ", memberType=" + memberType + ", schoolId=" + schoolId
+				+ ", kudosId=" + kudosId + ", responseStatus=" + requestStatus + "]";
+	}
+
+
+
+
+	
+	
+	
+
+}

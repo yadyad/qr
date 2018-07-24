@@ -1,0 +1,40 @@
+package com.zs.cws.ws.hybrid.kudos.model;
+
+public class KudosFCMModel {
+
+	int kudosID;
+	Long kudosCount;
+	int schoolID;
+	
+	public KudosFCMModel() {
+		
+	}
+	public int getKudosID() {
+		return kudosID;
+	}
+	
+	
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public void setKudosID(int kudosID) {
+		this.kudosID = kudosID;
+	}
+	public Long getKudosCount() {
+		return kudosCount;
+	}
+	public void setKudosCount(Long kudosCount) {
+		this.kudosCount = kudosCount;
+	}
+	@Override
+	public String toString() {
+		return "KudosFCMModel [kudosID=" + kudosID + ", kudosCount=" + kudosCount + ", schoolID=" + schoolID + "]";
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,75 @@
+package com.zs.cws.schooladmin.tax;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.master.tax.dao.TaxDAO;
+import com.zs.cws.superadmin.master.tax.model.TaxModel;
+import com.zs.cws.superadmin.master.tax.repository.TaxRepository;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/tax")
+public class SchoolAdminTaxController {
+
+	@Autowired
+	TaxRepository taxRepository;
+	
+	@Autowired
+	TaxDAO taxDAO;
+
+	@RequestMapping()
+	public ModelAndView taxView() {
+		ModelAndView modelAndView = new ModelAndView("super_admin_tax");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllPlans() {
+		List<TaxModel> taxModels = taxRepository.findAll();
+		return taxModels.get(0);
+	}
+	
+	
+	@RequestMapping(value = "/currentTax", method = RequestMethod.GET)
+	public @ResponseBody Object currentTax() {
+		return taxDAO.getCurrentTax();
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody TaxModel taxModel,
+			HttpSession session) {
+
+		String loggedUser = (String) session.getAttribute("loggedUser");
+
+		taxModel.setCreatedBy(loggedUser);
+		taxModel.setUpdatedBy(loggedUser);
+		taxModel.setCreatedDate(new Date());
+		taxModel.setUpdatedDate(new Date());
+		taxRepository.save(taxModel);
+		return taxModel;
+
+	}
+
+	@RequestMapping(value = "/taxdeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int taxId) {
+		if (taxId != 0) {
+			taxRepository.delete(taxId);
+			return true;
+		}
+		return false;
+	}
+}

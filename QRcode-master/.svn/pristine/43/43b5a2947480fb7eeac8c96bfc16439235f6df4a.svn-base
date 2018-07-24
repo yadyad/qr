@@ -1,0 +1,33 @@
+package com.zs.cws.ws.hybrid.directory.model;
+
+public class StaffDirectoryRequestModel {
+
+	int schoolID;
+	String lastModifiedDate;
+
+	public StaffDirectoryRequestModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public String getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(String lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "StaffDirectoryRequestModel [schoolID=" + schoolID + ", lastModifiedDate=" + lastModifiedDate + "]";
+	}
+
+	
+}

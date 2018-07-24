@@ -1,0 +1,108 @@
+package com.zs.cws.utils;
+
+
+import javax.mail.*;
+import javax.mail.internet.*;
+
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+
+import java.util.Properties;
+
+public class MailSender {
+	
+	
+
+	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
+	private static final String SMTP_AUTH_USER = "support@zoftsolutions.com";
+	private static final String SMTP_AUTH_PWD = "Dssp@2017";
+
+	public static void main(String[] args) throws Exception {
+		MailSentPOJO mailSentPOJO = new MailSentPOJO("sebin.jacob@zoftsolutions.com", "jins.varghese@zoftsolutions.com", "HAI", "TEST CONTENT");
+		MailSender.sendMail(mailSentPOJO);
+	}
+
+	public static void sendMail(MailSentPOJO mailSentPOJO) throws Exception {
+		Properties props = new Properties();
+		//props.put("mail.smtp.starttls.enable", "true");
+		
+		//props.put("mail.transport.protocol", "smtp");
+		//props.put("mail.smtp.host", SMTP_HOST_NAME);
+		//props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		//props.put("mail.smtp.auth", "true");
+		//props.put("mail.smtp.starttls.enable", "true");
+		
+		//props.put("mail.transport.protocol", "smtp");
+		
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", 465);
+		props.put("mxe.smtp.password", SMTP_AUTH_PWD);
+		props.put("mxe.smtp.user", SMTP_AUTH_USER);
+		props.put("mail.smtp.host", SMTP_HOST_NAME);
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.ssl.enable", "true");
+		
+
+		Authenticator auth = new SMTPAuthenticator();
+		Session mailSession = Session.getDefaultInstance(props, auth);
+
+		Transport transport = mailSession.getTransport();
+		
+		MimeMessage message = new MimeMessage(mailSession);
+		message.setContent(mailSentPOJO.getContent(), "text/html");
+		message.setSubject(mailSentPOJO.getSubject(), "text/html");
+		message.setFrom(new InternetAddress(mailSentPOJO.getFrom()));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailSentPOJO.getTo()));
+
+		transport.connect();
+		transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+		transport.close();
+	}
+
+	
+	public static void sendMailWithAttachment(MailSentPOJO mailSentPOJO) throws Exception {
+		Properties props = new Properties();
+		/*props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.host", SMTP_HOST_NAME);
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.auth", "true");*/
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", 465);
+		props.put("mxe.smtp.password", SMTP_AUTH_PWD);
+		props.put("mxe.smtp.user", SMTP_AUTH_USER);
+		props.put("mail.smtp.host", SMTP_HOST_NAME);
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.ssl.enable", "true");
+		
+
+		Authenticator auth = new SMTPAuthenticator();
+		Session mailSession = Session.getDefaultInstance(props, auth);
+
+		Transport transport = mailSession.getTransport();
+		
+		
+		MimeMessage message = new MimeMessage(mailSession);
+		message.setContent(mailSentPOJO.getContent(), "text/html");
+		message.setSubject(mailSentPOJO.getSubject(), "text/html");
+		message.setFrom(new InternetAddress(mailSentPOJO.getFrom()));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailSentPOJO.getTo()));
+
+		transport.connect();
+		transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+		transport.close();
+	}
+	
+	
+	private static class SMTPAuthenticator extends javax.mail.Authenticator {
+		public PasswordAuthentication getPasswordAuthentication() {
+			String username = SMTP_AUTH_USER;
+			String password = SMTP_AUTH_PWD;
+			return new PasswordAuthentication(username, password);
+		}
+	}
+}

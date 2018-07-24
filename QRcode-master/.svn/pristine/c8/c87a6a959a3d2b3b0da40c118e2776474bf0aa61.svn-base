@@ -1,0 +1,64 @@
+package com.zs.cws.superadmin.schoolfeature.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.master.feature.model.FeatureModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_feature_details")
+public class SchoolFeatureModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int schoolFeatureID;
+	
+	
+	@OneToOne
+	@JoinColumn(name="feature_id")
+	FeatureModel featureModel;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	SchoolModel schoolModel;
+
+	public SchoolFeatureModel() {
+	}
+
+	public int getSchoolFeatureID() {
+		return schoolFeatureID;
+	}
+
+	public void setSchoolFeatureID(int schoolFeatureID) {
+		this.schoolFeatureID = schoolFeatureID;
+	}
+
+	public FeatureModel getFeatureModel() {
+		return featureModel;
+	}
+
+	public void setFeatureModel(FeatureModel featureModel) {
+		this.featureModel = featureModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	@Override
+	public String toString() {
+		return "SchoolFeatureModel [schoolFeatureID=" + schoolFeatureID + ", featureModel=" + featureModel
+				+ ", schoolModel=" + schoolModel + "]";
+	}
+	
+}

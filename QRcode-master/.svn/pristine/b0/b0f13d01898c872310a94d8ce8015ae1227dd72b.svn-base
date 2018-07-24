@@ -1,0 +1,540 @@
+<%-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%> --%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+
+<!-- font libs -->
+<link href="http://fonts.googleapis.com/css?family=Lato"
+	rel="stylesheet" type="text/css" />
+<link
+	href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+	rel="stylesheet" />
+<link type="text/css"
+	href="${myUrl}resources/lib/div-search/css/jplist.demo-pages.min.css"
+	rel="stylesheet">
+<!-- demo page styles -->
+<link
+	href="${myUrl}resources/lib/div-search/css/jplist.demo-pages.min.css"
+	rel="stylesheet" type="text/css" />
+<!-- jQuery lib -->
+
+<!-- jPList core js and css  -->
+<link href="${myUrl}resources/lib/div-search/css/jplist.core.min.css"
+	rel="stylesheet" type="text/css" />
+<script src="${myUrl}resources/lib/div-search/js/jplist.core.min.js"></script>
+
+<!-- jPList sort bundle -->
+
+
+<!-- jPList textbox filter control -->
+<script
+	src="${myUrl}resources/lib/div-search/js/jplist.textbox-filter.min.js"></script>
+<link
+	href="${myUrl}resources/lib/div-search/css/jplist.textbox-filter.min.css"
+	rel="stylesheet" type="text/css" />
+
+<!-- jPList pagination bundle -->
+<script
+	src="${myUrl}resources/lib/div-search/js/jplist.pagination-bundle.min.js"></script>
+<link
+	href="${myUrl}resources/lib/div-search/css/jplist.pagination-bundle.min.css"
+	rel="stylesheet" type="text/css" />
+
+
+
+<!-- jPList views control -->
+<script
+	src="${myUrl}resources/lib/div-search/js/jplist.list-grid-view.min.js"></script>
+<link
+	href="${myUrl}resources/lib/div-search/css/jplist.list-grid-view.min.css"
+	rel="stylesheet" type="text/css" />
+<link href="${myUrl}resources/lib/div-search/css/mystyle-serach.css"
+	rel="stylesheet" type="text/css" />
+<script type="text/javascript"
+	src="${myUrl}resources/controller/superAdmin/school/SchoolController.js"></script>
+<script>
+	$('document').ready(function() {
+
+		$('#demo').jplist({
+			itemsBox : '.list',
+			itemPath : '.list-item',
+			panelPath : '.jplist-panel'
+		});
+	});
+</script>
+</head>
+<body>
+
+	<div class="container-fluid" ng-app="school" id="cntrlID"
+		ng-controller="schoolCtrl">
+		<h1 ng-if="managementModel.managementName!=null"
+			class="management-name">{{managementModel.managementName}}</h1>
+		<h1 ng-if="managementModel.managementName==null"
+			class="management-name">No Schools Found!</h1>
+		<button id="btnDelete" ng-click="hide()"
+			class="btn btn-primary pull-right  hide-btn-mrg-right">{{Show}}</button>
+		<!-- <button id="btnDelete" ng-click="show()"
+			class="btn btn-primary pull-right">New</button> -->
+		<div id="form-id" class="form-field">
+			<div class="alert-box success" id="success">Saved or updated
+				successfully!</div>
+			<div class="alert-box failure" id="deleted">Deleted
+				Successfully!</div>
+			<div class="alert-box failure" id="duplicate">Duplicate Entry!</div>
+			<div class="alert-box failure" id="imgFile">Upload only png or
+				jpg images !</div>
+			<div class="form-field box-form">
+				<div class="row">
+					<div class="title-form">
+						<h2>
+							School Details<small></small>
+						</h2>
+					</div>
+
+					<form id="demo-form2" name="form" ng-submit="submit()"
+						class="form-horizontal form-label-left">
+
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="schoolName">School Name <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input type="text" name="schoolName"
+										ng-model="schoolModel.schoolName" id="schoolName" required
+										pattern="^[^\s]+(\s.*)?$" maxlength="255"
+										class="form-control col-md-7 col-xs-12 schoolSpace"> <span
+										id="sn" style="color: green"></span>
+
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="description">Description <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<textarea type="text" ng-model="schoolModel.description"
+										id="description" maxlength="255" pattern="^[^\s]+(\s.*)?$"
+										name="description" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"></textarea>
+									<span id="sd" style="color: green"></span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="description">Syllabus <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input type="text" ng-model="schoolModel.syllabus"
+										maxlength="255" pattern="^[^\s]+(\s.*)?$" id="syllabus"
+										name="syllabus" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"> <span
+										id="ss" style="color: green"></span>
+								</div>
+							</div>
+
+
+						</div>
+
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="address">Address <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<textarea type="text" ng-model="schoolModel.address"
+										maxlength="255" pattern="^[^\s]+(\s.*)?$" id="address"
+										name="address" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"></textarea>
+									<span id="sa" style="color: green"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="last-name">Country <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<select class="form-control"
+										data-ng-model="schoolModel.country" id="country">
+										<option value="">Please choose a Country</option>
+										<option ng-repeat="row in coutryList.RestResponse.result"
+											value="{{row.name}}">{{row.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="state">State <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input type="text" ng-model="schoolModel.state" maxlength="255"
+										pattern="^[^\s]+(\s.*)?$" id="state" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"
+										name="state"> <span id="sst" style="color: green"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="district">District <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input ng-model="schoolModel.district" type="text"
+										pattern="^[^\s]+(\s.*)?$" id="district" name="district"
+										maxlength="255" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"> <span
+										id="sdd" style="color: green"></span>
+								</div>
+							</div>
+							<!-- 	</form> -->
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label for="location"
+									class="control-label col-md-5 col-sm-5 col-xs-12">Location
+									<span class="required" style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input id="location" ng-model="schoolModel.location"
+										pattern="^[^\s]+(\s.*)?$"
+										class="form-control col-md-7 col-xs-12 schoolSpace"
+										type="text" maxlength="255" name="location" required>
+									<span id="schooLoc" style="color: green"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="email">Email <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input ng-model="schoolModel.email" type="email" id="email"
+										name="emailID" required
+										pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+										title="Enter valid email"
+										class="form-control col-md-7 col-xs-12 schoolSpace"> <span
+										id="schooEmail" style="color: green"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12"
+									for="phone">Phone <span class="required"
+									style="color: red">*</span>
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+									<input type="text" ng-model="schoolModel.phone" id="phone"
+										name="phone" required
+										class="form-control col-md-7 col-xs-12 schoolSpace"
+										pattern="^\d{10}$" title="Phone number must be 10 digits"
+										required><br />
+								</div>
+							</div>
+
+
+							<input type="file" file-model="myFile" id="imgInp"
+								onchange="fileupload()" accept="image/*"
+								title="Accept only images" /> <span ng-if="imageEdit === ''">
+								No image Inserted </span> <span ng-if="imageEdit !== ''"> <img
+								id="blah" ng-src="{{imageEdit}}" height="100" width="100"></span>
+
+
+							<div class="form-group">
+								<button class="btn btn-primary pull-right"
+									ng-click="submitted=true" type="submit">Save</button>
+								<button class="btn btn-primary pull-right" ng-click="reset()"
+									type="reset">Clear</button>
+
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- main content -->
+
+		<div class="box">
+
+			<div class="center">
+				<!--<><><><><><><><><><><><><><><><><><><><><><><><><><> DEMO START <><><><><><><><><><><><><><><><><><><><><><><><><><>-->
+
+				<div id="demo" class="jplist" style="margin: 20px 0 50px 0">
+
+
+					<!-- ios button: show/hide panel -->
+					<div class="jplist-ios-button">
+						<i class="fa fa-sort"></i> jPList Actions
+					</div>
+
+					<!-- panel -->
+					<div class="jplist-panel  panel-top">
+
+						<!-- back button button 
+						<button type="button" data-control-type="back-button"
+							data-control-name="back-button" data-control-action="back-button">
+							<i class="fa fa-arrow-left"></i> Go Back
+						</button>
+
+						<!-- reset button -
+						<button type="button" class="jplist-reset-btn"
+							data-control-type="reset" data-control-name="reset"
+							data-control-action="reset">
+							Reset &nbsp;<i class="fa fa-share"></i>
+						</button> -->
+
+						<!-- items per page dropdown -->
+						<div class="jplist-drop-down"
+							data-control-type="items-per-page-drop-down"
+							data-control-name="paging" data-control-action="paging">
+
+							<ul>
+								<li><span data-number="3"> 3 per page </span></li>
+								<li><span data-number="5"> 5 per page </span></li>
+								<li><span data-number="10" data-default="true"> 10
+										per page </span></li>
+								<li><span data-number="all"> View All </span></li>
+							</ul>
+						</div>
+
+						<!-- sort dropdown -->
+
+
+						<!-- filter by title -->
+						<div class="text-filter-box">
+
+							<!-- 	<i class="fa fa-search  jplist-icon"></i> -->
+							<input type="text" value="" placeholder="Search"
+								data-control-name="title-filter" ng-model="search.$"
+								data-control-action="filter" />
+
+						</div>
+
+						<!-- filter by description -->
+						<div class="text-filter-box">
+
+							<i class="fa fa-search  jplist-icon"></i>
+
+
+						</div>
+
+						<!-- views -->
+						<div class="jplist-views" data-control-type="views"
+							data-control-name="views" data-control-action="views"
+							data-default="jplist-grid-view">
+
+							<button type="button" class="jplist-view jplist-list-view"
+								data-type="jplist-list-view"></button>
+							<button type="button" class="jplist-view jplist-grid-view"
+								data-type="jplist-grid-view"></button>
+							<button type="button" class="jplist-view jplist-thumbs-view"
+								data-type="jplist-thumbs-view"></button>
+						</div>
+
+						<!-- pagination results -->
+						<div class="jplist-label" data-type="Page {current} of {pages}"
+							data-control-type="pagination-info" data-control-name="paging"
+							data-control-action="paging"></div>
+
+						<!-- pagination control -->
+						<div class="jplist-pagination" data-control-type="pagination"
+							data-control-name="paging" data-control-action="paging"></div>
+
+					</div>
+					<!-- data -->
+					<div class="list box text-shadow">
+						<!-- item 1 -->
+
+						<div class="list-item box"
+							ng-repeat="schoolModel in schoolModelList | filter: search | orderBy : 'schoolName'"">
+							<!-- img -->
+							<!-- "src/main/webapp/resources/img/thumbs/arch-1.jpg" -->
+
+
+							<a><p class="date school-name text-center">{{schoolModel.schoolName}}</p></a>
+							<div class="img">
+								<%-- 	<a href="#"><img
+									src="${myUrl}/resources/img/thumbs/arch-1.jpg" alt="" title="" /></a> --%>
+								<img src="{{schoolModel.schoolLogo}}" alt="" title=""
+									style="max-height: 119px !important; width: 100% !important;" />
+							</div>
+							<!-- data -->
+							<div class="block">
+
+
+
+
+
+								<p class="title">{{schoolModel.email}}</p>
+								<p class="title">{{schoolModel.phone}}</p>
+								<p class="desc">{{schoolModel.description}}</p>
+								<a
+									href="${myUrl}superadmin/schoolStaff?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5"
+									style="margin-left: 3px;">Staff's</a> <a
+									href="${myUrl}superadmin/schoolDivison?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5">Division</a>
+								<br> <a
+									href="${myUrl}superadmin/student?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5">Students</a>
+								<a
+									href="${myUrl}superadmin/payment/paymentDetails?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5">Payment</a>
+								<%-- <a href="${myUrl}superadmin/payment/planDetailsGraph?id={{schoolModel.schoolId}}" class="btn btn-default btn-default-1">Plan</a>  --%>
+								<a
+									href="${myUrl}superadmin/schoolfeature?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5">Features</a>
+								<a
+									href="${myUrl}superadmin/subscription/activation?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1 col-sm-5 col-xs-5">Activation</a>
+								<%-- <a
+									href="${myUrl}superadmin/specialdays?id={{schoolModel.schoolId}}"
+									class="btn btn-default btn-default-1">Special Days</a> --%>
+
+
+								<a href="#" data-toggle="tooltip"
+									class="col-sm-2 col-xs-2 col-lg-offset-3 col-sm-offset-3 col-xs-offset-3"
+									title="Edit"><img
+									src="${myUrl}/resources/img/Custom-Icon-Design-Pretty-Office-9-Edit-validated.png"
+									class="img-responsive" ng-click="edit(schoolModel,$index)"></a>
+								<a href="#" data-toggle="tooltip" class="col-sm-2 col-xs-2"
+									title="Delete"><img
+									src="${myUrl}/resources/img/delete-xxl (1).png"
+									class="img-responsive"
+									ng-click="deleteSchool(schoolModel.schoolId,$index)"> </a>
+
+
+							</div>
+						</div>
+
+
+						<!-- item 2 -->
+						<div class="list-item box" style="display: none;">
+
+							<div class="img">
+
+								<img src="${myUrl}/resources/img/thumbs/christmas-2.jpg" alt=""
+									title="" />
+							</div>
+
+							<!-- data -->
+							<div class="block">
+								<p class="date">03/18/2012</p>
+								<p class="title">Sample Name</p>
+								<p class="desc">Architecture is both the process and product
+									of planning, designing and construction. Architectural works,
+									in the material form of buildings, are often perceived as
+									cultural symbols and as works of art. Historical civilizations
+									are often identified with their surviving architectural
+									achievements.</p>
+								<p class="theme">
+									<span class="architecture">Architecture</span> <span
+										class="group2">Group 2</span>
+								</p>
+								<p class="like">25 Likes</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="box jplist-no-results text-shadow align-center">
+						<p>No results found</p>
+					</div>
+				</div>
+				<!--<><><><><><><><><><><><><><><><><><><><><><><><><><> DEMO END <><><><><><><><><><><><><><><><><><><><><><><><><><>-->
+			</div>
+		</div>
+
+		<div style="">
+			<!-- 	<div class="row mrg-lg-btm-top" style="width: 100%;">
+				<button type="button" class="btn btn-primary pull-right"
+					data-toggle="modal" data-target="#model">EXCEL</button>
+					<button class="btn btn-primary pull-right">bitton3</button>
+				<button data-toggle="collapse" class="btn btn-primary pull-right"
+					data-target="#demo">Show/Hide</button>
+			</div> -->
+			<div class="modal fade bs-example-modal-lg" tabindex="-1" id="model"
+				role="dialog" aria-labelledby="myLargeModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content modal-height">
+						<div class="container">
+							<form:form action="${myUrl}superadmin/school/uploadSchool"
+								id="corporateFormId" name="corporateFormId" autocomplete="off"
+								class="idealforms1" enctype="multipart/form-data" method="post">
+								<div class="row">
+									<div class="buttons-modal">
+										<div class="col-lg-4 col-sm-6 col-12 col-lg-offset-1">
+
+											<div class="input-group">
+												<label class="input-group-btn"> <span
+													class="btn btn-primary"> Browse&hellip; <input
+														name="uploadfile"
+														accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+														type="file" style="display: none;" multiple>
+												</span>
+												</label> <input type="text"
+													class="form-control form-control-modal-height" readonly>
+											</div>
+											<span class="help-block">upload documents in excel
+												format only </span>
+										</div>
+										<div class="col-lg-4">
+											<!-- <button type="button" class="btn btn-primary">Download
+												Button</button> -->
+											<a href="${myUrl}superadmin/school/downloadExcel"
+												class="btn btn-primary" title="Download Upload File Format">
+												Download sample excel format </a>
+											<button type="submit" class="btn btn-primary"
+												onclick="submitFormCorporate();" title="Registration">Register</button>
+											<!-- <button type="button" type="submit" class="btn btn-primary">Button3</button> -->
+										</div>
+									</div>
+								</div>
+							</form:form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 	<div id="demo" class="contain-space1">
+		
+			</div> -->
+		</div>
+	</div>
+
+	<script>
+		function fileupload()
+
+		{
+			//alert("hai")
+			var typ = document.getElementById("imgInp").value;
+			var res = typ.match(".jp") || typ.match(".png");
+
+			if (res) {
+				//alert("sucess");
+			} else {
+				$("#imgFile").fadeIn(300).delay(1500).fadeOut(400);
+				//	alert("Sorry only jpeg images are accepted");
+				document.getElementById("imgInp").value = "";
+			}
+		}
+	</script>

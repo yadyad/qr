@@ -1,0 +1,34 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+
+import java.util.List;
+
+public class ManagementPrincipalResponseModel {
+	String responseStatus;
+	List<ManagementPrincipalModel> principalList;
+
+	public ManagementPrincipalResponseModel() {
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public List<ManagementPrincipalModel> getPrincipalList() {
+		return principalList;
+	}
+
+	public void setPrincipalList(List<ManagementPrincipalModel> principalList) {
+		this.principalList = principalList;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementPrincipalResponseModel [responseStatus=" + responseStatus + ", principalList=" + principalList
+				+ "]";
+	}
+
+}

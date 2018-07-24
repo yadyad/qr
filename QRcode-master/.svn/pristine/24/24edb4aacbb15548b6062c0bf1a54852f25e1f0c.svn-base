@@ -1,0 +1,76 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<c:url var="logout" value="/j_spring_security_logout" />
+<style>
+
+.login-header
+{
+position:fixed !important;
+}
+</style>
+
+<div class="login-header navbar navbar-static-top bs-docs-nav">
+	<div class="container-fluid">
+		<nav class="navbar navbar-default navbar-default-transprant">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header nav-skew">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <div class="col-lg-12 col-md-12 col-sm 12 col-xs- 12">
+
+   <!--  -->  
+   <a class="" href="#">
+     <img src="${myUrl}resources/img/School-logo.png" class="img-responsive schoollogo"/>
+        </a>
+      </div>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+ 
+     
+      <ul class="nav navbar-nav navbar-right nav-list">
+       <li><a href="${myUrl}superadmin" class="active"><i class="fa fa-home icons-head" aria-hidden="true"></i>Home</a></li>
+       <%--  <li><a href="${myUrl}superadmin/config"> <i class="fa fa-clone icons-head" aria-hidden="true"></i>Configuration </a></li> --%>
+             <li class="${resetpassword}"><a href="${myUrl}resetpassword" class="active">Reset Password</a></li>
+            <li class="${settings}"><a href="${myUrl}superadmin/settings" class=""><i class="fa fa-cogs icons-head" aria-hidden="true"></i>Settings</a></li>
+      
+       <%--  <li><a href="${myUrl}superadmin/payment/planDetailsGraph" class="active">Plan details</a></li> --%>
+        <li><%-- <a href="<c:url value="/logout"/>" style="border:transparent !important;"> --%><img src="${myUrl}resources/img/power-icon.png" data-target=".bs-example-modal-sm" data-toggle="modal" data-toggle="modal" class="img-responsive" style="margin-top: 14px;"></a></li>
+				
+    
+    
+    
+      </ul>
+      
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+  
+</nav>
+	</div>
+</div>
+<div class="fixing-menu"></div>
+<!-- <button class="btn btn-primary" data-target=".bs-example-modal-sm" data-toggle="modal">Logout modal</button>
+ -->
+<div tabindex="-1" class="modal bs-example-modal-sm" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header"><h4>Logout <i class="fa fa-lock"></i></h4></div>
+      <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to log-out?</div>
+      <div class="modal-footer"><a href="<c:url value="/logout" />" class="btn btn-primary btn-block"> Logout</a></div>
+    </div>
+  </div>
+</div>

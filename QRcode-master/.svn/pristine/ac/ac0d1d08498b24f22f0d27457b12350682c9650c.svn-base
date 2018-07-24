@@ -1,0 +1,16 @@
+package com.zs.cws.ws.android.leave.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.leave.model.LeaveApplyModel;
+import com.zs.cws.ws.android.leave.model.LeaveViewRequestModel;
+import com.zs.cws.ws.android.leave.model.LeaveViewResponseModel;
+
+public interface LeaveApplyDAO {
+
+	public List<LeaveViewResponseModel> getLeaveDetails(LeaveViewRequestModel leaveViewRequestModel);
+
+	public List<LeaveApplyModel> getStudentDetails(int studentID);
+
+	public boolean leaveApplied(int studentID);
+}

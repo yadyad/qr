@@ -1,0 +1,144 @@
+package com.zs.cws.schooladmin.kudos.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+@Entity
+@Table(name="cwas_kudos_details")
+public class KudosModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int kudosId;
+	
+	
+	
+	@Column(name="school_id")
+	private int schoolId;
+	
+	@Column(name="kudos")
+	private String kudos;
+	
+	@Column(name="description")
+	private String kudosDesc;
+	
+	@Column(name="image_url")
+	private String imageUrl;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@DateTimeFormat()
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	@DateTimeFormat
+	@Column(name="updated_date")
+	private Date updatedDate;
+
+	public KudosModel() {
+	
+		
+	}
+
+	public int getKudosId() {
+		return kudosId;
+	}
+
+	public void setKudosId(int kudosId) {
+		this.kudosId = kudosId;
+	}
+
+	public int getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public String getKudos() {
+		return kudos;
+	}
+
+	public void setKudos(String kudos) {
+		this.kudos = kudos;
+	}
+
+	public String getKudosDesc() {
+		return kudosDesc;
+	}
+
+	public void setKudosDesc(String kudosDesc) {
+		this.kudosDesc = kudosDesc;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "KudosModel [kudosId=" + kudosId + ", schoolId=" + schoolId + ", kudos=" + kudos + ", kudosDesc="
+				+ kudosDesc + ", imageUrl=" + imageUrl + ", createdBy=" + createdBy + ", createdDate=" + createdDate
+				+ ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate + "]";
+	}
+
+
+
+	
+
+	}

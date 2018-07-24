@@ -1,0 +1,102 @@
+package com.zs.cws.schooladmin.meeting.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.schooldivision.model.SchoolDivModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+import com.zs.cws.superadmin.student.model.StudentModel;
+
+@Entity
+@Table(name = "cwas_meeting_status_details")
+public class MeetingStatusModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int meetingStatusID;
+	
+	@OneToOne
+	@JoinColumn(name = "division_id")
+	SchoolDivModel schoolDivModel;
+	
+	@OneToOne
+	@JoinColumn(name = "meeting_id")
+	MeetingRequestModel meetingRequestModel;
+	
+	@OneToOne
+	@JoinColumn(name = "student_id")
+	StudentModel studentModel;
+	
+	@Column(name = "status")
+	private int status;
+	
+	@Column(name = "meeting_type")
+	private String meetingType;
+
+
+	public MeetingStatusModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getMeetingStatusID() {
+		return meetingStatusID;
+	}
+
+	public void setMeetingStatusID(int meetingStatusID) {
+		this.meetingStatusID = meetingStatusID;
+	}
+
+	public MeetingRequestModel getMeetingRequestModel() {
+		return meetingRequestModel;
+	}
+
+	public void setMeetingRequestModel(MeetingRequestModel meetingRequestModel) {
+		this.meetingRequestModel = meetingRequestModel;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public SchoolDivModel getSchoolDivModel() {
+		return schoolDivModel;
+	}
+
+	public void setSchoolDivModel(SchoolDivModel schoolDivModel) {
+		this.schoolDivModel = schoolDivModel;
+	}
+
+	public String getMeetingType() {
+		return meetingType;
+	}
+
+	public void setMeetingType(String meetingType) {
+		this.meetingType = meetingType;
+	}
+
+	public StudentModel getStudentModel() {
+		return studentModel;
+	}
+
+	public void setStudentModel(StudentModel studentModel) {
+		this.studentModel = studentModel;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingStatusModel [meetingStatusID=" + meetingStatusID + ", schoolDivModel=" + schoolDivModel
+				+ ", meetingRequestModel=" + meetingRequestModel + ", status=" + status + ", meetingType=" + meetingType
+				+ "]";
+	}
+
+}

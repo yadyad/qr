@@ -1,0 +1,121 @@
+package com.zs.cws.superadmin.master.category.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+@Table(name = "cwas_category_master")
+public class CategoryModel {
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int rowId;
+	
+	@Column(name = "category")
+	String category;
+	
+	@Column(name = "description")
+	String description; 
+	
+	@Column(name = "created_by")
+	String createdUser;
+	
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	
+	@Column(name = "updated_by")
+	String updatedUser;
+	
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public CategoryModel() {
+	}
+
+	public CategoryModel(int rowId, String category, String description, String createdUser, Date createdDate,
+			String updatedUser, Date updatedDate) {
+		super();
+		this.rowId = rowId;
+		this.category = category;
+		this.description = description;
+		this.createdUser = createdUser;
+		this.createdDate = createdDate;
+		this.updatedUser = updatedUser;
+		this.updatedDate = updatedDate;
+	}
+
+	public int getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "CategoryModel [rowId=" + rowId + ", category=" + category + ", description=" + description
+				+ ", createdUser=" + createdUser + ", createdDate=" + createdDate + ", updatedUser=" + updatedUser
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+	
+	
+}

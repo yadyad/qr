@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.principalquotes.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.principalquotes.model.PrincipalQuoteModel;
+
+public interface PrincipalQuoteRepository extends JpaRepository<PrincipalQuoteModel, Integer> {
+
+}

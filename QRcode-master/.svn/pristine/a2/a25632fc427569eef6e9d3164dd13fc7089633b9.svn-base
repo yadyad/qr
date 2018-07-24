@@ -1,0 +1,11 @@
+package com.zs.cws.schooladmin.principalquotes.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.principalquotes.model.PrincipalQuoteModel;
+
+public interface PrincipalQuoteDAO {
+
+	List<PrincipalQuoteModel> getPrincipalQuotes(int schoolID);
+
+}

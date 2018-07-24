@@ -1,0 +1,17 @@
+package com.zs.cws.ws.android.dairy.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.dairy.model.DairyMessageDeliverModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageResponseModel;
+import com.zs.cws.ws.android.dairy.model.MessageReplyResponseModel;
+
+public interface DairyDAO {
+
+	 List<DairyMessageResponseModel> getDeliveredMessages(String lastModifiedDate,String memberType,int memberID,String status);
+	 List<MessageReplyResponseModel> getReplies(int memberID,String memberType,int deliverID);
+	 List<DairyMessageResponseModel> getRepliedDeliverMessages(int messageID,String memberType,int memberID,String status,String fcmCall);
+     List<DairyMessageDeliverModel> getDeliveredMessages(int messageID,String groupStatus,String lastModifiedDate);
+     List<DairyMessageResponseModel> getRepliedDeliverMessagesForFCM(int messageID,String memberType,int memberID,String status,String fcmCall);
+
+}

@@ -1,0 +1,10 @@
+package com.zs.cws.superadmin.master.department.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.management.model.ManagementModel;
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+
+public interface DepartmentRepository extends JpaRepository<DepartmentModel, Integer> {
+
+}

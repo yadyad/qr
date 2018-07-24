@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.examdetails.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.examdetails.model.ExamDetailsModel;
+
+public interface ExamRepository extends JpaRepository<ExamDetailsModel, Integer> {
+
+}

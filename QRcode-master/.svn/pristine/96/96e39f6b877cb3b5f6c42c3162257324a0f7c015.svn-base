@@ -1,0 +1,54 @@
+package com.zs.cws.ws.android.progressreport.model;
+
+public class ProgressReportViewRequest {
+	
+	int schoolID;
+	int divisionID;
+	int studentID;
+	
+	
+	public ProgressReportViewRequest() {
+		
+	}
+
+	
+	
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getDivisionID() {
+		return divisionID;
+	}
+
+	public void setDivisionID(int divisionID) {
+		this.divisionID = divisionID;
+	}
+
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ProgressReportViewRequest [schoolID=" + schoolID + ", divisionID=" + divisionID + ", studentID="
+				+ studentID +  "]";
+	}
+
+	
+	
+	
+	
+	
+
+}

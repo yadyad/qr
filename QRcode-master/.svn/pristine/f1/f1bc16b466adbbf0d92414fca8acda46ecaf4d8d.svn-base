@@ -1,0 +1,127 @@
+package com.zs.cws.superadmin.master.plancreation.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="cwas_new_plan_master")
+public class PlanCreationModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int newPlanId;
+	
+	
+	@Column(name="plan_name")
+	private String planName;
+	
+	
+	@Column(name="size")
+	private double planSize;
+	
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	public int getNewPlanId() {
+		return newPlanId;
+	}
+
+
+	public void setNewPlanId(int newPlanId) {
+		this.newPlanId = newPlanId;
+	}
+
+
+	public String getPlanName() {
+		return planName;
+	}
+
+
+	public void setPlanName(String planName) {
+		this.planName = planName;
+	}
+
+
+	public double getPlanSize() {
+		return planSize;
+	}
+
+
+	public void setPlanSize(double planSize) {
+		this.planSize = planSize;
+	}
+
+
+	public PlanCreationModel() {
+		
+	}
+
+
+	@Override
+	public String toString() {
+		return "PlanCreationModel [newPlanId=" + newPlanId + ", planName=" + planName + ", planSize=" + planSize
+				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+
+
+	
+	
+}

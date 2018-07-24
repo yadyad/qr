@@ -1,0 +1,109 @@
+package com.zs.cws.superadmin.master.managementposition.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+@Table(name = "cwas_management_position_master")
+public class ManagementPositionModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int positionID;
+
+	@Column(name = "position")
+	String position;
+
+	@Column(name = "description")
+	String description;
+
+	@Column(name = "created_by")
+	String createdUser;
+	
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	
+	@Column(name = "updated_by")
+	String updatedUser;
+	
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+
+	public ManagementPositionModel() {
+	}
+
+	public int getPositionID() {
+		return positionID;
+	}
+
+	public void setPositionID(int positionID) {
+		this.positionID = positionID;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagementPositionModel [positionID=" + positionID + ", position=" + position + ", description="
+				+ description + ", createdUser=" + createdUser + ", createdDate=" + createdDate + ", updatedUser="
+				+ updatedUser + ", updatedDate=" + updatedDate + "]";
+	}
+	
+	
+}

@@ -1,0 +1,94 @@
+package com.zs.cws.superadmin.master.subject.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+@Table(name="cwas_subject_master")
+public class SubjectModel {
+	
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	int subjectId;
+	@Column(name = "subject")
+	String subject;
+	@Column(name = "description")
+	String description;
+	@Column(name = "created_by")
+	String createdUser;
+	@Column(name = "created_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date createdDate;
+	@Column(name = "updated_by")
+	String updatedUser;
+	@Column(name = "updated_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date updatedDate;
+	
+	public SubjectModel() {
+	}
+	
+	
+	public int getSubjectId() {
+		return subjectId;
+	}
+	public void setSubjectId(int subjectId) {
+		this.subjectId = subjectId;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getCreatedUser() {
+		return createdUser;
+	}
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getUpdatedUser() {
+		return updatedUser;
+	}
+	public void setUpdatedUser(String updatedUser) {
+		this.updatedUser = updatedUser;
+	}
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "SubjectModel [subjectId=" + subjectId + ", subject=" + subject + ", description=" + description
+				+ ", createdUser=" + createdUser + ", createdDate=" + createdDate + ", updatedUser=" + updatedUser
+				+ ", updatedDate=" + updatedDate + "]";
+	}
+
+
+
+}

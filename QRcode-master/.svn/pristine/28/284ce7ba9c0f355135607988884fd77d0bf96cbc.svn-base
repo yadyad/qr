@@ -1,0 +1,62 @@
+package com.zs.cws.schooladmin.reports.model;
+
+import java.util.Date;
+
+public class FeesReportModel {
+	
+	String enrollmentNumber;
+	String studentName;
+	String standard;
+	Double amount;
+	Date payedDate;
+	public FeesReportModel() {
+	
+	}
+	
+	public String getEnrollmentNumber() {
+		return enrollmentNumber;
+	}
+
+	public void setEnrollmentNumber(String enrollmentNumber) {
+		this.enrollmentNumber = enrollmentNumber;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+	public String getStandard() {
+		return standard;
+	}
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+	public Double getAmount() {
+		return amount;
+	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public Date getPayedDate() {
+		return payedDate;
+	}
+	public void setPayedDate(Date payedDate) {
+		this.payedDate = payedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "FeesReportModel [enrollmentNumber=" + enrollmentNumber + ", studentName=" + studentName + ", standard="
+				+ standard + ", amount=" + amount + ", payedDate=" + payedDate + "]";
+	}
+	
+	
+	
+	
+	
+	
+	
+
+}

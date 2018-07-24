@@ -1,0 +1,87 @@
+package com.zs.cws.schooladmin.principalmeeting.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name = "cwas_principal_meeting_status_details")
+public class PrincipalMeetingStatusModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int meetingStatusID;
+
+	@OneToOne
+	@JoinColumn(name = "staff_id")
+	SchoolStaffModel schoolStaffModel;
+	
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+	
+	@OneToOne
+	@JoinColumn(name = "meeting_id")
+	PrincipalMeetingModel principalMeetingModel;
+	
+	@Column(name = "status")
+	private int status;
+
+	public PrincipalMeetingStatusModel() {
+	}
+
+	public int getMeetingStatusID() {
+		return meetingStatusID;
+	}
+
+	public void setMeetingStatusID(int meetingStatusID) {
+		this.meetingStatusID = meetingStatusID;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public PrincipalMeetingModel getPrincipalMeetingModel() {
+		return principalMeetingModel;
+	}
+
+	public void setPrincipalMeetingModel(PrincipalMeetingModel principalMeetingModel) {
+		this.principalMeetingModel = principalMeetingModel;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "PrincipalMeetingStatusModel [meetingStatusID=" + meetingStatusID + ", schoolStaffModel="
+				+ schoolStaffModel + ", schoolModel=" + schoolModel + ", principalMeetingModel=" + principalMeetingModel
+				+ ", status=" + status + "]";
+	}
+	
+}

@@ -1,0 +1,38 @@
+package com.zs.cws.ws.android.feesdetails.model;
+
+import java.util.List;
+
+public class FinalFeesDetails {
+	
+	String status;
+	List<FeesDetailsResponse>feesDetails;
+
+	public FinalFeesDetails() {
+		
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<FeesDetailsResponse> getFeesDetails() {
+		return feesDetails;
+	}
+
+	public void setFeesDetails(List<FeesDetailsResponse> feesDetails) {
+		this.feesDetails = feesDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalFeesDetails [status=" + status + ", feesDetails=" + feesDetails + "]";
+	}
+
+	
+
+	
+}

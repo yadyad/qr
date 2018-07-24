@@ -1,0 +1,60 @@
+package com.zs.cws.ws.android.progressreport.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.ws.android.progressreport.model.ProgressReportModel;
+
+@Repository
+public class ProgressReportIMPL implements ProgressReportDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<ProgressReportModel> getReportDetails(int divisionID, int schoolID, int studentID, int examID) {
+		String query = "From ProgressReportModel where schoolDivModel.schoolDivId = '" + divisionID
+				+ "' and schoolModel.schoolId = '" + schoolID + "' and studentModel.studentId = '" + studentID
+				+ "' and examDetailsModel.examDetailsID='" + examID + "'";
+		List<ProgressReportModel> progressReportModels = entityManager.createQuery(query).getResultList();
+		return progressReportModels;
+	}
+
+	@Override
+	public List<ProgressReportModel> getExamMarks(int examDetailsID) {
+		String query = "From ProgressReportModel where examDetailsModel.examDetailsID='" + examDetailsID + "'";
+		List<ProgressReportModel> progressReportModel = entityManager.createQuery(query).getResultList();
+		return progressReportModel;
+	}
+
+	@Override
+	public String getExamMarksBySubjects(int subjectID, int examID, int studentID) {
+		String query = "From ProgressReportModel where examDetailsModel.examDetailsID=" + examID
+				+ " AND subjectModel.subjectId=" + subjectID + " AND studentModel.studentId=" + studentID + "";
+		List<ProgressReportModel> progressReportModels = entityManager.createQuery(query).getResultList();
+		if (progressReportModels.size() == 0) {
+			return "0";
+		}
+		return progressReportModels.get(0).getMarksSecured();
+	}
+
+	@Override
+	public ProgressReportModel isProgressExist(int examID, int subjectID, int studentId) {
+		String query = " from ProgressReportModel  where examDetailsModel.examDetailsID=" + examID
+				+ " AND subjectModel.subjectId=" + subjectID + " AND studentModel.studentId=" + studentId + "";
+		ProgressReportModel progressReportModel = null;
+		try {
+			 progressReportModel = (ProgressReportModel) entityManager.createQuery(query)
+					.getSingleResult();
+		} catch (NoResultException nre) {
+			return new ProgressReportModel();
+		}
+		return progressReportModel;
+	}
+
+}

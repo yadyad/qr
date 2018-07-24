@@ -1,0 +1,20 @@
+<!doctype html>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<html>
+<head>
+<!-- START HEAD SCRIPTS -->
+<tiles:insertAttribute name="schooladmin.script" ignore="true" />
+<!-- -END HEAD SCRIPTS -->
+</head>
+
+<!-- START HEADER -->
+<tiles:insertAttribute name="schooladmin.header" ignore="true" />
+<!-- -END HEADER -->
+</head>
+<body class="lgn-page-bg-home">
+	<div class="top-space"></div>
+	<!-- START BODY -->
+	<tiles:insertAttribute name="schooladmin_subheader.body" ignore="true" />
+	<tiles:insertAttribute name="schooladminnew.body" ignore="true" />
+	<!-- END BODY -->
+</body>

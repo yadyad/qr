@@ -1,0 +1,118 @@
+package com.zs.cws.superadmin.master.designation.controller;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+import com.zs.cws.superadmin.master.department.repository.DepartmentRepository;
+import com.zs.cws.superadmin.master.designation.dao.DesignationDAO;
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+import com.zs.cws.superadmin.master.designation.repository.DesignationRepository;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/designation")
+public class DesignationController {
+	
+	
+	@Autowired
+	DesignationRepository designationRepository;
+	@Autowired
+	DepartmentRepository departmentRepository;
+	@Autowired
+	DesignationDAO designationDAO;
+//	private static int schoolId = 0;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("super_admin_designation");
+	modelAndView.addObject("designation", "active");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		List<DesignationModel> designationList = designationRepository.findAll();
+		return designationList;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody DesignationModel designationModel,
+			HttpSession session) {
+		
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!designationDAO.isAvailable(designationModel)) {
+			designationModel.setCreatedUser(loggedUser);
+			designationModel.setUpdatedUser(loggedUser);
+			designationModel.setCreatedDate(new Date());
+			designationModel.setUpdatedDate(new Date());
+			DepartmentModel departmentModel = departmentRepository.findOne(designationModel.getDepartmentModel().getRowId());
+			designationModel.setDepartmentModel(departmentModel);
+			designationRepository.save(designationModel);
+
+			return designationModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	
+	
+	@RequestMapping(value = { "/getDropDownValue/{id}" }, method = RequestMethod.GET, produces = { "application/json" })
+	public @ResponseBody Object sdfsdg(HttpServletRequest request, @PathVariable int id, HttpSession session) {
+		DesignationModel designationModel = designationRepository.findOne(id);
+		return designationModel;
+
+	}
+	
+	
+	
+	@RequestMapping(value = "/deleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] desgIDs) {
+		for (int designId : desgIDs) {
+			if (designId != 0) {
+				designationRepository.delete(designId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/deleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int desigId) {
+		if (desigId != 0) {
+			designationRepository.delete(desigId);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/dropDown", method = RequestMethod.GET)
+	public @ResponseBody Object deptMap() {
+		List<DesignationModel> desgList = designationRepository.findAll();
+		Map<Integer, String> managMap = new HashMap<>();
+		for (DesignationModel designationModel : desgList) {
+			managMap.put(designationModel.getRowId(), designationModel.getDesignation());
+		}
+		return managMap;
+	}
+
+}

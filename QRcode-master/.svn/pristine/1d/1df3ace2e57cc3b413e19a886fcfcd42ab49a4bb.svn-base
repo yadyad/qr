@@ -1,0 +1,27 @@
+package com.zs.cws.ws.android.driverdetails.model;
+
+public class DriverDetailsRequest {
+	
+	
+	int schoolID;
+
+	public DriverDetailsRequest() {
+	
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	@Override
+	public String toString() {
+		return "DriverDetailsRequest [schoolID=" + schoolID + "]";
+	}
+	
+	
+
+}

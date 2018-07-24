@@ -1,0 +1,124 @@
+package com.zs.cws.ws.android.timetable.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.schooladmin.timetable.dao.TimeTableDAO;
+import com.zs.cws.schooladmin.timetable.model.TimeTableModel;
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.schooldivision.dao.SchoolDivDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.model.StudentModel;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.timetable.model.TimeTableRequest;
+import com.zs.cws.ws.android.timetable.model.TimeTableResponse;
+
+@RestController
+@RequestMapping("android/timetable")
+public class TimeTableServiceController {
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	SchoolDivDAO schoolDivDAO;
+	@Autowired
+	TimeTableDAO timeTableDAO;
+
+	@Autowired
+	StudentDAO studentDAO;
+	@Autowired
+	StudentRepository studentRepository;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object listFeesStructure(HttpServletRequest request,
+			@RequestBody TimeTableRequest timeTableRequest) {
+		try {
+			TimeTableResponse timeTableResponse = new TimeTableResponse();
+
+			if (timeTableRequest.getMemberType().equalsIgnoreCase("T")) {
+
+				if (schoolDAO.isValidSchool(timeTableRequest.getSchoolID())) {
+
+					if (schoolDivDAO.validDivision(timeTableRequest.getDivisionID(), timeTableRequest.getSchoolID())) {
+						List<TimeTableModel> timetableList = timeTableDAO.getTimeTableListByDivision(
+								timeTableRequest.getDivisionID(), timeTableRequest.getSchoolID());
+						timeTableResponse.setStatus("Success");
+						for (TimeTableModel timeTableModel : timetableList) {
+							timeTableResponse.setTimeTableURL(timeTableModel.getImageURL());
+							Date date = new Date();
+							date = timeTableModel.getUpdatedDate();
+							SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							String s = sdf1.format(date);
+							try {
+								date = sdf1.parse(s);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							timeTableResponse.setUploadedDate(s);
+						}
+						return timeTableResponse;
+
+					} else {
+						timeTableResponse.setStatus("Invalid division");
+						return timeTableResponse;
+
+					}
+
+				} else {
+					timeTableResponse.setStatus("Invalid User");
+					return timeTableResponse;
+
+				}
+
+			} else if (timeTableRequest.getMemberType().equalsIgnoreCase("P")) {
+
+				if (studentDAO.isValidStudent(timeTableRequest.getStudentID())) {
+
+					StudentModel studentModel = studentRepository.findOne(timeTableRequest.getStudentID());
+
+					List<TimeTableModel> timetableList = timeTableDAO.getTimeTableListByDivision(
+							studentModel.getSchoolDivModel().getSchoolDivId(), timeTableRequest.getSchoolID());
+					timeTableResponse.setStatus("Success");
+					for (TimeTableModel timeTableModel : timetableList) {
+						timeTableResponse.setTimeTableURL(timeTableModel.getImageURL());
+						Date date = new Date();
+						date = timeTableModel.getUpdatedDate();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						String s = sdf1.format(date);
+						try {
+							date = sdf1.parse(s);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						timeTableResponse.setUploadedDate(s);
+					}
+					return timeTableResponse;
+				} else {
+					timeTableResponse.setStatus("Invalid student");
+					return timeTableResponse;
+				}
+
+			} else {
+				timeTableResponse.setStatus("Invalid Type");
+				return timeTableResponse;
+			}
+
+		} catch (Exception e) {
+			TimeTableResponse timeTableResponse = new TimeTableResponse();
+			e.printStackTrace();
+			timeTableResponse.setStatus("Failed");
+			return timeTableResponse;
+		}
+
+	}
+}

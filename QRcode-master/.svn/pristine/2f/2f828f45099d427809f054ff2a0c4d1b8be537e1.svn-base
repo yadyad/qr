@@ -1,0 +1,125 @@
+package com.zs.cws.schooladmin.examdetails.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name="cwas_exam_term_master")
+public class ExamDetailsModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name="row_id")
+	private int examDetailsID;
+	
+	@OneToOne
+	@JoinColumn(name="school_id")
+	private SchoolModel schoolModel;
+	
+	@Column(name="exam_name")
+	private String examName;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="exam_description")
+	private String examDesc;
+	
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="updated_date")
+	private Date updatedDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+
+	public ExamDetailsModel() {
+	
+	}
+
+	public int getExamDetailsID() {
+		return examDetailsID;
+	}
+
+	public void setExamDetailsID(int examDetailsID) {
+		this.examDetailsID = examDetailsID;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getExamName() {
+		return examName;
+	}
+
+	public void setExamName(String examName) {
+		this.examName = examName;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getExamDesc() {
+		return examDesc;
+	}
+
+	public void setExamDesc(String examDesc) {
+		this.examDesc = examDesc;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "ExamDetailsModel [examDetailsID=" + examDetailsID + ", schoolModel=" + schoolModel + ", examName="
+				+ examName + ", createdBy=" + createdBy + ", examDesc=" + examDesc + ", createdDate=" + createdDate
+				+ ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy + "]";
+	}
+	
+	
+	
+	
+	
+}

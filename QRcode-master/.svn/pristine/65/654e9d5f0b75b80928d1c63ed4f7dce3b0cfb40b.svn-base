@@ -1,0 +1,91 @@
+package com.zs.cws.utils;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+
+import org.springframework.util.DefaultPropertiesPersister;
+
+
+
+public class PropertyFilesUtil {
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		String propertyFileName = "src/main/resources/mail.properties";
+		String xmlFileName = "DB.xml";
+		
+		readPropertyFile(propertyFileName, xmlFileName);
+	}
+
+
+	/**
+	 * This method reads property files from file system
+	 * 
+	 * @param propertyFileName
+	 * @param xmlFileName
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public static EmailConfigPOJO readPropertyFile(String propertyFileName, String xmlFileName)
+			throws FileNotFoundException, IOException {
+		System.out.println("Start of readPropertyFile");
+		Properties prop = new Properties();
+		FileReader reader = new FileReader(propertyFileName);
+		prop.load(PropertyFilesUtil.class.getClassLoader().getResourceAsStream(propertyFileName));
+		EmailConfigPOJO emailConfigPOJO = new EmailConfigPOJO();
+//		emailConfigPOJO.setHost(prop.getProperty("smtp.host"));
+//		emailConfigPOJO.setUsername(prop.getProperty("smtp.user"));
+//		emailConfigPOJO.setPassword(prop.getProperty("smtp.pass"));
+		System.out.println("End of readPropertyFile");
+		return emailConfigPOJO;
+	}
+
+	/**
+	 * This method writes Property files into file system in property file and
+	 * xml format
+	 * 
+	 * @param fileName
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+
+	public static void writePropertyFile(ServletContext context, EmailConfigPOJO configPOJO) {
+
+		try {   
+			String path = context.getRealPath("/WEB-INF");
+			System.out.println(path);
+			File file = new File(path, "classes");
+
+			if (!file.exists()) {
+				file.mkdir();
+			}
+
+			file = new File(file, "mail.properties");
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			Properties props = new Properties();
+//			props.setProperty("smtp.host", configPOJO.getHost());
+//			props.setProperty("smtp.pass", configPOJO.getPassword());
+//			props.setProperty("smtp.user", configPOJO.getUsername());
+//			DefaultPropertiesPersister p = new DefaultPropertiesPersister();
+//			p.store(props, fw, "Header COmment");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

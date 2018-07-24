@@ -1,0 +1,28 @@
+package com.zs.cws.ws.hybrid.license.model;
+
+import java.util.List;
+
+public class FeatureResponsePOJO {
+
+	
+	List<String>features;
+
+	
+	
+	public List<String> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<String> features) {
+		this.features = features;
+	}
+
+	@Override
+	public String toString() {
+		return "FeatureResponsePOJO [features=" + features + "]";
+	}
+	
+	
+	
+	
+}

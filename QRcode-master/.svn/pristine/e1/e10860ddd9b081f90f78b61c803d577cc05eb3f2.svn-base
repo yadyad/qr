@@ -1,0 +1,74 @@
+
+
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
+	<div id="wrapper">
+		<div id="sidebar-wrapper">
+			<aside id="sidebar">
+				<ul id="sidemenu" class="sidebar-nav">
+					<li class="${department}"><a href="${myUrl}/clubwizard-school/superadmin/department">
+							<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
+							<span class="sidebar-title">Department</span>
+					</a></li>
+					<li class="${managementpostion}"><a
+						href="${myUrl}/clubwizard-school/superadmin/managementposition">
+							<span class="sidebar-icon"><i class="fa fa-sitemap"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Management
+								Position</span>
+					</a></li>
+					<li class="${category}"><a href="${myUrl}/clubwizard-school/superadmin/category">
+							<span class="sidebar-icon"><i class="fa fa-list"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Category</span>
+					</a></li>
+					<li class="${feature}"><a href="${myUrl}/clubwizard-school/superadmin/feature">
+							<span class="sidebar-icon"><i class="fa fa-clipboard"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Feature</span>
+					</a></li>
+					<li class="${subject}"><a href="${myUrl}/clubwizard-school/superadmin/subject">
+							<span class="sidebar-icon"><i class="fa fa-book"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Subject</span>
+					</a></li>
+					<li class="${designation}"><a
+						href="${myUrl}/clubwizard-school/superadmin/designation"> <span
+							class="sidebar-icon"><i class="fa fa-graduation-cap"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Designation</span>
+					</a></li>
+					<li class="${subscription}"><a
+						href="${myUrl}/clubwizard-school/superadmin/subscription"> <span
+							class="sidebar-icon"><i class="fa fa-shopping-bag"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Subscription
+								Plan</span>
+					</a></li>
+
+					<li class="${createplan}"><a href="${myUrl}/clubwizard-school/superadmin/newPlan">
+							<span class="sidebar-icon"><i class="fa fa-briefcase"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Create
+								plan</span>
+					</a></li>
+
+
+
+
+					<li class="${paymentmode}"><a
+						href="${myUrl}/clubwizard-school/superadmin/paymentmode"> <span
+							class="sidebar-icon"><i class="fa fa-credit-card"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Payment
+								mode</span>
+					</a></li>
+
+
+
+					<li class="${tax}"><a href="${myUrl}/clubwizard-school/superadmin/tax"> <span
+							class="sidebar-icon"><i class="fa fa-money"
+								aria-hidden="true"></i></span> <span class="sidebar-title">Tax</span>
+					</a></li>
+
+					<li class="${quota}"><a href="${myUrl}/clubwizard-school/superadmin/quota">
+							<span class="sidebar-icon"><i class="fa fa-gift" aria-hidden="true"></i></span>
+							<span class="sidebar-title">Quota</span>
+					</a></li>
+				</ul>
+			</aside>
+		</div>
+	</div>
+</div>
+

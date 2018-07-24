@@ -1,0 +1,154 @@
+package com.zs.cws.schooladmin.principalmeeting.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+@Entity
+@Table(name = "cwas_principal_meeting_request_details")
+public class PrincipalMeetingModel {
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int meetingRequestID;
+
+	@OneToOne
+	@JoinColumn(name = "from_id")
+	SchoolStaffModel schoolStaffModel;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@Column(name = "purpose")
+	private String purpose;
+
+	@Column(name = "venue")
+	private String venue;
+
+	@Column(name = "meeting_time")
+	private String meetingTime;
+
+	@Column(name = "meeting_date")
+	private String meetingDate;
+
+	@Column(name = "meeting_type")
+	private String meetingType;
+
+	@Column(name = "agenda")
+	private String agenda;
+	@Column(name = "key_points")
+	private String keyPoints;
+
+	@Column(name = "next_meeting_date")
+	private String nextMeetingDate;
+
+	public PrincipalMeetingModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getMeetingRequestID() {
+		return meetingRequestID;
+	}
+
+	public void setMeetingRequestID(int meetingRequestID) {
+		this.meetingRequestID = meetingRequestID;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+
+	public SchoolStaffModel getSchoolStaffModel() {
+		return schoolStaffModel;
+	}
+
+	public void setSchoolStaffModel(SchoolStaffModel schoolStaffModel) {
+		this.schoolStaffModel = schoolStaffModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public String getMeetingType() {
+		return meetingType;
+	}
+
+	public void setMeetingType(String meetingType) {
+		this.meetingType = meetingType;
+	}
+
+	public String getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
+
+	public String getKeyPoints() {
+		return keyPoints;
+	}
+
+	public void setKeyPoints(String keyPoints) {
+		this.keyPoints = keyPoints;
+	}
+
+	public String getNextMeetingDate() {
+		return nextMeetingDate;
+	}
+
+	public void setNextMeetingDate(String nextMeetingDate) {
+		this.nextMeetingDate = nextMeetingDate;
+	}
+
+	@Override
+	public String toString() {
+		return "PrincipalMeetingModel [meetingRequestID=" + meetingRequestID + ", schoolStaffModel=" + schoolStaffModel
+				+ ", schoolModel=" + schoolModel + ", purpose=" + purpose + ", venue=" + venue + ", meetingTime="
+				+ meetingTime + ", meetingDate=" + meetingDate + ", meetingType=" + meetingType + ", agenda=" + agenda
+				+ ", keyPoints=" + keyPoints + ", nextMeetingDate=" + nextMeetingDate + "]";
+	}
+
+}

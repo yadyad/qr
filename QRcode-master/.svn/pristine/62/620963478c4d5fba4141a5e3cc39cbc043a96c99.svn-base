@@ -1,0 +1,9 @@
+package com.zs.cws.payment.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.payment.model.PaymentModel;
+
+public interface PaymentHistoryRepository extends JpaRepository<PaymentModel, Integer> {
+
+}

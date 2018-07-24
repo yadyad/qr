@@ -1,0 +1,24 @@
+package com.zs.cws.ws.hybrid.meeting.model;
+
+public class MeetingMembersRequestModel {
+	int meetingID;
+	String meetingType;
+	public MeetingMembersRequestModel() {
+	}
+	public int getMeetingID() {
+		return meetingID;
+	}
+	public void setMeetingID(int meetingID) {
+		this.meetingID = meetingID;
+	}
+	public String getMeetingType() {
+		return meetingType;
+	}
+	public void setMeetingType(String meetingType) {
+		this.meetingType = meetingType;
+	}
+	@Override
+	public String toString() {
+		return "MeetingMembersRequestModel [meetingID=" + meetingID + ", meetingType=" + meetingType + "]";
+	}
+}

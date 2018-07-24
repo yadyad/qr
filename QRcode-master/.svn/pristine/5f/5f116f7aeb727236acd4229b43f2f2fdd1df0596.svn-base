@@ -1,0 +1,10 @@
+package com.zs.cws.ws.android.complaintbox.dao;
+
+import java.util.List;
+
+import com.zs.cws.ws.android.complaintbox.model.ComplaintBoxModel;
+
+public interface ComplaintDAO {
+
+	public List<ComplaintBoxModel> getSchoolComplaints(int schoolID);
+}

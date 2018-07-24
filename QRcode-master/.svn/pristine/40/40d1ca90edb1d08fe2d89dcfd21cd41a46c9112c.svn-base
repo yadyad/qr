@@ -1,0 +1,109 @@
+package com.zs.cws.schooladmin.kudos.dao;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.schooladmin.kudos.model.KudosModel;
+import com.zs.cws.ws.hybrid.kudos.dao.KudosServiceDAO;
+import com.zs.cws.ws.hybrid.kudos.model.KudosLikesModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosRequestModel;
+import com.zs.cws.ws.hybrid.kudos.model.KudosResponseModel;
+
+@Repository
+public class kudosIMPL implements KudosDAO {
+
+	@Autowired
+	EntityManager entityManager;
+
+	@Autowired
+	KudosServiceDAO kudosServiceDAO;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<KudosResponseModel> getKudosDetails(KudosRequestModel kudosRequestModel) {
+		String query = "";
+		List<KudosModel> kudosModels = new ArrayList<>();
+
+		System.out.println("Kudos Model::>>" + kudosRequestModel.toString());
+		if (kudosRequestModel.getRequestStatus().equalsIgnoreCase("After")) {
+			query = "FROM KudosModel WHERE kudosId >" + kudosRequestModel.getKudosId() + "AND schoolId="+ kudosRequestModel.getSchoolId();
+			kudosModels = entityManager.createQuery(query).getResultList();
+		} else {
+			query = "FROM KudosModel WHERE kudosId <" + kudosRequestModel.getKudosId() + "AND schoolId="
+					+ kudosRequestModel.getSchoolId()+" order by kudosId DESC";
+			kudosModels = entityManager.createQuery(query).setMaxResults(10).getResultList();
+		}
+		
+		
+		System.out.println("KUDISSSSSS LISTTTTTTTTTT "+kudosModels.toString());
+		List<KudosResponseModel> kudosResponseList = new ArrayList<>();
+
+		for (KudosModel kudosModel : kudosModels) {
+			Date date = new Date();
+			date = kudosModel.getCreatedDate();
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+			String s = sdf1.format(date);
+			System.out.println(s);
+			try {
+				date = sdf1.parse(s);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			KudosResponseModel responseModel = new KudosResponseModel();
+			
+			responseModel.setKudosResponseId(kudosModel.getKudosId());
+			responseModel.setKudos(kudosModel.getKudos());
+			responseModel.setKudosDesc(kudosModel.getKudosDesc());
+			if (kudosModel.getImageUrl()==null || kudosModel.getImageUrl().equals("")) {
+				responseModel.setImageUrl("");
+				
+			}
+			else{
+				responseModel.setImageUrl(kudosModel.getImageUrl());
+			
+			}
+			responseModel.setKudosDate(s);
+			responseModel.setMemberId(kudosRequestModel.getMemberId());
+			responseModel.setSchoolID(kudosRequestModel.getSchoolId());
+			responseModel.setKudosLikeCount(kudosServiceDAO.getLikeCounts(kudosModel.getKudosId()));
+			kudosRequestModel.setKudosId(kudosModel.getKudosId());
+
+			if (kudosServiceDAO.alreadyLiked(kudosRequestModel)) {
+				responseModel.setKudosLikeStatus("1");
+			} else {
+				responseModel.setKudosLikeStatus("0");
+			}
+			kudosResponseList.add(responseModel);
+		}
+		return kudosResponseList;
+	}
+
+	@Override
+	public void insertKudosLikes(KudosLikesModel kudosLikesModel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<KudosModel> getAllKudos(int schoolID) {
+		String query = "FROM KudosModel WHERE schoolId="+schoolID;
+		@SuppressWarnings("unchecked")
+		List<KudosModel> kudosList=entityManager.createQuery(query).getResultList();
+		return kudosList;
+	}
+
+	/*
+	 * @Override public void insertKudosLikes(KudosLikesModel kudosLikesModel) {
+	 * // TODO Auto-generated method stub
+	 * 
+	 * }
+	 */
+
+}

@@ -1,0 +1,138 @@
+package com.zs.cws.schooladmin.subscriptionactivation.model;
+
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+@Entity
+@Table(name = "cwas_subscription_activation_details")
+public class SubscriptionPlanActivationModel {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "row_id")
+	private int subActivationID;
+
+	@OneToOne
+	@JoinColumn(name = "plan_id")
+	SubsciptionPlanModel subsciptionPlanModel;
+
+	@OneToOne
+	@JoinColumn(name = "school_id")
+	SchoolModel schoolModel;
+
+	@Column(name = "start_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date startDate;
+
+	@Column(name = "end_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date endDate;
+
+	@Column(name = "grace_end_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date graceEndDate;
+
+	@Column(name = "member_count")
+	private int memberCount;
+
+	@Column(name = "storage_space")
+	private double storageSpace;
+
+	@Column(name = "subscription_type")
+	private String subscriptionType;
+
+	public SubscriptionPlanActivationModel() {
+	}
+
+	public int getSubActivationID() {
+		return subActivationID;
+	}
+
+	public void setSubActivationID(int subActivationID) {
+		this.subActivationID = subActivationID;
+	}
+
+	public SubsciptionPlanModel getSubsciptionPlanModel() {
+		return subsciptionPlanModel;
+	}
+
+	public void setSubsciptionPlanModel(SubsciptionPlanModel subsciptionPlanModel) {
+		this.subsciptionPlanModel = subsciptionPlanModel;
+	}
+
+	public SchoolModel getSchoolModel() {
+		return schoolModel;
+	}
+
+	public void setSchoolModel(SchoolModel schoolModel) {
+		this.schoolModel = schoolModel;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Date getGraceEndDate() {
+		return graceEndDate;
+	}
+
+	public void setGraceEndDate(Date graceEndDate) {
+		this.graceEndDate = graceEndDate;
+	}
+
+	public int getMemberCount() {
+		return memberCount;
+	}
+
+	public void setMemberCount(int memberCount) {
+		this.memberCount = memberCount;
+	}
+
+	public double getStorageSpace() {
+		return storageSpace;
+	}
+
+	public void setStorageSpace(double storageSpace) {
+		this.storageSpace = storageSpace;
+	}
+
+	public String getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
+	}
+
+	@Override
+	public String toString() {
+		return "SubscriptionPlanActivationModel [subActivationID=" + subActivationID + ", subsciptionPlanModel="
+				+ subsciptionPlanModel + ", schoolModel=" + schoolModel + ", startDate=" + startDate + ", endDate="
+				+ endDate + ", graceEndDate=" + graceEndDate + ", memberCount=" + memberCount + ", storageSpace="
+				+ storageSpace + ", subscriptionType=" + subscriptionType + "]";
+	}
+
+}

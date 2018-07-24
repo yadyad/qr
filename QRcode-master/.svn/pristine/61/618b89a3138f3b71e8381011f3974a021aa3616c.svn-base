@@ -1,0 +1,14 @@
+package com.zs.cws.forgetpassword.dao;
+
+import java.util.List;
+
+import com.zs.cws.login.LoginModel;
+import com.zs.cws.superadmin.schoolstaff.model.SchoolStaffModel;
+
+public interface ForgetPasswordDAO {
+
+	SchoolStaffModel isValidEmail(String email);
+
+	LoginModel getLoginId(int schoolStaffId);
+
+}

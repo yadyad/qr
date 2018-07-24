@@ -1,0 +1,102 @@
+package com.zs.cws.ws.android.feesdetails.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.dao.SchoolDAO;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.ws.android.feesdetails.dao.FeesDetailsDAO;
+import com.zs.cws.ws.android.feesdetails.model.FeesDetailsRequest;
+import com.zs.cws.ws.android.feesdetails.model.FeesDetailsResponse;
+import com.zs.cws.ws.android.feesdetails.model.FinalFeesDetails;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+
+@RestController
+@RequestMapping("android/feesdetails")
+public class FeesDetailsServiceController {
+
+	@Autowired
+	SchoolDAO schoolDAO;
+	@Autowired
+	StudentDAO studentDAO;
+	@Autowired
+	FeesDetailsDAO feesDetailsDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentDairyMeaages(HttpServletRequest request,
+			@RequestBody FeesDetailsRequest feesDetailsRequest) {
+		try {
+			FinalFeesDetails finalFeesDetails = new FinalFeesDetails();
+			if (schoolDAO.isValidSchool(feesDetailsRequest.getSchoolID())) {
+
+				if (studentDAO.isValidStudent(feesDetailsRequest.getStudentID())) {
+						
+						if(feesDetailsDAO.isPayed(feesDetailsRequest.getStudentID())){
+							
+						
+					List<FeesPaymentModel> feesPaymentModels = feesDetailsDAO
+							.getFeesDetails(feesDetailsRequest.getSchoolID(), feesDetailsRequest.getStudentID());
+					List<FeesDetailsResponse> feesDetails = new ArrayList<>();
+					for (FeesPaymentModel feesPaymentModel : feesPaymentModels) {
+						FeesDetailsResponse detailsResponse = new FeesDetailsResponse();
+
+						finalFeesDetails.setStatus("Success");
+
+						Date date = new Date();
+						date = feesPaymentModel.getPayedDate();
+						SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						String s = sdf1.format(date);
+						try {
+							date = sdf1.parse(s);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						detailsResponse.setPayedDate(s);
+						detailsResponse.setAmount(feesPaymentModel.getAmount());
+						detailsResponse.setRemarks(feesPaymentModel.getRemarks());
+						feesDetails.add(detailsResponse);
+
+					}
+					finalFeesDetails.setFeesDetails(feesDetails);
+					return finalFeesDetails;
+				}else{
+					finalFeesDetails.setStatus("Not Paid");
+					finalFeesDetails.setFeesDetails(new ArrayList<>());
+					return finalFeesDetails;
+				}
+				} else {
+					finalFeesDetails = new FinalFeesDetails();
+					finalFeesDetails.setStatus("Invalid User");
+					finalFeesDetails.setFeesDetails(new ArrayList<>());
+					return finalFeesDetails;
+				}
+
+			} else {
+				finalFeesDetails = new FinalFeesDetails();
+				finalFeesDetails.setStatus("Invalid User");
+				finalFeesDetails.setFeesDetails(new ArrayList<>());
+				return finalFeesDetails;
+			}
+		} catch (Exception e) {
+			FinalFeesDetails finalFeesDetails = new FinalFeesDetails();
+			
+			finalFeesDetails.setStatus("Failed");
+			e.printStackTrace();
+			finalFeesDetails.setFeesDetails(new ArrayList<>());
+			return finalFeesDetails;
+		}
+
+	}
+}

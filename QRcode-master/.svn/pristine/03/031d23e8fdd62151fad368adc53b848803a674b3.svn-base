@@ -1,0 +1,14 @@
+package com.zs.cws.schooladmin.timetable.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.timetable.model.TimeTableModel;
+
+public interface TimeTableDAO {
+
+	List<TimeTableModel> getTimeTableList(int schoolID);
+	
+	public boolean isAvailable(TimeTableModel tableModel);
+
+	List<TimeTableModel> getTimeTableListByDivision(int divisionID, int schoolID);
+}

@@ -1,0 +1,301 @@
+package com.zs.cws.ws.android.dairy.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.zs.cws.ws.android.dairy.model.DairyMessageDeliverModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageReplyModel;
+import com.zs.cws.ws.android.dairy.model.DairyMessageResponseModel;
+import com.zs.cws.ws.android.dairy.model.MessageReplyResponseModel;
+
+@Transactional
+@Repository
+public class DairyIMPL implements DairyDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<DairyMessageResponseModel> getDeliveredMessages(String lastModiedDate, String memberType, int memberID,
+			String status) {
+		String query = "";
+		if (memberType.equalsIgnoreCase("P")) {
+			if (status.equalsIgnoreCase("After")) {
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID + " AND messageDate>'"
+						+ lastModiedDate + "' AND messageFlow='TP' order by messageDate desc";
+			} else {
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID + " AND messageDate<'"
+						+ lastModiedDate + "' order by messageDate desc";
+			}
+		} else {
+			if (status.equalsIgnoreCase("After")) {
+				query = "From DairyMessageDeliverModel where messageDate >'" + lastModiedDate
+						+ "' AND schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND messageFlow='PT' order by messageDate desc";
+			} else {
+				query = "From DairyMessageDeliverModel where messageDate <'" + lastModiedDate
+						+ "' AND schoolStaffModel.schoolStaffId=" + memberID + "+ order by messageDate desc";
+			}
+		}
+		@SuppressWarnings("unchecked")
+		List<DairyMessageDeliverModel> messageModels = entityManager.createQuery(query).getResultList();
+		List<DairyMessageResponseModel> finalMessageList = new ArrayList<>();
+		for (DairyMessageDeliverModel dairyMessageDeliverModel : messageModels) {
+			boolean duplicateStatus = false;
+			String parentName = "";
+			DairyMessageResponseModel dairyMessageResponseModel = new DairyMessageResponseModel();
+			dairyMessageResponseModel.setDeliverID(dairyMessageDeliverModel.getDeliverID());
+			dairyMessageResponseModel.setMessageID(dairyMessageDeliverModel.getDairyMessageModel().getMessageID());
+			dairyMessageResponseModel.setMessage(dairyMessageDeliverModel.getDairyMessageModel().getMessageContent());
+			dairyMessageResponseModel.setTitle(dairyMessageDeliverModel.getDairyMessageModel().getTitle());
+			dairyMessageResponseModel.setMessageFlow(dairyMessageDeliverModel.getMessageFlow());
+			dairyMessageResponseModel.setParentID(dairyMessageDeliverModel.getStudentModel().getStudentId());
+			dairyMessageResponseModel.setStaffID(dairyMessageDeliverModel.getSchoolStaffModel().getSchoolStaffId());
+			dairyMessageResponseModel.setMessageDate(String.valueOf(dairyMessageDeliverModel.getMessageDate()));
+			dairyMessageResponseModel.setParentName(dairyMessageDeliverModel.getStudentModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getStudentModel().getLastName());
+			dairyMessageResponseModel.setStaffName(dairyMessageDeliverModel.getSchoolStaffModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getSchoolStaffModel().getLastName());
+			dairyMessageResponseModel.setGroupStatus(dairyMessageDeliverModel.getDairyMessageModel().getGroupStatus());
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					parentName = parentName + "," + dairyMessageDeliverModel.getStudentModel().getFatherName();
+				}
+			}
+
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					duplicateStatus = true;
+					break;
+				}
+
+			}
+			if (duplicateStatus) {
+				dairyMessageResponseModel.setParentName(parentName);
+				finalMessageList.add(dairyMessageResponseModel);
+			} else {
+				finalMessageList.add(dairyMessageResponseModel);
+			}
+		}
+		return finalMessageList;
+	}
+
+	@Override
+	public List<MessageReplyResponseModel> getReplies(int memberID, String memberType, int deliverID) {
+		String query = "";
+		if (memberType.equalsIgnoreCase("P")) {
+
+			query = "From DairyMessageReplyModel where  dairyMessageDeliverModel.deliverID=" + deliverID
+					+ " AND dairyMessageDeliverModel.studentModel.studentId=" + memberID
+					+ " order by  messageReplyID desc";
+		} else {
+			query = "From DairyMessageReplyModel where  dairyMessageDeliverModel.deliverID=" + deliverID
+					+ " AND dairyMessageDeliverModel.schoolStaffModel.schoolStaffId=" + memberID
+					+ " order by messageReplyID desc";
+		}
+		List<MessageReplyResponseModel> messageReplyResponseList = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		List<DairyMessageReplyModel> messageReplyList = entityManager.createQuery(query).getResultList();
+		for (DairyMessageReplyModel dairyMessageReplyModel : messageReplyList) {
+			MessageReplyResponseModel messageReplyResponseModel = new MessageReplyResponseModel();
+			messageReplyResponseModel.setMessage(dairyMessageReplyModel.getReplyMessage());
+			messageReplyResponseModel.setMessageFlow(dairyMessageReplyModel.getMessageFlow());
+			messageReplyResponseModel.setParentName(
+					(dairyMessageReplyModel.getDairyMessageDeliverModel().getStudentModel().getFatherName()));
+			messageReplyResponseModel.setStaffName(dairyMessageReplyModel.getDairyMessageDeliverModel()
+					.getSchoolStaffModel().getFirstName() + " "
+					+ (dairyMessageReplyModel.getDairyMessageDeliverModel().getSchoolStaffModel().getLastName()));
+			messageReplyResponseModel.setMessageDate(String.valueOf(dairyMessageReplyModel.getMessageDate()));
+			messageReplyResponseList.add(messageReplyResponseModel);
+		}
+
+		return messageReplyResponseList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DairyMessageResponseModel> getRepliedDeliverMessages(int messageID, String memberType, int memberID,
+			String status, String fcmCall) {
+		System.out.println("FCMCALLL::>>>"+fcmCall);
+		System.out.println("MESSAGE ID BEFORE DECREMENT:>>"+messageID);
+		if (fcmCall.equalsIgnoreCase("yes")) {
+			messageID=messageID-1;
+		}
+		System.out.println("MESSAGE ID AFTER DECREMENT:>>"+messageID);
+		List<DairyMessageDeliverModel> messageModels = new ArrayList<>();
+		List<DairyMessageReplyModel> replyList = new ArrayList<>();
+		String query = "";
+		if (memberType.equalsIgnoreCase("P")) {
+			System.out.println("PARENTTTTTTT....");
+			if (status.equalsIgnoreCase("After")) {
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID
+						+ " AND dairyMessageModel.messageID>" + messageID
+						+ " AND messageFlow='TP'  order by messageDate desc";
+			} else {
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID
+						+ " AND dairyMessageModel.messageID<" + messageID + " order by messageDate desc";
+			}
+			messageModels = entityManager.createQuery(query).getResultList();
+		} else {
+			System.out.println("TEACHER.....");
+			if (status.equalsIgnoreCase("After")) {
+				System.out.println("AFTEERRRRRRR");
+				/*query = "From DairyMessageDeliverModel where  schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND dairyMessageModel.messageID>" + messageID
+						+ " AND messageFlow='PT'  AND dairyMessageModel.groupStatus='no' order by messageDate desc";*/
+				
+				query = "From DairyMessageDeliverModel where  schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND dairyMessageModel.messageID>" + messageID
+						+ "  AND dairyMessageModel.groupStatus='no' order by messageDate desc";
+			} else {
+				query = "From DairyMessageDeliverModel where  schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND dairyMessageModel.messageID<" + messageID + " order by messageDate desc";
+
+			}
+			messageModels = entityManager.createQuery(query).getResultList();
+		}
+
+		List<DairyMessageResponseModel> finalMessageList = new ArrayList<>();
+		for (DairyMessageDeliverModel dairyMessageDeliverModel : messageModels) {
+			boolean duplicateStatus = false;
+			String parentName = "";
+			DairyMessageResponseModel dairyMessageResponseModel = new DairyMessageResponseModel();
+			dairyMessageResponseModel.setDeliverID(dairyMessageDeliverModel.getDeliverID());
+			dairyMessageResponseModel.setMessageID(dairyMessageDeliverModel.getDairyMessageModel().getMessageID());
+			dairyMessageResponseModel.setMessage(dairyMessageDeliverModel.getDairyMessageModel().getMessageContent());
+			dairyMessageResponseModel.setTitle(dairyMessageDeliverModel.getDairyMessageModel().getTitle());
+			dairyMessageResponseModel.setMessageFlow(dairyMessageDeliverModel.getMessageFlow());
+			dairyMessageResponseModel.setParentID(dairyMessageDeliverModel.getStudentModel().getStudentId());
+			dairyMessageResponseModel.setStaffID(dairyMessageDeliverModel.getSchoolStaffModel().getSchoolStaffId());
+			dairyMessageResponseModel.setMessageDate(String.valueOf(dairyMessageDeliverModel.getMessageDate()));
+			dairyMessageResponseModel.setParentName(dairyMessageDeliverModel.getStudentModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getStudentModel().getLastName());
+			dairyMessageResponseModel.setStaffName(dairyMessageDeliverModel.getSchoolStaffModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getSchoolStaffModel().getLastName());
+			dairyMessageResponseModel.setGroupStatus(dairyMessageDeliverModel.getDairyMessageModel().getGroupStatus());
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					parentName = parentName + "," + dairyMessageDeliverModel.getStudentModel().getFatherName();
+				}
+			}
+
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					duplicateStatus = true;
+					break;
+				}
+
+			}
+			if (duplicateStatus) {
+				dairyMessageResponseModel.setParentName(parentName);
+				finalMessageList.add(dairyMessageResponseModel);
+			} else {
+				finalMessageList.add(dairyMessageResponseModel);
+			}
+		}
+		return finalMessageList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DairyMessageDeliverModel> getDeliveredMessages(int messageID, String groupStatus,
+			String lastModifiedDate) {
+		System.out.println("GROUP STATUS::>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+groupStatus);
+		List<DairyMessageDeliverModel> messageModels = new ArrayList<>();
+		if (groupStatus.equalsIgnoreCase("no")) {
+			String query = "From DairyMessageDeliverModel where  dairyMessageModel.messageID=" + messageID
+					+ "  order by messageDate desc";
+			messageModels = entityManager.createQuery(query).getResultList();
+		} else {
+			System.out.println("MESSAGE IDDD::>>"+messageID+"::>MESSAGE DATE::>>>"+lastModifiedDate);
+			String query = "From DairyMessageReplyModel where  dairyMessageModel.messageID=" + messageID
+					+ " AND  messageDate>='" + lastModifiedDate + "' order by messageDate desc";
+
+			List<DairyMessageReplyModel> messageReplyList = entityManager.createQuery(query).getResultList();
+			System.out.println("MESSAGE REPLY LIST cOUNT::>>>"+messageReplyList.size());
+			for (DairyMessageReplyModel DairyMessageReplyModel : messageReplyList) {
+				messageModels.add(DairyMessageReplyModel.getDairyMessageDeliverModel());
+			}
+		}
+		return messageModels;
+	}
+       //Deliver messages  for FCM 
+	@Override
+	public List<DairyMessageResponseModel> getRepliedDeliverMessagesForFCM(int messageID, String memberType,
+			int memberID, String status, String fcmCall) {
+		/*if (fcmCall.equalsIgnoreCase("yes")) {
+			messageID=messageID-1;
+		}*/
+		System.out.println("MESSAGE ID AFTER DECREMENT:>>"+messageID);
+		List<DairyMessageDeliverModel> messageModels = new ArrayList<>();
+		List<DairyMessageReplyModel> replyList = new ArrayList<>();
+		String query = "";
+		if (memberType.equalsIgnoreCase("P")) {
+			/*if (status.equalsIgnoreCase("After")) {
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID
+						+ " AND dairyMessageModel.messageID>" + messageID
+						+ " AND messageFlow='TP'  order by messageDate desc";
+			} else {*/
+				query = "From DairyMessageDeliverModel where  studentModel.studentId=" + memberID
+						+ " AND dairyMessageModel.messageID=" + messageID + " order by messageDate desc";
+//			}
+			messageModels = entityManager.createQuery(query).getResultList();
+		} else {
+			System.out.println("TEACHER.....");
+		/*	if (status.equalsIgnoreCase("After")) {
+				query = "From DairyMessageDeliverModel where  schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND dairyMessageModel.messageID>" + messageID
+						+ "  AND dairyMessageModel.groupStatus='no' order by messageDate desc";
+			} else {*/
+				query = "From DairyMessageDeliverModel where  schoolStaffModel.schoolStaffId=" + memberID
+						+ " AND dairyMessageModel.messageID=" + messageID + " order by messageDate desc";
+
+//			}
+			messageModels = entityManager.createQuery(query).getResultList();
+		}
+
+		List<DairyMessageResponseModel> finalMessageList = new ArrayList<>();
+		for (DairyMessageDeliverModel dairyMessageDeliverModel : messageModels) {
+			boolean duplicateStatus = false;
+			String parentName = "";
+			DairyMessageResponseModel dairyMessageResponseModel = new DairyMessageResponseModel();
+			dairyMessageResponseModel.setDeliverID(dairyMessageDeliverModel.getDeliverID());
+			dairyMessageResponseModel.setMessageID(dairyMessageDeliverModel.getDairyMessageModel().getMessageID());
+			dairyMessageResponseModel.setMessage(dairyMessageDeliverModel.getDairyMessageModel().getMessageContent());
+			dairyMessageResponseModel.setTitle(dairyMessageDeliverModel.getDairyMessageModel().getTitle());
+			dairyMessageResponseModel.setMessageFlow(dairyMessageDeliverModel.getMessageFlow());
+			dairyMessageResponseModel.setParentID(dairyMessageDeliverModel.getStudentModel().getStudentId());
+			dairyMessageResponseModel.setStaffID(dairyMessageDeliverModel.getSchoolStaffModel().getSchoolStaffId());
+			dairyMessageResponseModel.setMessageDate(String.valueOf(dairyMessageDeliverModel.getMessageDate()));
+			dairyMessageResponseModel.setParentName(dairyMessageDeliverModel.getStudentModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getStudentModel().getLastName());
+			dairyMessageResponseModel.setStaffName(dairyMessageDeliverModel.getSchoolStaffModel().getFirstName() + " "
+					+ dairyMessageDeliverModel.getSchoolStaffModel().getLastName());
+			dairyMessageResponseModel.setGroupStatus(dairyMessageDeliverModel.getDairyMessageModel().getGroupStatus());
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					parentName = parentName + "," + dairyMessageDeliverModel.getStudentModel().getFatherName();
+				}
+			}
+
+			for (DairyMessageResponseModel DairyMessageResponseModel : finalMessageList) {
+				if (DairyMessageResponseModel.getMessageID() == dairyMessageResponseModel.getMessageID()) {
+					duplicateStatus = true;
+					break;
+				}
+
+			}
+			if (duplicateStatus) {
+				dairyMessageResponseModel.setParentName(parentName);
+				finalMessageList.add(dairyMessageResponseModel);
+			} else {
+				finalMessageList.add(dairyMessageResponseModel);
+			}
+		}
+		return finalMessageList;
+	
+	}
+
+}

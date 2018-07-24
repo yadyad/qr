@@ -1,0 +1,25 @@
+package com.zs.cws.ws.android.principalquotes.model;
+
+public class PrincipalQuoteRequest {
+
+	int schoolID;
+
+	public PrincipalQuoteRequest() {
+		
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	@Override
+	public String toString() {
+		return "PrincipalQuoteRequest [schoolID=" + schoolID + "]";
+	}
+	
+	
+}

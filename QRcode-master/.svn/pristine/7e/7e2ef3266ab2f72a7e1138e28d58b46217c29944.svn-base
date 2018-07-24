@@ -1,0 +1,126 @@
+package com.zs.cws.superadmin.master.category.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.master.category.dao.CategoryDAO;
+import com.zs.cws.superadmin.master.category.model.CategoryModel;
+import com.zs.cws.superadmin.master.category.repository.CategoryRepository;
+import com.zs.cws.superadmin.master.designation.model.DesignationModel;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/category")
+public class CategoryController {
+
+	@Autowired
+	CategoryDAO categoryDAO;
+
+	@Autowired
+	CategoryRepository categoryRepository;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("super_admin_category");
+		modelAndView.addObject("category", "active");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/Catgoryall", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers(HttpServletRequest request, HttpSession session) throws IOException {
+		// IMPORTANT DONT DELETE ANYONE....
+/*
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/img/sample");
+		File file = new File(realPath);
+		double size = getFileFolderSize(file);
+		System.out.println("Total Space::>" + size / 1024 / 1024);
+		if (file.delete()) {
+			System.out.println(file.getName() + " is deleted!");
+		} else {
+			System.out.println("Delete operation is failed.");
+		}
+*/
+		List<CategoryModel> categorytList = categoryRepository.findAll();
+		return categorytList;
+	}
+
+	public static long getFileFolderSize(File dir) {
+		long size = 0;
+		if (dir.isDirectory()) {
+			for (File file : dir.listFiles()) {
+				if (file.isFile()) {
+					size += file.length();
+				} else
+					size += getFileFolderSize(file);
+			}
+		} else if (dir.isFile()) {
+			size += dir.length();
+		}
+		return size;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody CategoryModel categoryModel,
+			HttpSession session) {
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!categoryDAO.isAvailable(categoryModel)) {
+			categoryModel.setCreatedUser(loggedUser);
+			categoryModel.setUpdatedUser(loggedUser);
+			categoryModel.setCreatedDate(new Date());
+			categoryModel.setUpdatedDate(new Date());
+			categoryRepository.save(categoryModel);
+			return categoryModel;
+		} else {
+			System.out.println("DUplicate");
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/CatdeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] catIDs) {
+		for (int categoryId : catIDs) {
+			if (categoryId != 0) {
+				categoryRepository.delete(categoryId);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/CatdeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int catId) {
+		if (catId != 0) {
+			categoryRepository.delete(catId);
+			return true;
+		}
+		return false;
+	}
+
+	
+	
+	@RequestMapping(value = "/dropDownCategory", method = RequestMethod.GET)
+	public @ResponseBody Object deptMap() {
+		List<CategoryModel> categorytList = categoryRepository.findAll();
+		Map<Integer, String> categoryMap = new HashMap<>();
+		for (CategoryModel categoryModel : categorytList) {
+			categoryMap.put(categoryModel.getRowId(), categoryModel.getCategory());
+		}
+		return categoryMap;
+	}
+}

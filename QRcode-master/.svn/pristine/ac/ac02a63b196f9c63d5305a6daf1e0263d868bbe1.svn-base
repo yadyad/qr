@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.subscriptionactivation.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+
+public interface SubscriptionActivationRepository extends JpaRepository<SubscriptionPlanActivationModel, Integer>{
+
+}

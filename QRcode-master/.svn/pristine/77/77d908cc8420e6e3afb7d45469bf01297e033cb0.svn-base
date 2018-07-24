@@ -1,0 +1,103 @@
+package com.zs.cws.ws.android.principalmeeeting.model;
+
+public class PrincipalMeetingResponseModel {
+
+	int meetingID;
+	String purpose="";
+	String venue="";
+	String meetingTime="";
+	String meetingDate="";
+	String keyPoints="";
+	String agenda="";
+	String nextMeetingDate="";
+	String day;
+	String month;
+	String year;
+	String fromMeetingType;
+	public PrincipalMeetingResponseModel() {
+	}
+	public int getMeetingID() {
+		return meetingID;
+	}
+	public void setMeetingID(int meetingID) {
+		this.meetingID = meetingID;
+	}
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+	public String getVenue() {
+		return venue;
+	}
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+	public String getKeyPoints() {
+		return keyPoints;
+	}
+	public void setKeyPoints(String keyPoints) {
+		this.keyPoints = keyPoints;
+	}
+	public String getAgenda() {
+		return agenda;
+	}
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
+	public String getNextMeetingDate() {
+		return nextMeetingDate;
+	}
+	public void setNextMeetingDate(String nextMeetingDate) {
+		this.nextMeetingDate = nextMeetingDate;
+	}
+	
+	
+	public String getDay() {
+		return day;
+	}
+	public void setDay(String day) {
+		this.day = day;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "PrincipalMeetingResponseModel [meetingID=" + meetingID + ", purpose=" + purpose + ", venue=" + venue
+				+ ", meetingTime=" + meetingTime + ", meetingDate=" + meetingDate + ", keyPoints=" + keyPoints
+				+ ", agenda=" + agenda + ", nextMeetingDate=" + nextMeetingDate + ", day=" + day + ", month=" + month
+				+ ", year=" + year + "]";
+	}
+	public String getFromMeetingType() {
+		return fromMeetingType;
+	}
+	public void setFromMeetingType(String fromMeetingType) {
+		this.fromMeetingType = fromMeetingType;
+	}
+
+}

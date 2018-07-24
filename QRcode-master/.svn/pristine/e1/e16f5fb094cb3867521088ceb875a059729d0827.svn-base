@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.subject.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.subject.model.SubjectModel;
+
+public interface SubjectRepository extends JpaRepository<SubjectModel, Integer> {
+
+}

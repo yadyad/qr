@@ -1,0 +1,37 @@
+package com.zs.cws.ws.hybrid.attendance.model;
+
+import java.util.List;
+
+public class FinalClassList {
+
+	String standard;
+	
+	List<Division> divisionList;
+
+	public FinalClassList() {
+	}
+
+	public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+
+	public List<Division> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<Division> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	@Override
+	public String toString() {
+		return "FinalClassList [standard=" + standard + ", divisionList=" + divisionList + "]";
+	}
+	
+	
+	
+}

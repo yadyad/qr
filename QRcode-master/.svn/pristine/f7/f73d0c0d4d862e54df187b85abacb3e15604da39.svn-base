@@ -1,0 +1,87 @@
+package com.zs.cws.ws.android.leave.model;
+
+public class LeaveViewResponseModel {
+
+	int leaveID;
+	String fromDate="";
+	String toDate;
+	int noOfDays;
+	String studentName="";
+	String enrollmentNumber="";
+	String appliedDate="";
+	String reason="";
+	int readStatus;
+	
+	
+	public LeaveViewResponseModel() {
+	}
+	public int getLeaveID() {
+		return leaveID;
+	}
+	public void setLeaveID(int leaveID) {
+		this.leaveID = leaveID;
+	}
+	public String getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+	public String getToDate() {
+		return toDate;
+	}
+	
+	
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+	public int getNoOfDays() {
+		return noOfDays;
+	}
+	public void setNoOfDays(int noOfDays) {
+		this.noOfDays = noOfDays;
+	}
+	public String getStudentName() {
+		return studentName;
+	}
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+	public String getEnrollmentNumber() {
+		return enrollmentNumber;
+	}
+	public void setEnrollmentNumber(String enrollmentNumber) {
+		this.enrollmentNumber = enrollmentNumber;
+	}
+	
+	public String getAppliedDate() {
+		return appliedDate;
+	}
+	public void setAppliedDate(String appliedDate) {
+		this.appliedDate = appliedDate;
+	}
+	
+	
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
+	public int getReadStatus() {
+		return readStatus;
+	}
+	public void setReadStatus(int readStatus) {
+		this.readStatus = readStatus;
+	}
+	@Override
+	public String toString() {
+		return "LeaveViewResponseModel [leaveID=" + leaveID + ", fromDate=" + fromDate + ", toDate=" + toDate
+				+ ", noOfDays=" + noOfDays + ", studentName=" + studentName + ", enrollmentNumber=" + enrollmentNumber
+				+ ", appliedDate=" + appliedDate + ", reason=" + reason + ", readStatus=" + readStatus + "]";
+	}
+	
+	
+}

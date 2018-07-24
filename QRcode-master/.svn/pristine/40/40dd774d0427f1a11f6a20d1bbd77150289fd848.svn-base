@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.school.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.school.model.SchoolModel;
+
+public interface SchoolRepository extends JpaRepository<SchoolModel, Integer>{
+
+}

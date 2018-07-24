@@ -1,0 +1,60 @@
+package com.zs.cws.ws.hybrid.news.model;
+
+public class NewsRequestModel {
+
+	private int memberId;
+	private String memberType="";
+	private int schoolID;
+	private int newsID;
+	private String status="";
+
+	public NewsRequestModel() {
+	}
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+	public int getNewsID() {
+		return newsID;
+	}
+
+	public void setNewsID(int newsID) {
+		this.newsID = newsID;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	@Override
+	public String toString() {
+		return "NewsRequestModel [memberId=" + memberId + ", memberType=" + memberType + ", schoolID=" + schoolID
+				+ ", newsID=" + newsID + ", status=" + status + "]";
+	}
+
+}

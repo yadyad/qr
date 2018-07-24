@@ -1,0 +1,50 @@
+package com.zs.cws.schooladmin.timetable.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.timetable.model.TimeTableModel;
+
+@Repository
+@Transactional
+public class TimeTableIMPL implements TimeTableDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<TimeTableModel> getTimeTableList(int schoolID) {
+		String query = "from TimeTableModel where schoolModel.schoolId=" + schoolID;
+		@SuppressWarnings("unchecked")
+		List<TimeTableModel> timeTableList = entityManager.createQuery(query).getResultList();
+		return timeTableList;
+	}
+
+	@Override
+	public boolean isAvailable(TimeTableModel tableModel) {
+		String query = "";
+		if (tableModel.getTimeTableID() != 0) {
+			query = "select count(*) from TimeTableModel where schoolDivModel.schoolDivId='"
+					+ tableModel.getSchoolDivModel().getSchoolDivId() + "' and timeTableID <> "
+					+ tableModel.getTimeTableID() + "";
+		} else {
+			query = "select count(*) from TimeTableModel where schoolDivModel.schoolDivId='"
+					+ tableModel.getSchoolDivModel().getSchoolDivId() + "' ";
+		}
+		boolean exists = (Long) entityManager.createQuery(query).getSingleResult() > 0;
+		return exists;
+	}
+
+	@Override
+	public List<TimeTableModel> getTimeTableListByDivision(int divisionID, int schoolID) {
+		System.out.println("DIVVVVVV::::??"+divisionID + "SCHOOLID>>>>"+schoolID);
+	String query ="From TimeTableModel where schoolDivModel.schoolDivId = "+divisionID+" and schoolModel.schoolId="+schoolID+"";
+	List<TimeTableModel>tableModels= entityManager.createQuery(query).getResultList();
+		return tableModels;
+	}
+
+}

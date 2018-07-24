@@ -1,0 +1,61 @@
+<!-- <body class="lgn-page-bg-home">
+ -->
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<script type="text/javascript"
+	src="${myUrl}resources/controller/schoolAdmin/directory/directory.js"></script>
+<div class="container">
+	<div ng-app="schoolNews" id="cntrlID" ng-controller="schoolNewsCtrl">
+		<div>
+
+			<div id="schoolnewsId" class="" >
+				<a class="fa fa-arrow-left text-large anchor stat-icon" id="backID" style="display: none" ng-click="backFolder()"> Back</a>
+				<div class="row">
+					
+				</div>
+
+				<div class="row">
+				<div ng-repeat="file in fileList">
+
+						<div class="folder">
+							<div class="align-float" ng-if="file.fileType == 'jpg'">
+								<a href="${myUrl}{{file.fileURL}}"> <img alt="image"
+									src="${myUrl}{{file.fileURL}}" class="img-responsive d-image"></a><i class="align-float">{{file.name}}</i>
+							</div>
+							<div class="align-float" ng-if="file.fileType == 'pdf'">
+								<a href="${myUrl}{{file.fileURL}}" class="fa fa-file-pdf-o align-float pdf- text-large stat-icon info-text"> </a>
+								<i class="align-float">{{file.name}}({{file.fileSize | number:2}}MB)</i>
+							</div>
+							 <div class="anchor align-float">      <i class="fa fa-trash-o" ng-click="deleteFile(file)"
+								aria-hidden="true"> Delete</i> </div>
+						</div>
+					</div>
+					<div class="folder col-md-2" ng-repeat="folder in folderList">
+
+						<div class="align-float">
+							<i class="align-float">{{folder.name}}({{folder.fileSize | number:2}}MB)</i><a ng-dblclick="folderview(folder)" 
+								class="fa fa-folder-open-o yellow- text-large stat-icon info-text align-float"
+								aria-hidden="true"></a>
+								
+								 <div class="anchor align-float"><i class="fa fa-trash-o"
+								ng-click="deleteFile(folder)" aria-hidden="true"> Delete</i></div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

@@ -1,0 +1,9 @@
+package com.zs.cws.superadmin.master.paymentmode.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.superadmin.master.paymentmode.model.PaymentModeModel;
+
+public interface PaymentModeRepository extends JpaRepository<PaymentModeModel, Integer> {
+
+}

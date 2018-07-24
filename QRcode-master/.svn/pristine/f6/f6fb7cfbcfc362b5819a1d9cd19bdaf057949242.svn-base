@@ -1,0 +1,11 @@
+package com.zs.cws.superadmin.master.department.dao;
+
+import com.zs.cws.superadmin.master.department.model.DepartmentModel;
+
+public interface DepartmentDAO {
+
+	boolean isAvailable(DepartmentModel departmentModel);
+	
+	DepartmentModel getDepartmentByname(String departmentName);
+
+}

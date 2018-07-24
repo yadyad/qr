@@ -1,0 +1,33 @@
+package com.zs.cws.ws.android.leave.model;
+
+import java.util.List;
+
+public class FinalLeaveForParents {
+	
+	String status;
+	List<LeaveViewResponseModel>leaveDetails;
+	
+	
+	public FinalLeaveForParents() {
+		
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public List<LeaveViewResponseModel> getLeaveDetails() {
+		return leaveDetails;
+	}
+	public void setLeaveDetails(List<LeaveViewResponseModel> leaveDetails) {
+		this.leaveDetails = leaveDetails;
+	}
+	@Override
+	public String toString() {
+		return "FinalLeaveForParents [status=" + status + ", leaveDetails=" + leaveDetails + "]";
+	}
+	
+	
+
+}

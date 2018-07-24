@@ -1,0 +1,25 @@
+package com.zs.cws.schooladmin.principalquotes.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.principalquotes.model.PrincipalQuoteModel;
+
+@Repository
+public class PrincipalQuoteIMPL implements PrincipalQuoteDAO {
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<PrincipalQuoteModel> getPrincipalQuotes(int schoolID) {
+		String query="From PrincipalQuoteModel where schoolModel.schoolId = '"+schoolID+"'";
+		List<PrincipalQuoteModel>principalQuoteModels  = entityManager.createQuery(query).getResultList();
+		return principalQuoteModels;
+	}
+
+}

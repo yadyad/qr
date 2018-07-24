@@ -1,0 +1,111 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="baseURL"
+	value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
+<c:url var="myUrl" value="${baseURL}/${MyID}" />
+<body style="background: #dddfd4 !important;">
+
+	<div class="container-fluid">
+
+
+		<div class="error-list-page">
+			<div class="inner-container" style="overflow: auto;">
+
+				<div class="row">
+					<div class="col-md-4 text-center">
+						<label class="c-label">Total Number Of Entries</label> <span
+							class="count-">${excelCount}</span>
+
+
+
+					</div>
+					<div class="col-md-4 text-center">
+
+						<label class="c-label">Total Number Of Success</label> <span
+							class="count-" style="color: green;">${successCount}</span>
+					</div>
+					<div class="col-md-4 text-center">
+
+						<label class="c-label"> Total Number Of Failures</label> <span
+							class="count-" style="color: red;">${failureCount}</span>
+
+
+					</div>
+				</div>
+				<!-- row -->
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="">
+							<div class="row">
+								<div class="col-md-12">
+									<p class="excel-warning">
+										<c:out value="${msg}">
+
+
+										</c:out>
+									</p>
+									<div class="alert alert-info alert-failure">Failure List</div>
+
+
+									<table class="table failure-1 table-responsive">
+										<thead>
+											<tr class="heading-table">
+												<th>First Name</th>
+												<th>Last Name</th>
+												<th>Qualification</th>
+												<th>Department</th>
+												<th>Designation</th>
+												<th>Category</th>
+												<th>Email</th>
+												<th>Phone</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="failedList" items="${failedList}">
+												<tr class="danger">
+													<td>${failedList.getFirstName()}</td>
+													<td>${failedList.getLastName()}</td>
+													<td>${failedList.getQualification()}</td>
+													<td>${failedList.getDepartmentModel().getDepartment()}</td>
+													<td>${failedList.getDesignationModel().getDesignation()}</td>
+
+													<td>${failedList.getCategoryModel().getCategory()}</td>
+
+													<td>${failedList.getEmailId()}</td>
+													<td>${failedList.getPhone()}</td>
+
+												</tr>
+											</c:forEach>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<!-- inner- container -->
+		</div>
+		<!-- error page-->
+
+	</div>
+	<!--  container -->
+	<script>
+		$(document).ready(function() {
+
+			$('.excel-warning').fadeIn('slow').delay(2000).fadeOut('slow');
+
+		});
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+package com.zs.cws.ws.hybrid.kudos.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class KudosFinalModel {
+	
+	private String status="";
+	private String responseStatus="";
+	private Long kudosLikeCount=0l;
+	private int schoolID;
+	private int kudosID;
+	private List<KudosResponseModel>kudosResponseModels=new ArrayList<>();
+	
+	
+	public KudosFinalModel() {
+		
+	}
+
+
+	public int getSchoolID() {
+		return schoolID;
+	}
+
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+
+
+	public int getKudosID() {
+		return kudosID;
+	}
+
+	public void setKudosID(int kudosID) {
+		this.kudosID = kudosID;
+	}
+
+	public Long getKudosLikeCount() {
+		return kudosLikeCount;
+	}
+
+	public void setKudosLikeCount(Long kudosLikeCount) {
+		this.kudosLikeCount = kudosLikeCount;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<KudosResponseModel> getKudosResponseModels() {
+		return kudosResponseModels;
+	}
+
+	public void setKudosResponseModels(List<KudosResponseModel> kudosResponseModels) {
+		this.kudosResponseModels = kudosResponseModels;
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+
+	@Override
+	public String toString() {
+		return "KudosFinalModel [status=" + status + ", responseStatus=" + responseStatus + ", kudosLikeCount="
+				+ kudosLikeCount + ", schoolID=" + schoolID + ", kudosID=" + kudosID + ", kudosResponseModels="
+				+ kudosResponseModels + "]";
+	}
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+
+	
+
+
+	
+
+
+
+
+	
+
+	
+	
+
+}

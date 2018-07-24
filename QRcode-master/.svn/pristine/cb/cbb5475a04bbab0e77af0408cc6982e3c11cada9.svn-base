@@ -1,0 +1,42 @@
+package com.zs.cws.ws.android.principalmeeeting.model;
+
+public class PrincipalUpcomingMeetingRequestModel {
+
+	int schoolID;
+	int memberID;
+	int managementID;
+	String memberType;
+	public PrincipalUpcomingMeetingRequestModel() {
+	}
+	public int getSchoolID() {
+		return schoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		this.schoolID = schoolID;
+	}
+	public int getMemberID() {
+		return memberID;
+	}
+	public void setMemberID(int memberID) {
+		this.memberID = memberID;
+	}
+	public String getMemberType() {
+		return memberType;
+	}
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+	
+	
+	public int getManagementID() {
+		return managementID;
+	}
+	public void setManagementID(int managementID) {
+		this.managementID = managementID;
+	}
+	@Override
+	public String toString() {
+		return "PrincipalUpcomingMeetingRequestModel [schoolID=" + schoolID + ", memberID=" + memberID + "]";
+	}
+	
+}

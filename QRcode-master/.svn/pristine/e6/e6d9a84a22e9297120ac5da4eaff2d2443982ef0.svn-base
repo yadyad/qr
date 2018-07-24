@@ -1,0 +1,25 @@
+package com.zs.cws.schooladmin.settings.model;
+
+public class FeeStructureViewModel {
+	String fileName;
+	String pathName;
+	public FeeStructureViewModel() {
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getPathName() {
+		return pathName;
+	}
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
+	}
+	@Override
+	public String toString() {
+		return "FeeStructureViewModel [fileName=" + fileName + ", pathName=" + pathName + "]";
+	}
+	
+}

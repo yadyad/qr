@@ -1,0 +1,33 @@
+package com.zs.cws.schooladmin.meeting.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.meeting.model.MeetingRequestModel;
+
+@Repository
+@Transactional
+public class MeetingIMPL implements MeetingDAO{
+
+	@Autowired
+	EntityManager entityManager;
+	@Override
+	public List<MeetingRequestModel> getAllMeetings(int schoolID) {
+		String query = "FROM MeetingRequestModel WHERE schoolModel.schoolId="+schoolID+" ORDER BY meetingRequestID DESC";
+		@SuppressWarnings("unchecked")
+		List<MeetingRequestModel> meetingResult = entityManager.createQuery(query).getResultList();
+		return meetingResult;
+	}
+	/*@Override
+	public Object isMeetingAvail(String meetingDate, String meetingTime, String staffs) {
+		String query = "SELECT COUNT(meetingDate,meetingTime,schoolStaffModel.schoolStaffId) FROM MeetingRequestModel WHERE meetingDate='" + meetingDate + "' and meetingTime = "+meetingTime+" and schoolStaffModel.schoolStaffId = "+staffs+"";
+		long a = (Long) entityManager.createQuery(query).getSingleResult();
+		return a > 0;
+	}*/
+
+}

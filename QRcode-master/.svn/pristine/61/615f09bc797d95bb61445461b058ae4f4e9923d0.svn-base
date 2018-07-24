@@ -1,0 +1,79 @@
+package com.zs.cws.ws.hybrid.mangementmeeting.model;
+
+import java.util.List;
+
+public class ManagementMeetingServiceRequestModel {
+	int managementID;
+	String purpose;
+	String venue;
+	String meetingTime;
+	String meetingDate;
+	String agenda;
+	List<Integer> principalLists;
+
+	public ManagementMeetingServiceRequestModel() {
+	}
+
+	public int getManagementID() {
+		return managementID;
+	}
+
+	public void setManagementID(int managementID) {
+		this.managementID = managementID;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public String getMeetingTime() {
+		return meetingTime;
+	}
+
+	public void setMeetingTime(String meetingTime) {
+		this.meetingTime = meetingTime;
+	}
+
+	public String getMeetingDate() {
+		return meetingDate;
+	}
+
+	public void setMeetingDate(String meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public List<Integer> getPrincipalLists() {
+		return principalLists;
+	}
+
+	public void setPrincipalLists(List<Integer> principalLists) {
+		this.principalLists = principalLists;
+	}
+
+	public String getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
+
+	@Override
+	public String toString() {
+		return "MeetingServiceRequestModel [managementID=" + managementID + ", purpose=" + purpose + ", venue=" + venue
+				+ ", meetingTime=" + meetingTime + ", meetingDate=" + meetingDate + ", principalLists=" + principalLists
+				+ "]";
+	}
+}

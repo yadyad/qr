@@ -1,0 +1,10 @@
+package com.zs.cws.ws.android.feespayment.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+
+
+public interface FeesPaymentRepository extends JpaRepository<FeesPaymentModel, Integer>{
+
+}

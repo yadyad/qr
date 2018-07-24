@@ -1,0 +1,62 @@
+package com.zs.cws.ws.android.feespayment.controller;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.student.repository.StudentRepository;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentRequestModel;
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentResponseModel;
+import com.zs.cws.ws.android.feespayment.repository.FeesPaymentRepository;
+
+@RestController
+@RequestMapping("android/feespayment")
+public class FeesPaymentServiceController {
+
+	@Autowired
+	FeesPaymentRepository feesPaymentRepository;
+
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Autowired
+	StudentRepository studentRepository;
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@RequestMapping(produces = { "application/json" }, method = RequestMethod.POST)
+	public @ResponseBody Object sentDairyMeaages(HttpServletRequest request,
+			@RequestBody FeesPaymentRequestModel feesPaymentRequestModel) {
+		FeesPaymentResponseModel feesPaymentResponseModel = new FeesPaymentResponseModel();
+		try{
+		if (studentDAO.isValidStudent(feesPaymentRequestModel.getStudentID())) {
+			FeesPaymentModel feesPaymentModel = new FeesPaymentModel();
+			feesPaymentModel.setSchoolModel(schoolRepository.findOne(feesPaymentRequestModel.getSchoolID()));
+			feesPaymentModel.setStudentModel(studentRepository.findOne(feesPaymentRequestModel.getStudentID()));
+			feesPaymentModel.setAmount(feesPaymentRequestModel.getAmount());
+			feesPaymentModel.setRemarks(feesPaymentRequestModel.getRemarks());
+			feesPaymentModel.setPayedDate(new Date());
+			feesPaymentRepository.save(feesPaymentModel);
+			feesPaymentResponseModel.setResponseStatus("Success");
+			return feesPaymentResponseModel;
+		} else {
+			feesPaymentResponseModel.setResponseStatus("Invalid User");
+			return feesPaymentResponseModel;
+		}
+		}catch(Exception e){
+			feesPaymentResponseModel.setResponseStatus("Failed");
+			return feesPaymentResponseModel;
+		}
+	}
+}

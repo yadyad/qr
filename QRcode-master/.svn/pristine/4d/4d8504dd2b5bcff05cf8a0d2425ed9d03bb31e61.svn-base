@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.meetingtask.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+
+public interface PrincipalMeetingTaskRepository extends JpaRepository<PrincipalMeetingTaskModel, Integer>{
+
+}

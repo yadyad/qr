@@ -1,0 +1,9 @@
+package com.zs.cws.schooladmin.principalmeeting.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zs.cws.schooladmin.principalmeeting.model.PrincipalMeetingStatusModel;
+
+public interface PrincipalMeetingStatusRepository extends  JpaRepository<PrincipalMeetingStatusModel, Integer>{
+
+}

@@ -1,0 +1,37 @@
+package com.zs.cws.ws.android.feesdetails.model;
+
+
+public class FeesDetailsResponse {
+	
+
+	String payedDate;
+	Double amount;
+	String remarks;
+	public FeesDetailsResponse() {
+	
+	}
+	public String getPayedDate() {
+		return payedDate;
+	}
+	public void setPayedDate(String payedDate) {
+		this.payedDate = payedDate;
+	}
+	public Double getAmount() {
+		return amount;
+	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	@Override
+	public String toString() {
+		return "FeesDetailsResponse [payedDate=" + payedDate + ", amount=" + amount + ", remarks=" + remarks + "]";
+	}
+	
+
+}

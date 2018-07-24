@@ -1,0 +1,51 @@
+package com.zs.cws.schooladmin.subscriptionactivation.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import com.zs.cws.schooladmin.subscriptionactivation.dao.SubscriptionActivationDAO;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+import com.zs.cws.superadmin.master.suscription.repository.SubscriptionPlanRepository;
+import com.zs.cws.utils.GlobalVariables;
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/subscriptionactivation")
+public class SubscriptionActivationController {
+	@Autowired
+	SubscriptionPlanRepository subscriptionPlanRepository;
+
+	@Autowired
+	SubscriptionActivationDAO subscriptionActivationDAO;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("school_admin_subscription_activation");
+		List<SubsciptionPlanModel> subSubsciptionPlanModels = subscriptionPlanRepository.findAll();
+		modelAndView.addObject("subSubsciptionPlanModels", subSubsciptionPlanModels);
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/getcurrentsubscription", method = RequestMethod.GET)
+	public @ResponseBody Object getCurrentSubscription() {
+		SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(GlobalVariables.SCHOOL_ID);
+		return subscriptionPlanActivationModel;
+	}
+
+	
+	@RequestMapping(value = "/getPlanDetails", method = RequestMethod.GET)
+	public @ResponseBody Object getPlanDetails() {
+		System.out.println("INSIDE PLAN DETIALS"+GlobalVariables.PLAN_ID);
+		SubsciptionPlanModel subsciptionPlanModel = subscriptionPlanRepository.findOne(GlobalVariables.PLAN_ID);
+		return subsciptionPlanModel;
+	}
+
+}

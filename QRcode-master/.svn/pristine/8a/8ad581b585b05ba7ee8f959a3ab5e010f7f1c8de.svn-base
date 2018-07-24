@@ -1,0 +1,102 @@
+package com.zs.cws.schooladmin.meetingtask.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.schooladmin.meetingtask.model.PrincipalMeetingTaskModel;
+import com.zs.cws.ws.android.principalmeeeting.model.PrincipalMeetingRequestModel;
+import com.zs.cws.ws.android.principalmeeeting.model.TaskResponseModel;
+import com.zs.cws.ws.hybrid.mangementmeeting.model.ManagementTaskAssignmentModel;
+
+@Repository
+@Transactional
+public class PrincipalMeetingTaskIMPL implements PrincipalMeetingTaskDAO {
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<PrincipalMeetingTaskModel> getCurrentTasks(int meetingID) {
+		String query = "FROM PrincipalMeetingTaskModel WHERE principalMeetingModel.meetingRequestID=" + meetingID + "";
+		@SuppressWarnings("unchecked")
+		List<PrincipalMeetingTaskModel> meetingTasksList = entityManager.createQuery(query).getResultList();
+		return meetingTasksList;
+	}
+
+	@Override
+	public List<TaskResponseModel> getMyTasks(PrincipalMeetingRequestModel principalMeetingRequestModel) {
+
+		String query = "";
+		List<TaskResponseModel> taskResponseList = new ArrayList<>();
+		if (principalMeetingRequestModel.getMemberType().equalsIgnoreCase("principal")) {
+			if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+				query = "FROM PrincipalMeetingTaskModel WHERE schoolStaffModel.schoolStaffId="
+						+ principalMeetingRequestModel.getMemberID() + " AND taskID > "
+						+ principalMeetingRequestModel.getTaskID() + "";
+			} else {
+				query = "FROM PrincipalMeetingTaskModel WHERE schoolStaffModel.schoolStaffId="
+						+ principalMeetingRequestModel.getMemberID() + " AND taskID < "
+						+ principalMeetingRequestModel.getTaskID() + "";
+			}
+			List<PrincipalMeetingTaskModel> meetingTasksList = entityManager.createQuery(query).getResultList();
+			for (PrincipalMeetingTaskModel PrincipalMeetingTaskModel : meetingTasksList) {
+				TaskResponseModel taskResponseModel = new TaskResponseModel();
+				taskResponseModel.setTaskID(PrincipalMeetingTaskModel.getTaskID());
+				taskResponseModel.setTaskName(PrincipalMeetingTaskModel.getTaskName());
+				taskResponseModel.setStartDate(PrincipalMeetingTaskModel.getStartDate());
+				taskResponseModel.setEndDate(PrincipalMeetingTaskModel.getEndDate());
+				taskResponseModel.setPercentageCompletion(PrincipalMeetingTaskModel.getCompletionPercentage());
+				taskResponseModel.setMemberName(PrincipalMeetingTaskModel.getSchoolStaffModel().getFirstName() + " "
+						+ PrincipalMeetingTaskModel.getSchoolStaffModel().getLastName());
+				taskResponseModel
+						.setMeetingID(PrincipalMeetingTaskModel.getPrincipalMeetingModel().getMeetingRequestID());
+				taskResponseList.add(taskResponseModel);
+			}
+		} else {
+			if (principalMeetingRequestModel.getStatus().equalsIgnoreCase("After")) {
+				query = "FROM ManagementTaskAssignmentModel WHERE schoolStaffModel.schoolStaffId="
+						+ principalMeetingRequestModel.getMemberID() + " AND taskID > "
+						+ principalMeetingRequestModel.getTaskID() + "";
+			} else {
+				query = "FROM ManagementTaskAssignmentModel WHERE schoolStaffModel.schoolStaffId="
+						+ principalMeetingRequestModel.getMemberID() + " AND taskID < "
+						+ principalMeetingRequestModel.getTaskID() + "";
+				
+				
+			}
+			List<ManagementTaskAssignmentModel> meetingTasksList = entityManager.createQuery(query).getResultList();
+		
+
+			for (ManagementTaskAssignmentModel managementTaskAssignmentModel : meetingTasksList) {
+				TaskResponseModel taskResponseModel = new TaskResponseModel();
+				taskResponseModel.setTaskID(managementTaskAssignmentModel.getTaskID());
+				taskResponseModel.setTaskName(managementTaskAssignmentModel.getTaskName());
+				taskResponseModel.setStartDate(managementTaskAssignmentModel.getStartDate());
+				taskResponseModel.setEndDate(managementTaskAssignmentModel.getEndDate());
+				taskResponseModel.setPercentageCompletion(managementTaskAssignmentModel.getCompletionPercentage());
+				taskResponseModel.setMemberName(managementTaskAssignmentModel.getSchoolStaffModel().getFirstName() + " "
+						+ managementTaskAssignmentModel.getSchoolStaffModel().getLastName());
+				taskResponseModel
+						.setMeetingID(managementTaskAssignmentModel.getManagementMeetingModel().getMeetingID());
+				taskResponseList.add(taskResponseModel);
+			}
+		}
+
+	
+		return taskResponseList;
+	}
+
+	@Override
+	public List<ManagementTaskAssignmentModel> getCurrentTasksForMgmt(int meetingID, String memberType) {
+		String query = "FROM ManagementTaskAssignmentModel WHERE managementMeetingModel.meetingID=" + meetingID + "";
+		@SuppressWarnings("unchecked")
+		List<ManagementTaskAssignmentModel> meetingTasksList = entityManager.createQuery(query).getResultList();
+		return meetingTasksList;
+	}
+
+}

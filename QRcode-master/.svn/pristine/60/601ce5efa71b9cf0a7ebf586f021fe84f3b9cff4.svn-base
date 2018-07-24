@@ -1,0 +1,188 @@
+package com.zs.cws.superadmin.subscription.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.payment.dao.PaymentDAO;
+import com.zs.cws.payment.model.PaymentModel;
+import com.zs.cws.payment.repository.PaymentHistoryRepository;
+import com.zs.cws.schooladmin.subscriptionactivation.dao.SubscriptionActivationDAO;
+import com.zs.cws.schooladmin.subscriptionactivation.model.SubscriptionPlanActivationModel;
+import com.zs.cws.schooladmin.subscriptionactivation.repository.SubscriptionActivationRepository;
+import com.zs.cws.superadmin.master.suscription.model.SubsciptionPlanModel;
+import com.zs.cws.superadmin.master.suscription.repository.SubscriptionPlanRepository;
+import com.zs.cws.superadmin.school.model.SchoolModel;
+import com.zs.cws.superadmin.school.repository.SchoolRepository;
+import com.zs.cws.superadmin.student.dao.StudentDAO;
+import com.zs.cws.superadmin.subscription.model.CurrentPlanDetailsModel;
+import com.zs.cws.superadmin.subscription.model.SuperAdminSubscriptionModel;
+import com.zs.cws.utils.DateParsor;
+import com.zs.cws.utils.FileAction;
+
+@Controller
+@Scope("session")
+@RequestMapping("superadmin/subscription/activation")
+public class SuperAdminSubscriptionActivationController {
+	@Autowired
+	SubscriptionActivationDAO subscriptionActivationDAO;
+
+	@Autowired
+	SubscriptionPlanRepository subscriptionPlanRepository;
+
+	@Autowired
+	SubscriptionActivationRepository subscriptionActivationRepository;
+	@Autowired
+	SchoolRepository schoolRepository;
+
+	@Autowired
+	StudentDAO studentDAO;
+
+	@Autowired
+	PaymentDAO paymentDAO;
+	static int SCHOOL_ID;
+	@Autowired
+	PaymentHistoryRepository paymentHistoryRepository;
+
+	static boolean isRenewal = false;
+
+	@RequestMapping()
+	public ModelAndView superAdminManagementPage(@RequestParam("id") int schoolID) {
+		SCHOOL_ID = schoolID;
+		ModelAndView model = new ModelAndView("super_admin_subscription_activation");
+		return model;
+	}
+
+	@RequestMapping(value = "/getcurrentsubscription", method = RequestMethod.GET)
+	public @ResponseBody Object getCurrentSubscription() {
+		SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(SCHOOL_ID);
+		if (subscriptionPlanActivationModel.getSubActivationID() != 0) {
+			isRenewal = true;
+		}
+		return subscriptionPlanActivationModel;
+	}
+
+	@RequestMapping(value = "/getStudentsCount", method = RequestMethod.GET)
+	public @ResponseBody Object getStudentsCount() {
+		long studentsCount = studentDAO.getStudentsCount(SCHOOL_ID);
+		return studentsCount;
+	}
+
+	@RequestMapping(value = "/addmorestudents", method = RequestMethod.GET)
+	public @ResponseBody Object paymentRequestForNewStudents() {
+		/* return "test/payment_request"; */
+		System.out.println("<<<<<<<<<<<<<<<ADD STUDENTS>>>>>>>>>>>>>");
+		SubscriptionPlanActivationModel subscriptionPlanActivationModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(SCHOOL_ID);
+		isRenewal = true;
+			return subscriptionPlanActivationModel;
+	}
+
+	@RequestMapping(value = "/currentPlanDetails", method = RequestMethod.GET)
+	public @ResponseBody Object getCurrentPlanDetails(HttpServletRequest request) {
+		long studentsCount = studentDAO.getStudentsCount(SCHOOL_ID);
+
+		SchoolModel schoolModel = schoolRepository.findOne(SCHOOL_ID);
+		String path = "resources/img/" + schoolModel.getManagementModel().getManagementName() + "/"
+				+ schoolModel.getSchoolName();
+		double usedSpace = FileAction.getFileSize(request, path);
+		SubscriptionPlanActivationModel planModels = paymentDAO.getPlanDetails(SCHOOL_ID);
+
+		System.out.println("DATA MODEL::>>>" + planModels.toString());
+
+		CurrentPlanDetailsModel currentPlanDetailsModel = new CurrentPlanDetailsModel();
+		currentPlanDetailsModel.setStartDate(planModels.getStartDate());
+		currentPlanDetailsModel.setEndDate(planModels.getEndDate());
+		currentPlanDetailsModel.setTotalSpace(planModels.getStorageSpace());
+		currentPlanDetailsModel.setUsedSpace(usedSpace);
+		currentPlanDetailsModel.setFreeSpace(planModels.getStorageSpace() - usedSpace);
+		currentPlanDetailsModel.setStudentCount(studentsCount);
+		return currentPlanDetailsModel;
+	}
+	
+	@RequestMapping(value = "/isnew/{isnew}", method = RequestMethod.GET)
+	public @ResponseBody Object isRegisteredPhone(@PathVariable("isnew") boolean isNew) {
+		isRenewal=isNew;
+		return null;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request,
+			@RequestBody SuperAdminSubscriptionModel superAdminSubscriptionModel, HttpSession session) {
+
+		SchoolModel schoolModel = schoolRepository.findOne(SCHOOL_ID);
+		SubscriptionPlanActivationModel subscriptionPlanActivationModel = new SubscriptionPlanActivationModel();
+	 if (!isRenewal) {
+		
+		subscriptionPlanActivationModel.setSchoolModel(schoolModel);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = null;
+		try {
+			date = formatter.parse(superAdminSubscriptionModel.getStartDate());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		SubscriptionPlanActivationModel lastInsertedSubscriptionModel = subscriptionActivationDAO
+				.getLastSubscribedPlan(SCHOOL_ID);
+		
+		
+		SubsciptionPlanModel subsciptionPlanModel = subscriptionPlanRepository.findOne(2);
+		subscriptionPlanActivationModel.setStartDate(new Date());
+		if (superAdminSubscriptionModel.getPaymentPeriod().equals("Quarterly")) {
+			subscriptionPlanActivationModel.setEndDate(DateParsor.addDays(date, 91));
+		} else {
+			subscriptionPlanActivationModel.setEndDate(DateParsor.addDays(date, 365));
+		}
+		subscriptionPlanActivationModel.setSubscriptionType(superAdminSubscriptionModel.getPaymentPeriod());
+		subscriptionPlanActivationModel
+				.setGraceEndDate(DateParsor.addDays(subscriptionPlanActivationModel.getEndDate(), 10));
+		subscriptionPlanActivationModel.setSubsciptionPlanModel(subsciptionPlanModel);
+		subscriptionPlanActivationModel.setMemberCount(superAdminSubscriptionModel.getStudentCount());
+
+		subscriptionPlanActivationModel.setStorageSpace(
+				lastInsertedSubscriptionModel.getStorageSpace() + subsciptionPlanModel.getStorageSpace());
+
+		subscriptionActivationRepository.save(subscriptionPlanActivationModel);
+
+	
+		  }else{ SubscriptionPlanActivationModel
+		  subscriptionPlanActivationModel1 = subscriptionActivationDAO
+		  .getLastSubscribedPlan(SCHOOL_ID);
+		  subscriptionPlanActivationModel1.setMemberCount(
+		  subscriptionPlanActivationModel1.getMemberCount() +
+		  superAdminSubscriptionModel.getStudentCount());
+		  subscriptionActivationRepository.save(subscriptionPlanActivationModel1
+		  ); isRenewal = false; }
+
+		PaymentModel paymentModel = new PaymentModel();
+		paymentModel.setSchoolModel(schoolModel);
+		paymentModel.setTransactionID(superAdminSubscriptionModel.getChequeNumber());
+		paymentModel.setAmount(String.valueOf(superAdminSubscriptionModel.getAmount()));
+		paymentModel.setPaymentMethod(superAdminSubscriptionModel.getPaymentMode());
+		paymentModel.setTransaction_date(new Date());
+		paymentModel.setCurrencyCode("INR");
+			paymentModel.setResponseStatus("Success");
+		paymentHistoryRepository.save(paymentModel);
+
+		 
+		return new ModelAndView("redirect:/superadmin");
+	}
+
+}

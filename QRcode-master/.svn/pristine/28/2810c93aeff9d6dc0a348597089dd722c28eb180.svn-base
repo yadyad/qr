@@ -1,0 +1,115 @@
+package com.zs.cws.ws.android.dairy.model;
+
+import java.util.List;
+
+public class DiaryMessageResponseModel {
+
+	int messageID;
+	String title;
+	String message;
+	String groupStatus;
+	String messageDate;
+	String parentName;
+	String staffName;
+	String messageFlow;
+	int parentID;
+	int staffID;
+	List<DairyDeliveryModel> messageDeliverList;
+
+	public DiaryMessageResponseModel() {
+	}
+
+	public int getMessageID() {
+		return messageID;
+	}
+
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public List<DairyDeliveryModel> getMessageDeliverList() {
+		return messageDeliverList;
+	}
+
+	public void setMessageDeliverList(List<DairyDeliveryModel> messageDeliverList) {
+		this.messageDeliverList = messageDeliverList;
+	}
+
+	public String getGroupStatus() {
+		return groupStatus;
+	}
+
+	public void setGroupStatus(String groupStatus) {
+		this.groupStatus = groupStatus;
+	}
+
+	public String getMessageDate() {
+		return messageDate;
+	}
+
+	public void setMessageDate(String messageDate) {
+		this.messageDate = messageDate;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getMessageFlow() {
+		return messageFlow;
+	}
+
+	public void setMessageFlow(String messageFlow) {
+		this.messageFlow = messageFlow;
+	}
+
+	public int getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
+	}
+
+	public int getStaffID() {
+		return staffID;
+	}
+
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
+	}
+
+	@Override
+	public String toString() {
+		return "DiaryMessageResponseModel [messageID=" + messageID + ", title=" + title + ", message=" + message
+				+ ",messageDeliverList=" + messageDeliverList + "]";
+	}
+}

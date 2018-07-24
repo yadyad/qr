@@ -1,0 +1,35 @@
+package com.zs.cws.ws.android.feesdetails.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.zs.cws.ws.android.feespayment.model.FeesPaymentModel;
+
+@Repository
+public class FeesDetailsIMPL implements FeesDetailsDAO {
+	
+	@Autowired
+	EntityManager entityManager;
+
+	@Override
+	public List<FeesPaymentModel> getFeesDetails(int schoolID, int studentID) {
+		String query = "From FeesPaymentModel where schoolModel.schoolId = '"+schoolID+"' and studentModel.studentId= '"+studentID+"'";
+		List<FeesPaymentModel>feesPaymentModels = entityManager.createQuery(query).getResultList();
+		return feesPaymentModels;
+	}
+
+	@Override
+	public boolean isPayed(int studentID) {
+		String query = "From FeesPaymentModel where studentModel.studentId= '"+studentID+"'";
+		List<FeesPaymentModel>feesPaymentModels = entityManager.createQuery(query).getResultList();
+		if (feesPaymentModels.size()!=0) {
+			return true;
+		}
+		return false;
+	}
+
+}

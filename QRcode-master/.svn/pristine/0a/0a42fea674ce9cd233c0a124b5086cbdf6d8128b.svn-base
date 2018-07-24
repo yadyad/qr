@@ -1,0 +1,88 @@
+package com.zs.cws.schooladmin.quota;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.zs.cws.superadmin.master.quota.dao.QuotaDAO;
+import com.zs.cws.superadmin.master.quota.model.QuotaModel;
+import com.zs.cws.superadmin.master.quota.repository.QuotaRepository;
+
+
+@Controller
+@Scope("session")
+@RequestMapping("schooladmin/quota")
+public class SchoolAdminQuotaController {
+
+	
+	
+	
+	
+	@Autowired
+	QuotaRepository quotaRepository;
+	
+	@Autowired
+	QuotaDAO quotaDAO;
+
+	@RequestMapping()
+	public ModelAndView view() {
+		ModelAndView modelAndView = new ModelAndView("super_admin_quota");
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public @ResponseBody Object listAllUsers() {
+		List<QuotaModel> quotaModels = quotaRepository.findAll();
+		return quotaModels;
+	}
+
+	@RequestMapping(value = { "/post" }, method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody Object getJsonData(HttpServletRequest request, @RequestBody QuotaModel quotaModel,
+			HttpSession session) {
+
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if (!quotaDAO.isAvailable(quotaModel)) {
+			quotaModel.setCreatedBy(loggedUser);
+			quotaModel.setUpdatedBy(loggedUser);
+			quotaModel.setCreatedDate(new Date());
+			quotaModel.setUpdatedDate(new Date());
+			quotaRepository.save(quotaModel);
+			return quotaModel;
+		}else{
+			return null;
+		}
+		}
+	
+
+	@RequestMapping(value = "/quotadeleteItems/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int[] quotaIDs) {
+		for (int quotaID : quotaIDs) {
+			if (quotaID != 0) {
+				quotaRepository.delete(quotaID);
+			}
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/quotadeleteSingleItem/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object deleteItems(@PathVariable("id") int quotaId) {
+		if (quotaId != 0) {
+			quotaRepository.delete(quotaId);
+			return true;
+		}
+		return false;
+	}
+
+}

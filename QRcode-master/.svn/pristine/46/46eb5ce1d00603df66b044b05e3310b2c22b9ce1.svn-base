@@ -1,0 +1,13 @@
+package com.zs.cws.schooladmin.driverroutes.dao;
+
+import java.util.List;
+
+import com.zs.cws.schooladmin.driverroutes.model.DriverRoutesModel;
+
+public interface DriverRouteDAO {
+
+	List<DriverRoutesModel> getRouteDetails(int sCHOOL_ID);
+
+	//List<DriverRoutesModel> getDriverRoutes(int sCHOOL_ID);
+
+}
